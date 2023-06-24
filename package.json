@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "npx ts-node --esm src/convert.ts",
-    "prepare": "husky install",
-    "test": ""
+    "prepare": "husky install"
   },
   "author": "Noman",
   "license": "MIT",
