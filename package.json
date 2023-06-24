@@ -9,14 +9,14 @@
   },
   "author": "Noman",
   "license": "MIT",
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "whisper-node": "^0.2.12"
+  },
   "devDependencies": {
     "@types/node": "^20.3.1",
     "prettier": "^2.8.8",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "sqlite3": "^5.1.6",
-    "whisper-node": "^0.2.12"
   }
 }
