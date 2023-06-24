@@ -2,7 +2,12 @@
 
 No Such Thing As A Fish episode transcripts.
 
-## Local dev
+## Running webapp locally
+
+1. Run `npm install`
+2. Run `npm run dev`
+
+## Download new episodes from the RSS feed, transcribe them, and add them to the database
 
 1. Run `pip install -r requirements.txt`
-2. Run `python src/convert.py` to download, transcribe, and save any new episode info into the database
+2. Run `python src/convert.py`
