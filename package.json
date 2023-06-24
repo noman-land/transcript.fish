@@ -5,7 +5,9 @@
   "main": "src/convert.ts",
   "type": "module",
   "scripts": {
-    "start": "npx ts-node --esm src/convert.ts"
+    "start": "npx ts-node --esm src/convert.ts",
+    "prepare": "husky install",
+    "test": ""
   },
   "author": "Noman",
   "license": "MIT",
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.3.1",
+    "husky": "^8.0.0",
     "prettier": "^2.8.8",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
