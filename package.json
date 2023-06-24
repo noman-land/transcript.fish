@@ -1,0 +1,23 @@
+{
+  "name": "transcript.fish",
+  "version": "0.1.0",
+  "description": "No Such Thing As a Fish episode transcripts.",
+  "main": "src/convert.ts",
+  "type": "module",
+  "scripts": {
+    "start": "npx ts-node --esm src/convert.ts"
+  },
+  "author": "Noman",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "whisper-node": "^0.2.12"
+  }
+}

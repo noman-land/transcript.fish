@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "lib": ["es2020"],
+    "module": "es2022",
+    "target": "es2022",
+    "preserveConstEnums": true,
+    "types": ["node"],
+    "outDir": "dist"
+  },
+  "include": ["/**/*.ts"],
+  "exclude": ["node_modules"]
+}
