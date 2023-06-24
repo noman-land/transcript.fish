@@ -15,8 +15,7 @@
   "author": "Noman",
   "license": "MIT",
   "dependencies": {
-    "sqlite3": "^5.1.6",
-    "whisper-node": "^0.2.12"
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "@types/node": "^20.3.1",
@@ -43,7 +42,7 @@
     "vite-tsconfig-paths": "^4.2.0"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
+    "**/*.{js,jsx,ts,tsx,json}": [
       "npx eslint --fix",
       "npx prettier --write"
     ]
