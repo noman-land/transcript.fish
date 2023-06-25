@@ -1,7 +1,8 @@
 :root {
   font-family: 'Courier New', Courier, monospace;
-  line-height: 1.5;
-  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   background: #e8d22f;
 
@@ -14,8 +15,6 @@
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
