@@ -30,7 +30,7 @@ export const useDb = () => {
       .then(
         (worker) => {
           return worker.db
-            .exec(`select episode, title, image, pubDate from episodes`)
+            .exec(`select episode, title, pubDate from episodes`)
             .then(([{ values }]) => setRows(values))
             .catch(console.error);
         },

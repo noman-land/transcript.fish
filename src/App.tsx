@@ -53,13 +53,11 @@ export const App = () => {
           width={316}
           src="https://upload.wikimedia.org/wikipedia/en/e/e1/No_Such_Thing_As_A_Fish_logo.jpg"
         />
-        {window.location.pathname === "/alpha" && (
-          <ErrorBoundary>
-            <StyledBackground>
-              <Episodes />
-            </StyledBackground>
-          </ErrorBoundary>
-        )}
+        <ErrorBoundary>
+          <StyledBackground>
+            <Episodes />
+          </StyledBackground>
+        </ErrorBoundary>
       </div>
     </Wrapper>
   );
