@@ -1,5 +1,6 @@
 import { Episodes } from "./Episodes";
 import styled from "styled-components";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,6 +18,20 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+`;
+
+const StyledBackground = styled.div`
+  background-color: #f8e44f;
+  table {
+    border-spacing: 0;
+
+    td {
+      padding: 6px;
+    }
+    tr:hover {
+      background-color: #fff189;
+    }
   }
 `;
 
@@ -38,7 +53,13 @@ export const App = () => {
           width={316}
           src="https://upload.wikimedia.org/wikipedia/en/e/e1/No_Such_Thing_As_A_Fish_logo.jpg"
         />
-        <Episodes />
+        {window.location.pathname === "/alpha" && (
+          <ErrorBoundary>
+            <StyledBackground>
+              <Episodes />
+            </StyledBackground>
+          </ErrorBoundary>
+        )}
       </div>
     </Wrapper>
   );

@@ -1,4 +1,5 @@
 audio/
+*.db
 
 # Logs
 logs
