@@ -1,7 +1,7 @@
 import { useDb } from "./dbHooks";
 
 const formatDate = (date: string) =>
-  new Intl.DateTimeFormat().format(new Date(date));
+  date ? new Intl.DateTimeFormat().format(new Date(date)) : "";
 
 export const Episodes = () => {
   const episodes = useDb();
