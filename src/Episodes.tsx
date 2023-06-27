@@ -1,16 +1,22 @@
-import { useEffect, useState } from "react";
+import { useDb } from "./dbHooks";
+
+const formatDate = (date: string) =>
+  new Intl.DateTimeFormat().format(new Date(date));
 
 export const Episodes = () => {
-  const [episodes] = useState([]);
-  useEffect(() => {
-    // fetch('').then().catch();
-  }, []);
+  const episodes = useDb();
 
   return (
-    <ul>
-      {episodes.map((episode) => (
-        <li>{episode}</li>
-      ))}
-    </ul>
+    <table>
+      <tbody>
+        {episodes.map(([number, title, , pubDate]) => (
+          <tr key="number">
+            <td style={{ textAlign: "right" }}>{number}:</td>
+            <td style={{ textAlign: "left" }}>{title}</td>
+            <td style={{ textAlign: "right" }}>{formatDate(pubDate)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };

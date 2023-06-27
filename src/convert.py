@@ -101,7 +101,7 @@ def transcribe_file(episode_num):
     save_words(segments, episode_num)
     print(f'  End of episode {episode_num} transcription: {now()}')
 
-con = sqlite3.connect('data/nosuchfish.db')
+con = sqlite3.connect('data/transcript.db')
 
 save_episodes(get_new_episodes())
 
