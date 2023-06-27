@@ -8,13 +8,23 @@ export const Episodes = () => {
   return (
     <table>
       <tbody>
-        {episodes.map(([number, title, , pubDate]) => (
-          <tr key={number}>
-            <td style={{ textAlign: "right" }}>{number}:</td>
-            <td style={{ textAlign: "left" }}>{title}</td>
-            <td style={{ textAlign: "right" }}>{formatDate(pubDate)}</td>
-          </tr>
-        ))}
+        {episodes.map(
+          ({
+            episode,
+            title,
+            pubDate,
+          }: {
+            episode: number;
+            title: string;
+            pubDate: string;
+          }) => (
+            <tr key={episode}>
+              <td style={{ textAlign: "right" }}>{episode}:</td>
+              <td style={{ textAlign: "left" }}>{title}</td>
+              <td style={{ textAlign: "right" }}>{formatDate(pubDate)}</td>
+            </tr>
+          )
+        )}
       </tbody>
     </table>
   );

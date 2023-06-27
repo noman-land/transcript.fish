@@ -7,22 +7,22 @@ const workerUrl = new URL(
 );
 const wasmUrl = new URL("sql.js-httpvfs/dist/sql-wasm.wasm", import.meta.url);
 
-const config = {
-  from: "inline",
-  config: {
-    requestChunkSize: 4096,
-    serverMode: "full",
-    url: "https://media.transcript.fish/transcript.db",
-  },
-};
-
 const maxBytesToRead = 10 * 1024 * 1024;
 
 export const useDb = () => {
   const [rows, setRows] = useState([]);
   useEffect(() => {
     createDbWorker(
-      [config],
+      [
+        {
+          from: "inline",
+          config: {
+            requestChunkSize: 4096,
+            serverMode: "full",
+            url: "https://media.transcript.fish/transcript.db",
+          },
+        },
+      ],
       workerUrl.toString(),
       wasmUrl.toString(),
       maxBytesToRead // optional, defaults to Infinity
@@ -30,8 +30,8 @@ export const useDb = () => {
       .then(
         (worker) => {
           return worker.db
-            .exec(`select episode, title, pubDate from episodes`)
-            .then(([{ values }]) => setRows(values))
+            .query(`select episode, title, pubDate from episodes`)
+            .then((value) => setRows(value as []))
             .catch(console.error);
         },
         (err) => {
