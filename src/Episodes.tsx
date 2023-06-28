@@ -5,7 +5,7 @@ const formatDate = (date: string) =>
 
 const formatDuration = (duration: number) => {
   const min = Math.floor(duration / 60);
-  const sec = `${duration - min * 60}`.padEnd(2, "0");
+  const sec = `${duration - min * 60}`.padStart(2, "0");
   return `${min}:${sec}`;
 };
 interface Episode {
