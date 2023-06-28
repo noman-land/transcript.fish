@@ -3,7 +3,13 @@ import { useDb } from "./dbHooks";
 import { ReactNode } from "react";
 
 const formatDate = (date: string) =>
-  date ? new Intl.DateTimeFormat().format(new Date(date)) : "";
+  date
+    ? new Intl.DateTimeFormat(undefined, {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }).format(new Date(date))
+    : "";
 
 const formatDuration = (duration: number) => {
   return `${Math.floor(duration / 60)} minutes`;
@@ -21,6 +27,19 @@ interface Episode {
 const StyledTable = styled.table`
   background-color: #f8e44f;
   border-collapse: collapse;
+  & .description {
+    // Some descriptions end in <br> tags
+    // which add unwanted line breaks
+    & br:last-child {
+      display: none;
+    }
+
+    // Some descriptions are wrapped in a <p>
+    // which adds unwanted margin
+    & > p {
+      margin: 0;
+    }
+  }
 
   & tr {
     position: relative;
@@ -97,23 +116,26 @@ export const Episodes = () => {
                 >
                   <span
                     style={{
-                      opacity: 0.4,
-                      fontSize: 17,
+                      opacity: 0.5,
                       fontWeight: 600,
+                      marginBottom: 16,
                     }}
                   >
-                    {formatDuration(duration)}
+                    {formatDate(pubDate)}
                   </span>
                 </div>
-                <p dangerouslySetInnerHTML={{ __html: description }} />
+                <span
+                  className="description"
+                  dangerouslySetInnerHTML={{ __html: description }}
+                />
                 <span
                   style={{
                     opacity: 0.5,
                     fontWeight: 600,
-                    textAlign: "right",
+                    marginTop: 16,
                   }}
                 >
-                  {formatDate(pubDate)}
+                  {formatDuration(duration)}
                 </span>
               </td>
             </StyledTr>
