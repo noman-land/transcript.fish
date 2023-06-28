@@ -1,5 +1,6 @@
 import { css, styled } from "styled-components";
 import { useDb } from "./dbHooks";
+import { ReactNode } from "react";
 
 const formatDate = (date: string) =>
   date ? new Intl.DateTimeFormat().format(new Date(date)) : "";
@@ -46,9 +47,11 @@ const StyledTable = styled.table`
   }
 `;
 
-const StyledTr = styled(({ image: __, ...props }: { image: any }) => (
-  <tr {...props} />
-))`
+const StyledTr = styled(
+  ({ image: __, ...props }: { image: any; children: ReactNode }) => (
+    <tr {...props} />
+  )
+)`
   &::after {
     ${({ image }) => css`
       background-image: url(${image});
