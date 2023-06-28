@@ -6,6 +6,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
+  & a {
+    color: black;
+  }
+
   header {
     height: 32px;
     display: flex;
@@ -50,6 +54,7 @@ export const App = () => {
         <h1>transcript.fish</h1>
         <h2>coming soon</h2>
         <img
+          style={{ marginBottom: 32 }}
           width={316}
           src="https://upload.wikimedia.org/wikipedia/en/e/e1/No_Such_Thing_As_A_Fish_logo.jpg"
         />
