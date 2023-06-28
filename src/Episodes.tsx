@@ -34,7 +34,7 @@ export const Episodes = () => {
           }: Episode) => (
             <tr key={episode}>
               <td style={{ verticalAlign: "top", padding: 16 }}>
-                <img width={128} src={image} />
+                <img width={80} src={image} />
               </td>
               <td
                 style={{
