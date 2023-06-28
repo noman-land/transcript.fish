@@ -15,7 +15,7 @@ const formatDuration = (duration: number) => {
   return `${Math.floor(duration / 60)} minutes`;
 };
 
-interface Episode {
+export interface Episode {
   image: string;
   description: string;
   duration: number;

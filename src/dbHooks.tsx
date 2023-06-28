@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { WorkerHttpvfs, createDbWorker } from "sql.js-httpvfs";
+import { Episode } from "./Episodes";
 
 const workerUrl = new URL(
   "sql.js-httpvfs/dist/sqlite.worker.js",
@@ -9,9 +10,12 @@ const wasmUrl = new URL("sql.js-httpvfs/dist/sql-wasm.wasm", import.meta.url);
 
 const maxBytesToRead = 10 * 1024 * 1024;
 
+const sort = (episodes: Episode[]) =>
+  episodes.sort((a, b) => b.episode - a.episode);
+
 export const useDb = () => {
   const workerRef = useRef<WorkerHttpvfs>();
-  const [episodes, setEpisodes] = useState([]);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [episodeWords, setEpisodeWords] = useState([]);
 
   useEffect(() => {
@@ -36,7 +40,9 @@ export const useDb = () => {
           `select episode, title, pubDate, image, description, duration from episodes`
         )
         .then(
-          (value) => setEpisodes(value as []),
+          (result) => {
+            setEpisodes(sort(result as Episode[]));
+          },
           (err) => console.error("Error selecting from db:", err)
         )
         .catch((err) =>
