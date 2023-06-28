@@ -46,7 +46,7 @@ const StyledTable = styled.table`
   }
 `;
 
-const StyledTr = styled(({ image: __, ...props }: { image: string }) => (
+const StyledTr = styled(({ image: __, ...props }: { image: any }) => (
   <tr {...props} />
 ))`
   &::after {
