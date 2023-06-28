@@ -24,7 +24,7 @@ const StyledTable = styled.table`
 
   & tr {
     position: relative;
-    border: 2px solid #d2bb3d;
+    border-bottom: 2px solid #d2bb3d;
 
     &:hover {
       background-color: #fff189;
@@ -105,10 +105,7 @@ export const Episodes = () => {
                     {formatDuration(duration)}
                   </span>
                 </div>
-                <p
-                  style={{ marginBottom: 0 }}
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
+                <p dangerouslySetInnerHTML={{ __html: description }} />
                 <span
                   style={{
                     opacity: 0.5,
