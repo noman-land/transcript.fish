@@ -46,7 +46,9 @@ const StyledTable = styled.table`
   }
 `;
 
-const StyledTr = styled(({ image: __, ...props }) => <tr {...props} />)`
+const StyledTr = styled(({ image: __, ...props }: { image: string }) => (
+  <tr {...props} />
+))`
   &::after {
     ${({ image }) => css`
       background-image: url(${image});
