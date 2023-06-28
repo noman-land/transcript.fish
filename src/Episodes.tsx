@@ -20,10 +20,11 @@ interface Episode {
 
 const StyledTable = styled.table`
   background-color: #f8e44f;
-  border-spacing: 0;
+  border-collapse: collapse;
 
   & tr {
     position: relative;
+    border: 2px solid #d2bb3d;
 
     &:hover {
       background-color: #fff189;
@@ -34,7 +35,7 @@ const StyledTable = styled.table`
       display: inline-block;
       height: 100%;
       width: 100%;
-      opacity: 0.09;
+      opacity: 0.08;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: 50% 50%;
@@ -84,36 +85,39 @@ export const Episodes = () => {
                   padding: 20,
                 }}
               >
+                <h3 style={{ marginTop: 0, flexGrow: 1 }}>
+                  {episode}: {title}
+                </h3>
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "stretch",
+                    justifyContent: "space-between",
                     alignItems: "baseline",
                   }}
                 >
-                  <h3 style={{ marginTop: 0, flexGrow: 1 }}>
-                    {episode}: {title}
-                  </h3>
                   <span
                     style={{
-                      marginLeft: 16,
-                      opacity: 0.5,
+                      opacity: 0.4,
+                      fontSize: 17,
                       fontWeight: 600,
                     }}
                   >
-                    {formatDate(pubDate)}
+                    {formatDuration(duration)}
                   </span>
                 </div>
+                <p
+                  style={{ marginBottom: 0 }}
+                  dangerouslySetInnerHTML={{ __html: description }}
+                />
                 <span
                   style={{
-                    opacity: 0.4,
-                    fontSize: 17,
+                    opacity: 0.5,
                     fontWeight: 600,
+                    textAlign: "right",
                   }}
                 >
-                  {formatDuration(duration)}
+                  {formatDate(pubDate)}
                 </span>
-                <p dangerouslySetInnerHTML={{ __html: description }} />
               </td>
             </StyledTr>
           )
