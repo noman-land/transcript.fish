@@ -1,6 +1,6 @@
-import { Episodes } from "./Episodes";
 import styled from "styled-components";
 import { ErrorBoundary } from "./ErrorBoundary";
+import { EpisodeSearch } from "./EpisodesSearch";
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,14 +18,6 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: end;
   }
-
-  .content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
 `;
 
 export const App = () => {
@@ -39,7 +31,7 @@ export const App = () => {
           />
         </a>
       </header>
-      <div className="content">
+      <div>
         <h1>transcript.fish</h1>
         <h2>coming soon</h2>
         <img
@@ -48,7 +40,7 @@ export const App = () => {
           src="https://upload.wikimedia.org/wikipedia/en/e/e1/No_Such_Thing_As_A_Fish_logo.jpg"
         />
         <ErrorBoundary>
-          <Episodes />
+          <EpisodeSearch />
         </ErrorBoundary>
       </div>
     </Wrapper>

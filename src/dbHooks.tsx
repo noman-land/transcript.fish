@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { WorkerHttpvfs, createDbWorker } from "sql.js-httpvfs";
-import { Episode } from "./Episodes";
+import { Episode } from "./EpisodesTable";
 
 const workerUrl = new URL(
   "sql.js-httpvfs/dist/sqlite.worker.js",
@@ -15,7 +15,7 @@ const sort = (episodes: Episode[]) =>
 
 export const useDb = () => {
   const workerRef = useRef<WorkerHttpvfs>();
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [episodes, setEpisodes] = useState<Episode[]>();
   const [episodeWords, setEpisodeWords] = useState([]);
 
   useEffect(() => {
