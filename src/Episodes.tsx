@@ -107,7 +107,7 @@ export const Episodes = () => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "stretch",
-                  padding: "32px 3vw",
+                  padding: "4vw 3vw",
                 }}
               >
                 <h3 style={{ marginTop: 0, flexGrow: 1 }}>
