@@ -6,12 +6,15 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
+  & header {
+    padding: 32px 32px 0 32px;
+  }
+
   & a {
     color: black;
   }
 
   header {
-    height: 32px;
     display: flex;
     justify-content: end;
   }
@@ -22,20 +25,6 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-`;
-
-const StyledBackground = styled.div`
-  background-color: #f8e44f;
-  table {
-    border-spacing: 0;
-
-    td {
-      padding: 6px;
-    }
-    tr:hover {
-      background-color: #fff189;
-    }
   }
 `;
 
@@ -59,9 +48,7 @@ export const App = () => {
           src="https://upload.wikimedia.org/wikipedia/en/e/e1/No_Such_Thing_As_A_Fish_logo.jpg"
         />
         <ErrorBoundary>
-          <StyledBackground>
-            <Episodes />
-          </StyledBackground>
+          <Episodes />
         </ErrorBoundary>
       </div>
     </Wrapper>
