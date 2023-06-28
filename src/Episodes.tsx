@@ -27,6 +27,7 @@ interface Episode {
 const StyledTable = styled.table`
   background-color: #f8e44f;
   border-collapse: collapse;
+
   & .description {
     // Some descriptions end in <br> tags
     // which add unwanted line breaks
@@ -43,7 +44,11 @@ const StyledTable = styled.table`
 
   & tr {
     position: relative;
-    border-bottom: 2px solid #d2bb3d;
+    z-index: 0;
+
+    &:not(:last-child) {
+      border-bottom: 2px solid #d2bb3d;
+    }
 
     &:hover {
       background-color: #fff189;
@@ -63,6 +68,7 @@ const StyledTable = styled.table`
       right: 0;
       top: 0;
       bottom: 0;
+      z-index: -1;
     }
   }
 `;
