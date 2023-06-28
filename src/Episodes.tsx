@@ -30,7 +30,7 @@ const StyledTable = styled.table`
   & .description {
     // Some descriptions end in <br> tags
     // which add unwanted line breaks
-    & br:last-child {
+    & > :last-child > br:last-child {
       display: none;
     }
 
