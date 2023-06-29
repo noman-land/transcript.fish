@@ -30,6 +30,7 @@ const StyledTable = styled.table`
   }
 
   & tr {
+    display: inline-block;
     position: relative;
     z-index: 0;
 
