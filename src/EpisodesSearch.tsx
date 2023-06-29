@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { useCallback, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { EpisodesTable } from "./EpisodesTable";
 import { useDb } from "./dbHooks";
+import { throttle } from "throttle-debounce";
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,9 +24,16 @@ export const EpisodeSearch = () => {
   const { episodes } = useDb();
   const [search, setSearch] = useState("");
 
-  const handleSearch = useCallback((event: { target: { value: string } }) => {
-    setSearch(event.target.value);
-  }, []);
+  const handleSearch = useCallback(
+    throttle(
+      100,
+      ({ target }: FormEvent) => {
+        setSearch((target as HTMLInputElement).value);
+      },
+      { noLeading: true }
+    ),
+    []
+  );
 
   if (!episodes) {
     return null;
@@ -41,7 +49,7 @@ export const EpisodeSearch = () => {
 
   return (
     <Wrapper>
-      <input placeholder="Search" onChange={handleSearch} />
+      <input placeholder="Search" onInput={handleSearch} />
       <EpisodesTable episodes={filteredEpisodes} />
     </Wrapper>
   );
