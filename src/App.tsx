@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { ErrorBoundary } from "./ErrorBoundary";
-import { EpisodeSearch } from "./EpisodesSearch";
+import styled from 'styled-components';
+import { ErrorBoundary } from './ErrorBoundary';
+import { EpisodeSearch } from './EpisodesSearch';
 
 const Wrapper = styled.div`
   display: flex;

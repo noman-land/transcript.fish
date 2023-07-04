@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { WorkerHttpvfs, createDbWorker } from "sql.js-httpvfs";
-import { Episode } from "./EpisodesTable";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { WorkerHttpvfs, createDbWorker } from 'sql.js-httpvfs';
+import { Episode } from './EpisodesTable';
 
 const workerUrl = new URL(
-  "sql.js-httpvfs/dist/sqlite.worker.js",
+  'sql.js-httpvfs/dist/sqlite.worker.js',
   import.meta.url
 );
-const wasmUrl = new URL("sql.js-httpvfs/dist/sql-wasm.wasm", import.meta.url);
+const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
 const maxBytesToRead = 10 * 1024 * 1024;
 
@@ -22,32 +22,32 @@ export const useDb = () => {
     createDbWorker(
       [
         {
-          from: "inline",
+          from: 'inline',
           config: {
             requestChunkSize: 4 * 1024,
-            serverMode: "full",
-            url: "https://media.transcript.fish/transcript.db",
+            serverMode: 'full',
+            url: 'https://media.transcript.fish/transcript.db',
           },
         },
       ],
       workerUrl.toString(),
       wasmUrl.toString(),
       maxBytesToRead // optional, defaults to Infinity
-    ).then((worker) => {
+    ).then(worker => {
       workerRef.current = worker;
       workerRef.current.db
         .query(
-          `select episode, title, pubDate, image, description, duration from episodes`
+          'select episode, title, pubDate, image, description, duration from episodes'
         )
         .then(
-          (result) => {
+          result => {
             setEpisodes(sort(result as Episode[]));
           },
-          (err) => console.error("Error selecting from db:", err)
+          err => console.error('Error selecting from db:', err)
         )
-        .catch((err) =>
+        .catch(err =>
           console.error(
-            "Something absolutely terrible and unexpected happened getting episodes from database.",
+            'Something absolutely terrible and unexpected happened getting episodes from database.',
             err
           )
         );
@@ -56,11 +56,11 @@ export const useDb = () => {
 
   const getEpisode = useCallback((episode: number) => {
     workerRef.current?.db
-      .query("select count(*) from words where episode == ?", [episode])
-      .then((value) => setEpisodeWords(value as []))
+      .query('select count(*) from words where episode == ?', [episode])
+      .then(value => setEpisodeWords(value as []))
       .catch((err: Error) =>
         console.error(
-          "Something absolutely terrible and unexpected happened getting episode words from database.",
+          'Something absolutely terrible and unexpected happened getting episode words from database.',
           err
         )
       );

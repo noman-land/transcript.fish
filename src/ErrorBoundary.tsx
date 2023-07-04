@@ -1,4 +1,4 @@
-import { Component, ReactNode } from "react";
+import { Component, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -6,12 +6,12 @@ interface Props {
 }
 
 export class ErrorBoundary extends Component {
-  state = { hasError: false };
-  props: Props = { children: null, fallback: null };
-
   constructor(props: Props) {
     super(props);
   }
+
+  state = { hasError: false };
+  props: Props = { children: null, fallback: null };
 
   static getDerivedStateFromError() {
     return { hasError: true };

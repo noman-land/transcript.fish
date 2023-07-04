@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { FormEvent, useCallback, useState } from "react";
-import { EpisodesTable } from "./EpisodesTable";
-import { useDb } from "./dbHooks";
-import { throttle } from "throttle-debounce";
+import styled from 'styled-components';
+import { FormEvent, useCallback, useState } from 'react';
+import { EpisodesTable } from './EpisodesTable';
+import { useDb } from './dbHooks';
+import { throttle } from 'throttle-debounce';
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 
 export const EpisodeSearch = () => {
   const { episodes } = useDb();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const handleSearch = useCallback(
     throttle(
@@ -39,7 +39,7 @@ export const EpisodeSearch = () => {
     return null;
   }
 
-  const filteredEpisodes = episodes.filter((ep) => {
+  const filteredEpisodes = episodes.filter(ep => {
     const lowercaseSearch = search.toLocaleLowerCase();
     return (
       ep.title.toLocaleLowerCase().includes(lowercaseSearch) ||

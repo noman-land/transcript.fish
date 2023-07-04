@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { EmptyStateRow } from "./EmptyStateRow";
-import { EpisodeRow } from "./EpisodeRow";
+import styled from 'styled-components';
+import { EmptyStateRow } from './EmptyStateRow';
+import { EpisodeRow } from './EpisodeRow';
 
 export interface Episode {
   image: string;
@@ -43,7 +43,7 @@ const StyledTable = styled.table`
     }
 
     &::after {
-      content: " ";
+      content: ' ';
       display: inline-block;
       height: 100%;
       width: 100%;
@@ -66,7 +66,9 @@ export const EpisodesTable = ({ episodes }: { episodes: Episode[] }) => {
     <StyledTable>
       <tbody>
         {episodes.length ? (
-          episodes.map((episode: Episode) => <EpisodeRow episode={episode} />)
+          episodes.map((episode: Episode) => (
+            <EpisodeRow episode={episode} key={episode.episode} />
+          ))
         ) : (
           <EmptyStateRow />
         )}
