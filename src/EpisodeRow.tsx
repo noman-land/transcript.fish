@@ -1,14 +1,13 @@
-import styled, { css } from "styled-components";
-import { ReactNode } from "react";
+import styled from 'styled-components';
 
 const formatDate = (date: string) =>
   date
     ? new Intl.DateTimeFormat(undefined, {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
       }).format(new Date(date))
-    : "";
+    : '';
 
 const formatDuration = (duration: number) => {
   return `${Math.floor(duration / 60)} minutes`;
@@ -23,14 +22,10 @@ export interface Episode {
   pubDate: string;
 }
 
-const StyledTr = styled(
-  ({ image: __, ...props }: { image: string; children: ReactNode }) => (
-    <tr {...props} />
-  )
-)`
+const StyledTr = styled.tr<{ $image: string }>`
   &::after {
-    ${({ image }) => css`
-      background-image: url(${image});
+    ${({ $image }) => `
+      background-image: url(${$image});
     `}
   }
 `;
@@ -40,14 +35,14 @@ export const EpisodeRow = ({
 }: {
   episode: Episode;
 }) => (
-  <StyledTr image={image} key={episode}>
+  <StyledTr $image={image} key={episode}>
     <td
       style={{
-        textAlign: "left",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "stretch",
-        padding: "4vw 3vw",
+        textAlign: 'left',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'stretch',
+        padding: '4vw 3vw',
       }}
     >
       <h3 style={{ marginTop: 0, flexGrow: 1 }}>
@@ -55,9 +50,9 @@ export const EpisodeRow = ({
       </h3>
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "baseline",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
         }}
       >
         <span
