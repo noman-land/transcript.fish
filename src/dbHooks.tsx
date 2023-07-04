@@ -37,7 +37,7 @@ export const useDb = () => {
       workerRef.current = worker;
       workerRef.current.db
         .query(
-          'select episode, title, pubDate, image, description, duration from episodes'
+          'SELECT episode, title, pubDate, image, description, duration FROM episodes'
         )
         .then(
           result => {
@@ -56,7 +56,7 @@ export const useDb = () => {
 
   const getEpisode = useCallback((episode: number) => {
     workerRef.current?.db
-      .query('select count(*) from words where episode == ?', [episode])
+      .query('SELECT COUNT(*) FROM words WHERE episode == ?', [episode])
       .then(value => setEpisodeWords(value as []))
       .catch((err: Error) =>
         console.error(
