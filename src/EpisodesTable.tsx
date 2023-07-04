@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { EmptyStateRow } from "./EmptyStateRow";
 import { EpisodeRow } from "./EpisodeRow";
 

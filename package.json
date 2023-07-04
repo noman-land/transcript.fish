@@ -17,19 +17,20 @@
   "dependencies": {
     "sql.js-httpvfs": "^0.8.12",
     "sqlite3": "^5.1.6",
-    "styled-components": "^6.0.2",
+    "styled-components": "^5.3.11",
     "throttle-debounce": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.3.3",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
+    "@types/styled-components": "^5.1.26",
     "@types/throttle-debounce": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "eslint": "^8.43.0",
-    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.32.2",
