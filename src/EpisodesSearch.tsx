@@ -31,9 +31,9 @@ export const EpisodeSearch = () => {
       ({ target }: FormEvent) => {
         setSearch((target as HTMLInputElement).value);
       },
-      { noLeading: true },
+      { noLeading: true }
     ),
-    [],
+    []
   );
 
   if (!episodes) {

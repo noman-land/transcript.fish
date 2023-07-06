@@ -4,7 +4,7 @@ import { Episode, Word } from './types';
 
 const workerUrl = new URL(
   'sql.js-httpvfs/dist/sqlite.worker.js',
-  import.meta.url,
+  import.meta.url
 );
 const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
@@ -19,7 +19,7 @@ const worker = await createDbWorker(
   ],
   workerUrl.toString(),
   wasmUrl.toString(),
-  maxBytesToRead, // optional, defaults to Infinity
+  maxBytesToRead // optional, defaults to Infinity
 );
 
 export const useDb = () => {
@@ -29,19 +29,19 @@ export const useDb = () => {
   useEffect(() => {
     worker.db
       .query(
-        'SELECT episode, title, pubDate, image, description, duration FROM episodes ORDER BY episode DESC',
+        'SELECT episode, title, pubDate, image, description, duration FROM episodes ORDER BY episode DESC'
       )
       .then(
         result => {
           setEpisodes(result as Episode[]);
         },
-        err => console.error('Error selecting from db:', err),
+        err => console.error('Error selecting from db:', err)
       )
       .catch(err =>
         console.error(
           'Something unexpected happened getting episodes from database.',
-          err,
-        ),
+          err
+        )
       );
   }, []);
 
@@ -49,14 +49,14 @@ export const useDb = () => {
     worker.db
       .query(
         'SELECT startTime, endTime, word, probability FROM words WHERE episode = ? ORDER BY startTime',
-        [episode],
+        [episode]
       )
       .then(value => setEpisodeWords(value as []))
       .catch((err: Error) =>
         console.error(
           'Something unexpected happened getting episode words from database.',
-          err,
-        ),
+          err
+        )
       );
   }, []);
 
