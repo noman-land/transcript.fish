@@ -6,6 +6,7 @@ export default defineConfig({
   assetsInclude: ['/images'],
   build: {
     target: 'ESNext',
+    sourcemap: true,
   },
   plugins: [react(), tsconfigPaths()],
 });
