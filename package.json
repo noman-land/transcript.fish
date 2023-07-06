@@ -1,6 +1,6 @@
 {
   "name": "transcript.fish",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "No Such Thing As a Fish episode transcripts.",
   "main": "src/main.tsx",
   "type": "module",
@@ -9,8 +9,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "prepare": "husky install"
+    "lint": "eslint --ext ts,tsx --report-unused-disable-directives --max-warnings 0 .",
+    "lint:fix": "eslint --fix --ext ts,tsx --report-unused-disable-directives --max-warnings 0 .",
+    "prettier": "npx prettier --check .",
+    "prettier:write": "npx prettier --write .",
+    "prepare": "husky install",
+    "splitdb": "./create_db.sh ./data/transcript.db ./public/db"
   },
   "author": "Noman",
   "license": "MIT",
@@ -47,8 +51,8 @@
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "npx eslint --fix",
-      "npx prettier --write"
+      "npm run lint:fix",
+      "npm run prettier:write"
     ]
   }
 }

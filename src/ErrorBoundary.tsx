@@ -6,8 +6,8 @@ interface Props {
 }
 
 export class ErrorBoundary extends Component {
-  constructor(props: Props) {
-    super(props);
+  constructor(...args: [Props]) {
+    super(...args);
   }
 
   state = { hasError: false };
