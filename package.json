@@ -1,7 +1,7 @@
 {
   "name": "transcript.fish",
   "version": "0.2.0",
-  "description": "No Such Thing As a Fish episode transcripts.",
+  "description": "Unofficial No Such Thing As a Fish episode transcripts.",
   "main": "src/main.tsx",
   "type": "module",
   "scripts": {

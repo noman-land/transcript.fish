@@ -1,6 +1,6 @@
 # transcript.fish
 
-No Such Thing As A Fish episode transcripts.
+Unofficial No Such Thing As A Fish episode transcripts.
 
 ## Running webapp locally
 
