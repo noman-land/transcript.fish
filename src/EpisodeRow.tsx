@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useCallback } from 'react';
+import { MouseEventHandler, useCallback } from 'react';
 import { useDb } from './dbHooks';
 import { Episode, Word } from './types';
 
@@ -24,6 +24,7 @@ const makeKey = (w: Word) => {
 };
 
 const StyledTr = styled.tr<{ $image: string }>`
+  cursor: pointer;
   display: block;
   position: relative;
   z-index: 0;
@@ -104,6 +105,10 @@ const StyledTd = styled.td`
   }
 `;
 
+const stopPropagation: MouseEventHandler = event => {
+  event.stopPropagation();
+};
+
 export const EpisodeRow = ({
   episode: { image, episode, title, description, pubDate, duration },
 }: {
@@ -123,6 +128,7 @@ export const EpisodeRow = ({
         </h3>
         <div className="episode-published-date">{formatDate(pubDate)}</div>
         <span
+          onClick={stopPropagation}
           className="episode-description"
           dangerouslySetInnerHTML={{ __html: description }}
         />
