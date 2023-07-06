@@ -14,7 +14,7 @@ const worker = await createDbWorker(
   [
     {
       from: 'jsonconfig',
-      configUrl: '/data/config.json',
+      configUrl: '/db/config.json',
     },
   ],
   workerUrl.toString(),

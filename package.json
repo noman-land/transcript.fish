@@ -14,7 +14,7 @@
     "prettier": "npx prettier --check .",
     "prettier:write": "npx prettier --write .",
     "prepare": "husky install",
-    "splitdb": "./create_db.sh ./data/transcript.db ./data"
+    "splitdb": "./create_db.sh ./data/transcript.db ./public/db"
   },
   "author": "Noman",
   "license": "MIT",
