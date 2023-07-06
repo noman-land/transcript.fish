@@ -5,7 +5,8 @@
   "main": "src/main.tsx",
   "type": "module",
   "scripts": {
-    "convert": "npx ts-node --esm src/convert.ts",
+    "convert": "python src/convert.py",
+    "convert:js": "npx ts-node --esm src/convert.ts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -14,7 +15,9 @@
     "prettier": "npx prettier --check .",
     "prettier:write": "npx prettier --write .",
     "prepare": "husky install",
-    "splitdb": "./create_db.sh ./data/transcript.db ./public/db"
+    "splitdb": "./create_db.sh ./data/transcript.db ./public/db",
+    "syncdb": "rclone sync -P ./data/transcript.db cf:transcript-fish/",
+    "getnew": "npm run convert && npm run splitdb && npm run syncdb"
   },
   "author": "Noman",
   "license": "MIT",

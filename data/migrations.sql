@@ -10,6 +10,7 @@ CREATE TABLE "episodes" (
   "guid" TEXT UNIQUE,
   "author" TEXT,
   "path" TEXT UNIQUE,
+  "wordCount" INTEGER,
   PRIMARY KEY("episode")
 );
 

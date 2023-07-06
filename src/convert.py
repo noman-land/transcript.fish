@@ -49,8 +49,8 @@ def get_new_episodes():
     last_episode_num = get_last_episode_num()
     # Oldest first
     rss_eps = reversed(get_rss_episodes())
-    new_eps = filter(lambda ep: is_new_episode(ep, last_episode_num), rss_eps)
-    print(f'{len(list(new_eps))} new episodes since {last_episode_num}.')
+    new_eps = list(filter(lambda ep: is_new_episode(ep, last_episode_num), rss_eps))
+    print(f'{len(new_eps)} new episodes since {last_episode_num}.')
     return new_eps
 
 def is_audio(media):
@@ -75,15 +75,15 @@ def make_episode_row(episode):
         episode['summary'], # description
         episode['published'], # pubDate
         episode['id'], # guid
-        episode['author'], # author
         f'audio/{episode_num}-{episode_title}.mp3', # path
+        0, # wordCount
     )
 
 def save_episodes(episodes):
     cur = con.cursor()
     for episode in episodes:
         episode_row = make_episode_row(episode)
-        (episode_num, _, audio_url, *_, path) = episode_row
+        (episode_num, _, audio_url, *_, path, _) = episode_row
         download_file(audio_url, path)
         cur.execute('INSERT INTO episodes VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', episode_row)
         transcribe_file(episode_num)
