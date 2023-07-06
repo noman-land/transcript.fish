@@ -38,11 +38,11 @@ export const App = () => {
             marginBottom: 32,
           }}
         >
-          <img width={72} src="/images/construction-sign.gif" />
+          <img width={60} src="/images/construction-sign.gif" />
           <h2 style={{ marginLeft: '1vw', marginRight: '1vw' }}>
             under construction
           </h2>
-          <img width={72} src="/images/construction-sign.gif" />
+          <img width={60} src="/images/construction-sign.gif" />
         </div>
 
         <img style={{ marginBottom: 32 }} width={316} src="/images/logo.jpg" />
