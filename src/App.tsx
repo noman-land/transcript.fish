@@ -25,20 +25,27 @@ export const App = () => {
     <Wrapper>
       <header>
         <a href="https://github.com/noman-land/transcript.fish">
-          <img
-            width={32}
-            src="https://logos-download.com/wp-content/uploads/2016/09/GitHub_logo.png"
-          />
+          <img width={32} src="/images/github-logo.png" />
         </a>
       </header>
       <div>
         <h1>transcript.fish</h1>
-        <h2>coming soon</h2>
-        <img
-          style={{ marginBottom: 32 }}
-          width={316}
-          src="https://upload.wikimedia.org/wikipedia/en/e/e1/No_Such_Thing_As_A_Fish_logo.jpg"
-        />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 32,
+          }}
+        >
+          <img width={72} src="/images/construction-sign.gif" />
+          <h2 style={{ marginLeft: '1vw', marginRight: '1vw' }}>
+            under construction
+          </h2>
+          <img width={72} src="/images/construction-sign.gif" />
+        </div>
+
+        <img style={{ marginBottom: 32 }} width={316} src="/images/logo.jpg" />
         <ErrorBoundary>
           <EpisodeSearch />
         </ErrorBoundary>
