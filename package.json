@@ -15,7 +15,9 @@
     "prettier": "npx prettier --check .",
     "prettier:write": "npx prettier --write .",
     "prepare": "husky install",
-    "splitdb": "./create_db.sh ./data/transcript.db ./public/db"
+    "splitdb": "./create_db.sh ./data/transcript.db ./public/db",
+    "syncdb": "rclone sync -P ./data/transcript.db cf:transcript-fish/",
+    "getnew": "npm run convert && npm run splitdb && npm run syncdb"
   },
   "author": "Noman",
   "license": "MIT",
