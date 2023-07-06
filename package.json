@@ -5,7 +5,8 @@
   "main": "src/main.tsx",
   "type": "module",
   "scripts": {
-    "convert": "npx ts-node --esm src/convert.ts",
+    "convert": "python src/convert.py",
+    "convert:js": "npx ts-node --esm src/convert.ts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
