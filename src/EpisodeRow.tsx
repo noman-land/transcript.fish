@@ -4,13 +4,15 @@ import { useDb } from './dbHooks';
 import { Episode, Word } from './types';
 
 const formatDate = (date: string) => {
-  return date
-    ? new Intl.DateTimeFormat(undefined, {
-        month: 'short',
-        day: '2-digit',
-        year: 'numeric',
-      }).format(new Date(date))
-    : '';
+  if (!date) {
+    return '';
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+  }).format(new Date(date));
 };
 
 const formatDuration = (duration: number) => {
