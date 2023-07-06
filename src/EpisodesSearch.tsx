@@ -24,15 +24,16 @@ export const EpisodeSearch = () => {
   const { episodes } = useDb();
   const [search, setSearch] = useState('');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
     throttle(
       100,
       ({ target }: FormEvent) => {
         setSearch((target as HTMLInputElement).value);
       },
-      { noLeading: true }
+      { noLeading: true },
     ),
-    []
+    [],
   );
 
   if (!episodes) {
