@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MouseEventHandler, useCallback } from 'react';
+import { MouseEvent, useCallback } from 'react';
 import { useDb } from './dbHooks';
 import { Episode, Word } from './types';
 
@@ -105,10 +105,6 @@ const StyledTd = styled.td`
   }
 `;
 
-const stopPropagation: MouseEventHandler = event => {
-  event.stopPropagation();
-};
-
 export const EpisodeRow = ({
   episode: { image, episode, title, description, pubDate, duration },
 }: {
@@ -117,8 +113,16 @@ export const EpisodeRow = ({
   const { episodeWords, getEpisode } = useDb();
 
   const handleClick = useCallback(() => {
-    getEpisode(episode);
-  }, [episode, getEpisode]);
+    if (!episodeWords) {
+      getEpisode(episode);
+    }
+  }, [episode, episodeWords, getEpisode]);
+
+  const stopPropagation = useCallback((event: MouseEvent) => {
+    if ((event.target as HTMLElement).nodeName === 'A') {
+      event.stopPropagation();
+    }
+  }, []);
 
   return (
     <StyledTr $image={image} key={episode}>
