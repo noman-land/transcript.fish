@@ -15,13 +15,12 @@ split -d -b $serverChunkSize -a $suffixLength "$indb" "$outdir/db.sqlite3."
 requestChunkSize="$(sqlite3 "$indb" 'pragma page_size')"
 
 # write a json config
-echo '
-{
-    "serverMode": "chunked",
-    "requestChunkSize": '$requestChunkSize',
-    "databaseLengthBytes": '$bytes',
-    "serverChunkSize": '$serverChunkSize',
-    "urlPrefix": "db.sqlite3.",
-    "suffixLength": '$suffixLength'
+echo '{
+  "serverMode": "chunked",
+  "requestChunkSize": '$requestChunkSize',
+  "databaseLengthBytes": '$bytes',
+  "serverChunkSize": '$serverChunkSize',
+  "urlPrefix": "db.sqlite3.",
+  "suffixLength": '$suffixLength'
 }
 ' > "$outdir/config.json"
