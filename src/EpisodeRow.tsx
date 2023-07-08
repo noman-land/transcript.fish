@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MouseEvent, useCallback } from 'react';
+import { MouseEvent, useCallback, useState } from 'react';
 import { useDb } from './dbHooks';
 import { Episode, Word } from './types';
 
@@ -23,8 +23,8 @@ const makeKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
 };
 
-const StyledTr = styled.tr<{ $image: string }>`
-  cursor: pointer;
+const StyledTr = styled.tr<{ $isOpen: boolean }>`
+  background-color: ${({ $isOpen }) => $isOpen && '#fff189'};
   display: block;
   position: relative;
   z-index: 0;
@@ -33,13 +33,11 @@ const StyledTr = styled.tr<{ $image: string }>`
     border-bottom: 2px solid #d2bb3d;
   }
 
-  &:hover {
-    background-color: #fff189;
-  }
-
   &::after {
     content: ' ';
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     height: 100%;
     width: 100%;
     opacity: 0.08;
@@ -52,14 +50,17 @@ const StyledTr = styled.tr<{ $image: string }>`
     top: 0;
     bottom: 0;
     z-index: -1;
+  }
+`;
 
-    ${({ $image }) => `
-      background-image: url(${$image});
-    `}
+const TrWithBackground = styled(StyledTr)<{ $image: string }>`
+  &::after {
+    background-image: url(${({ $image }) => $image});
   }
 `;
 
 const StyledTd = styled.td`
+  cursor: pointer;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -103,6 +104,10 @@ const StyledTd = styled.td`
   .episode-words {
     margin-bottom: 0;
   }
+
+  &:hover {
+    background-color: #fff189;
+  }
 `;
 
 export const EpisodeRow = ({
@@ -110,12 +115,15 @@ export const EpisodeRow = ({
 }: {
   episode: Episode;
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { episodeWords, getEpisode } = useDb();
 
   const handleClick = useCallback(() => {
     if (!episodeWords) {
       getEpisode(episode);
     }
+
+    setIsOpen(open => !open);
   }, [episode, episodeWords, getEpisode]);
 
   const stopPropagation = useCallback((event: MouseEvent) => {
@@ -125,7 +133,7 @@ export const EpisodeRow = ({
   }, []);
 
   return (
-    <StyledTr $image={image} key={episode}>
+    <TrWithBackground $isOpen={isOpen} $image={image} key={episode}>
       <StyledTd onClick={handleClick}>
         <h3 className="episode-title">
           <span>{episode}</span>: {title}
@@ -137,14 +145,16 @@ export const EpisodeRow = ({
           dangerouslySetInnerHTML={{ __html: description }}
         />
         <span className="episode-duration">{formatDuration(duration)}</span>
-        {episodeWords && (
+      </StyledTd>
+      {isOpen && episodeWords && (
+        <td style={{ textAlign: 'left', padding: '0 3vw 4vw 3vw' }}>
           <p className="episode-words">
             {episodeWords.map(word => (
               <span key={makeKey(word)}>{word.word}</span>
             ))}
           </p>
-        )}
-      </StyledTd>
-    </StyledTr>
+        </td>
+      )}
+    </TrWithBackground>
   );
 };
