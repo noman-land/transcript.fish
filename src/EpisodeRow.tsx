@@ -105,7 +105,8 @@ const StyledTd = styled.td`
     margin-bottom: 0;
   }
 
-  &:hover {
+  &:hover,
+  &:hover + td {
     background-color: #fff189;
   }
 `;
