@@ -19,6 +19,14 @@ const formatDuration = (duration: number) => {
   return `${Math.floor(duration / 60)} minutes`;
 };
 
+const formatTimestamp = (duration: number) => {
+  const minutes = Math.floor(duration / 60);
+  const seconds = Math.floor(duration % 60)
+    .toString()
+    .padStart(2, '0');
+  return `[${minutes}:${seconds}]`;
+};
+
 const makeKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
 };
@@ -150,8 +158,19 @@ export const EpisodeRow = ({
       {isOpen && episodeWords && (
         <td style={{ textAlign: 'left', padding: '0 3vw 4vw 3vw' }}>
           <p className="episode-words">
-            {episodeWords.map(word => (
-              <span key={makeKey(word)}>{word.word}</span>
+            {episodeWords.map((word, i) => (
+              <>
+                {i > 0 && i % 500 === 0 && (
+                  // Timestamp every 500 words
+                  <h4
+                    aria-label="timestamp"
+                    style={{ margin: '1rem 0', fontWeight: 400 }}
+                  >
+                    {formatTimestamp(word.startTime)}
+                  </h4>
+                )}
+                <span key={makeKey(word)}>{word.word}</span>
+              </>
             ))}
           </p>
         </td>
