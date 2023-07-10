@@ -113,6 +113,16 @@ const StyledTd = styled.td`
     margin-bottom: 0;
   }
 
+  & + td {
+    text-align: left;
+    padding: 0 3vw 4vw 3vw;
+
+    .timestamp {
+      margin: 1rem 0;
+      font-weight: 400;
+    }
+  }
+
   &:hover,
   &:hover + td {
     background-color: #fff189;
@@ -156,16 +166,13 @@ export const EpisodeRow = ({
         <span className="episode-duration">{formatDuration(duration)}</span>
       </StyledTd>
       {isOpen && episodeWords && (
-        <td style={{ textAlign: 'left', padding: '0 3vw 4vw 3vw' }}>
+        <td>
           <p className="episode-words">
             {episodeWords.map((word, i) => (
               <>
                 {i > 0 && i % 500 === 0 && (
                   // Timestamp every 500 words
-                  <h4
-                    aria-label="timestamp"
-                    style={{ margin: '1rem 0', fontWeight: 400 }}
-                  >
+                  <h4 className="timestamp" aria-label="timestamp">
                     {formatTimestamp(word.startTime)}
                   </h4>
                 )}
