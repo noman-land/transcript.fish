@@ -10,7 +10,7 @@ import sys
 import urllib.request
 
 model = WhisperModel(
-    model_size_or_path='base.en',
+    model_size_or_path='medium.en',
     compute_type='int8',
     local_files_only=True,
     num_workers=4,
@@ -79,6 +79,32 @@ def make_episode_row(episode):
         0, # wordCount
     )
 
+def save_words(segments, episode_num):
+    cur = con.cursor()
+    wordCount = 0
+    for segment in segments:
+        wordCount += len(segment.words)
+        cur.executemany(f'INSERT INTO words VALUES(?, ?, ?, ?, {episode_num})', segment.words)
+    cur.execute(f'UPDATE episodes SET wordCount = ? WHERE episode = {episode_num}', [wordCount])
+
+def transcribe_file(episode_num):
+    cur = con.cursor()
+    result = cur.execute('SELECT episode from words where episode = ? GROUP BY episode LIMIT 1', [episode_num]).fetchone()
+    
+    if result:
+        print(f'Already transcribed episode {episode_num}. Skipping.')
+        return
+
+    print(f'Start of episode {episode_num} transcription: {now()}')
+    filepath = glob.glob(f'audio/{episode_num}-*.mp3')[0]
+    segments, _ = model.transcribe(
+        filepath,
+        word_timestamps=True,
+        initial_prompt=f'The following is an episode of a podcast called No Such Thing As A Fish. No Such Thing As A Fish is a weekly podcast in which QI researchers Dan Schreiber, James Harkin, Anna Ptaszynski and Andrew Hunter Murray share the most bizarre, extraordinary and hilarious facts they have discovered over the last seven days.\n\n'
+    )
+    save_words(segments, episode_num)
+    print(f'  End of episode {episode_num} transcription: {now()}')
+
 def save_episodes(episodes):
     cur = con.cursor()
     for episode in episodes:
@@ -87,19 +113,6 @@ def save_episodes(episodes):
         download_file(audio_url, path)
         cur.execute('INSERT INTO episodes VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', episode_row)
         transcribe_file(episode_num)
-
-def save_words(segments, episode_num):
-    cur = con.cursor()
-    for segment in segments:
-        cur.executemany(f'INSERT INTO words VALUES(?, ?, ?, ?, {episode_num})', segment.words)
-
-def transcribe_file(episode_num):
-    print(f'Start of episode {episode_num} transcription: {now()}')
-    
-    filepath = glob.glob(f'audio/{episode_num}-*.mp3')[0]
-    segments, _ = model.transcribe(filepath, word_timestamps=True)
-    save_words(segments, episode_num)
-    print(f'  End of episode {episode_num} transcription: {now()}')
 
 con = sqlite3.connect('data/transcript.db')
 
