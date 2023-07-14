@@ -39,7 +39,7 @@ export const useDb = () => {
       )
       .catch(err =>
         console.error(
-          'Something unexpected happened getting episodes from database.',
+          'Something unexpected happened while getting episodes from database.',
           err
         )
       );
@@ -54,7 +54,7 @@ export const useDb = () => {
       .then(value => setEpisodeWords(value as []))
       .catch((err: Error) =>
         console.error(
-          'Something unexpected happened getting episode words from database.',
+          'Something unexpected happened while getting episode transcript from database.',
           err
         )
       );
