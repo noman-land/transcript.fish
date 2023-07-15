@@ -32,12 +32,10 @@ export const useDb = () => {
         'SELECT episode, title, pubDate, image, description, duration FROM episodes ORDER BY episode DESC'
       )
       .then(
-        result => {
-          setEpisodes(result as Episode[]);
-        },
+        result => setEpisodes(result as Episode[]),
         err => console.error('Error selecting from db:', err)
       )
-      .catch(err =>
+      .catch((err: Error) =>
         console.error(
           'Something unexpected happened while getting episodes from database.',
           err
@@ -51,7 +49,10 @@ export const useDb = () => {
         'SELECT startTime, endTime, word, probability FROM words WHERE episode = ? ORDER BY startTime',
         [episode]
       )
-      .then(value => setEpisodeWords(value as []))
+      .then(
+        value => setEpisodeWords(value as Word[]),
+        err => console.error('Error selecting from db:', err)
+      )
       .catch((err: Error) =>
         console.error(
           'Something unexpected happened while getting episode transcript from database.',
