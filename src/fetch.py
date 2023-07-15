@@ -18,7 +18,7 @@ def get_rss_episodes():
     return feedparser.parse('https://audioboom.com/channels/2399216.rss').entries
 
 def get_new_episodes():
-    (last_episode_num, pub_date) = database.get_last_episode()
+    last_episode_num, pub_date = database.get_last_episode()
     date = utils.format_pub_date(pub_date)
     # Oldest first
     rss_eps = reversed(get_rss_episodes())
