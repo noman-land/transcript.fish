@@ -1,4 +1,5 @@
 audio/
+__pycache__
 *.db
 
 # Logs
