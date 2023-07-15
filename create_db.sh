@@ -22,5 +22,4 @@ echo '{
   "serverChunkSize": '$serverChunkSize',
   "urlPrefix": "db.sqlite3.",
   "suffixLength": '$suffixLength'
-}
-' > "$outdir/config.json"
+}' > "$outdir/config.json"
