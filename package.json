@@ -24,7 +24,7 @@
   "dependencies": {
     "sql.js-httpvfs": "^0.8.12",
     "sqlite3": "^5.1.6",
-    "styled-components": "^5.3.11",
+    "styled-components": "^6.0.4",
     "throttle-debounce": "^5.0.0"
   },
   "devDependencies": {
