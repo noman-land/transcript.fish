@@ -8,8 +8,6 @@ CREATE TABLE "episodes" (
   "description" TEXT,
   "pubDate" TEXT,
   "guid" TEXT UNIQUE,
-  "author" TEXT,
-  "path" TEXT UNIQUE,
   "wordCount" INTEGER,
   PRIMARY KEY("episode")
 );
