@@ -49,4 +49,3 @@ def commit():
 
 def close():
     con.close()
-

@@ -29,4 +29,3 @@ def transcribe(episode):
         database.insert_words(episode_num, words)
     database.insert_episode(episode, word_count)
     utils.log(episode_num, f'Transcription complete with {word_count} words.')
-
