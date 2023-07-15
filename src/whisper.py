@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import database 
 import utils
 
-model_size = 'tiny.en'
+model_size = 'medium.en'
 
 model = WhisperModel(
     model_size_or_path=model_size,
