@@ -44,7 +44,8 @@ export const EpisodeSearch = () => {
     const lowercaseSearch = search.toLocaleLowerCase();
     return (
       ep.title.toLocaleLowerCase().includes(lowercaseSearch) ||
-      ep.description.toLocaleLowerCase().includes(lowercaseSearch)
+      ep.description.toLocaleLowerCase().includes(lowercaseSearch) ||
+      String(ep.episode).includes(lowercaseSearch)
     );
   });
 
