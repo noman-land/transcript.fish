@@ -1,6 +1,9 @@
 audio/
 __pycache__
+_audio/
+_data/
 *.db
+*.db-journal
 
 # Logs
 logs
