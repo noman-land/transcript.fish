@@ -15,7 +15,7 @@ def download_audio(episode):
         urllib.request.urlretrieve(audio_url, audio_path)
 
 def get_rss_episodes():
-    return feedparser.parse('https://audioboom.com/channels/2399216.rss').entries
+    return feedparser.parse('https://audioboom.com/channels/2399216.rss')['entries']
 
 def get_new_episodes():
     last_episode_num, pub_date = database.get_last_episode()
@@ -23,5 +23,5 @@ def get_new_episodes():
     # Oldest first
     rss_eps = reversed(get_rss_episodes())
     new_eps = list(filter(lambda ep: utils.is_new_episode(ep, last_episode_num), rss_eps))
-    print(f'-- Found {len(new_eps)} new episodes since Episode {last_episode_num} from {date}. Moving on to transcription.')
+    print(f'-- Found {len(new_eps)} new episodes since Episode {last_episode_num} from {date}.')
     return new_eps
