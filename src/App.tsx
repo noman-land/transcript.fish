@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { ErrorBoundary } from 'react-error-boundary';
 import { EpisodeSearch } from './EpisodesSearch';
 import { UnderConstructionBanner } from './UnderConstructionBanner';
+import { EpisodeSearchFallback } from './EpisodeSearchFallback';
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,32 +24,26 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
 
-    @media (max-width: 400px) {
-      h1 {
+    h1 {
+      @media (max-width: 400px) {
         font-size: 1.8em;
       }
-
-      h2 {
-        font-size: 1.4em;
-      }
-    }
-
-    @media (max-width: 360px) {
-      h1 {
+      @media (max-width: 360px) {
         font-size: 1.6em;
       }
-
-      h2 {
-        font-size: 1.2em;
+      @media (max-width: 320px) {
+        font-size: 1.4em;
       }
     }
 
-    @media (max-width: 320px) {
-      h1 {
+    h2 {
+      @media (max-width: 400px) {
         font-size: 1.4em;
       }
-
-      h2 {
+      @media (max-width: 360px) {
+        font-size: 1.2em;
+      }
+      @media (max-width: 320px) {
         font-size: 1em;
       }
     }
@@ -73,14 +68,7 @@ export const App = () => {
         <h1>transcript.fish</h1>
         <UnderConstructionBanner />
         <img className="nstaaf-logo" src="/images/logo.jpg" />
-        <ErrorBoundary
-          fallback={
-            <div style={{ textAlign: 'center' }}>
-              <h3>Something went wrong.</h3>
-              <div>Please reload page.</div>
-            </div>
-          }
-        >
+        <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
           <EpisodeSearch />
         </ErrorBoundary>
       </div>
