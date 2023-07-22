@@ -1,16 +1,7 @@
 import styled from 'styled-components';
 import { Fragment } from 'react';
 import type { Word } from './types';
-
-const formatTimestamp = (duration: number) => {
-  const minutes = Math.floor(duration / 60)
-    .toString()
-    .padStart(2, '0');
-  const seconds = Math.floor(duration % 60)
-    .toString()
-    .padStart(2, '0');
-  return `${minutes}:${seconds}`;
-};
+import { Timestamp } from './Timestamp';
 
 const makeKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
@@ -30,20 +21,6 @@ const StyledTd = styled.td`
     text-align: justify;
     margin: 0;
   }
-
-  .timestamp {
-    text-align: center;
-    margin: 1rem 0;
-    font-style: italic;
-
-    &::before {
-      content: '[';
-    }
-
-    &::after {
-      content: ']';
-    }
-  }
 `;
 
 export const EpisodeTranscriptCell = ({ words }: { words: Word[] }) => {
@@ -52,11 +29,7 @@ export const EpisodeTranscriptCell = ({ words }: { words: Word[] }) => {
       <div className="episode-words">
         {words.map((word, i) => (
           <Fragment key={`${i}-${word}`}>
-            {i > 0 && i % 200 === 0 && (
-              <h4 className="timestamp" aria-label="timestamp">
-                {formatTimestamp(word.startTime)}
-              </h4>
-            )}
+            {i > 0 && i % 200 === 0 && <Timestamp value={word.startTime} />}
             <span key={makeKey(word)}>{word.word}</span>
           </Fragment>
         ))}
