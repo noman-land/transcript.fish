@@ -53,3 +53,7 @@ h2,
 h3 {
   font-family: TTB, 'Courier New', Courier, monospace;
 }
+
+.text-center {
+  text-align: center;
+}
