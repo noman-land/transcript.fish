@@ -6,7 +6,7 @@ import { UnderConstructionBanner } from './UnderConstructionBanner';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  line-height: 1.15;
+  line-height: 1.1;
 
   & header {
     display: flex;
