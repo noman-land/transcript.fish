@@ -19,5 +19,5 @@ Unofficial No Such Thing As A Fish episode transcripts.
    - Run `npm run syncdb`
 4. Split database into chunks
    - Run `npm run splitdb`
-5. Update episode number query param in [/src/dbHooks.tsx](/src/dbHooks.tsx#L17) for cache busting purposes
+5. Update episode number query param in [dbHooks.tsx](/src/dbHooks.tsx#L17) for cache busting purposes
 6. Commit it all and PR new episode
