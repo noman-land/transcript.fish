@@ -10,11 +10,13 @@ const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
 const maxBytesToRead = 10 * 1024 * 1024;
 
+const CACHE_BUST_PARAM = '488b';
+
 const worker = await createDbWorker(
   [
     {
       from: 'jsonconfig',
-      configUrl: '/db/config.json?ep=488',
+      configUrl: `/db/config.json?ep=${CACHE_BUST_PARAM}`,
     },
   ],
   workerUrl.toString(),
