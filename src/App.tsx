@@ -6,18 +6,16 @@ import { UnderConstructionBanner } from './UnderConstructionBanner';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  line-height: 1.15;
 
   & header {
+    display: flex;
+    justify-content: end;
     padding: 32px 32px 0 32px;
   }
 
   & a {
     color: black;
-  }
-
-  header {
-    display: flex;
-    justify-content: end;
   }
 
   .app-body {
