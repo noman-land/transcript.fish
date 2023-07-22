@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { ErrorBoundary } from './ErrorBoundary';
 import { EpisodeSearch } from './EpisodesSearch';
+import { UnderConstructionBanner } from './UnderConstructionBanner';
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,22 +25,40 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
 
-    .under-construction-banner {
-      font-size: 0.8em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.5em;
-      text-align: center;
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 1.8em;
+      }
 
       h2 {
-        margin-left: 1vw;
-        margin-right: 1vw;
+        font-size: 1.4em;
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        font-size: 1.6em;
+      }
+
+      h2 {
+        font-size: 1.2em;
+      }
+    }
+
+    @media (max-width: 320px) {
+      h1 {
+        font-size: 1.4em;
+      }
+
+      h2 {
+        font-size: 1em;
       }
     }
 
     .nstaaf-logo {
       margin-bottom: 1.5em;
+      width: 80%;
+      max-width: 316px;
     }
   }
 `;
@@ -54,12 +73,8 @@ export const App = () => {
       </header>
       <div className="app-body">
         <h1>transcript.fish</h1>
-        <div className="under-construction-banner">
-          <img width={50} src="/images/construction-sign.gif" />
-          <h2>under construction</h2>
-          <img width={50} src="/images/construction-sign.gif" />
-        </div>
-        <img className="nstaaf-logo" width={316} src="/images/logo.jpg" />
+        <UnderConstructionBanner />
+        <img className="nstaaf-logo" src="/images/logo.jpg" />
         <ErrorBoundary>
           <EpisodeSearch />
         </ErrorBoundary>
