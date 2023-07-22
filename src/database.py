@@ -21,7 +21,7 @@ def make_episode_row(episode, word_count):
         episode_title, # title
         utils.get_audio_url(episode), # audio
         episode['link'], # link
-        episode['image']['href'], # image
+        utils.get_image_url(episode), # image
         int(episode['itunes_duration']), # duration
         episode['summary'], # description
         episode['published'], # pubDate
