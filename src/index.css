@@ -1,11 +1,32 @@
+@font-face {
+  font-family: TTB;
+  src: url(fonts/TT2020StyleB-Regular.woff2);
+  font-weight: bold;
+}
+@font-face {
+  font-family: TTB;
+  src: url(fonts/TT2020StyleB-Italic.woff2);
+  font-style: italic;
+}
+@font-face {
+  font-family: TTE;
+  src: url(fonts/TT2020StyleE-Regular.woff2);
+  font-style: normal;
+}
+@font-face {
+  font-family: TTE;
+  src: url(fonts/TT2020StyleE-Italic.woff2);
+  font-style: italic;
+}
+
+* {
+  font-display: block;
+}
+
 :root {
-  font-family: 'Courier New', Courier, monospace;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-
   background: #e8d22f;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -13,14 +34,22 @@
   -webkit-text-size-adjust: 100%;
 }
 
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
 body {
+  font-family: TTE;
+  font-size: 1.4em;
+  text-align: justify;
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
 }
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  text-align: center;
+h1,
+h2,
+h3 {
+  font-family: TTB;
 }

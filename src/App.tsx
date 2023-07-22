@@ -18,6 +18,29 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: end;
   }
+
+  .app-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .under-construction-banner {
+      font-size: 0.8em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5em;
+
+      h2 {
+        margin-left: 1vw;
+        margin-right: 1vw;
+      }
+    }
+
+    .nstaaf-logo {
+      margin-bottom: 1.5em;
+    }
+  }
 `;
 
 export const App = () => {
@@ -28,24 +51,14 @@ export const App = () => {
           <img width={32} src="/images/github-logo.png" />
         </a>
       </header>
-      <div>
+      <div className="app-body">
         <h1>transcript.fish</h1>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: 32,
-          }}
-        >
-          <img width={60} src="/images/construction-sign.gif" />
-          <h2 style={{ marginLeft: '1vw', marginRight: '1vw' }}>
-            under construction
-          </h2>
-          <img width={60} src="/images/construction-sign.gif" />
+        <div className="under-construction-banner">
+          <img width={50} src="/images/construction-sign.gif" />
+          <h2>under construction</h2>
+          <img width={50} src="/images/construction-sign.gif" />
         </div>
-
-        <img style={{ marginBottom: 32 }} width={316} src="/images/logo.jpg" />
+        <img className="nstaaf-logo" width={316} src="/images/logo.jpg" />
         <ErrorBoundary>
           <EpisodeSearch />
         </ErrorBoundary>
