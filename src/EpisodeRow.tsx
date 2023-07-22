@@ -87,6 +87,10 @@ const StyledTd = styled.td`
   .episode-description {
     text-align: justify;
 
+    a {
+      word-break: break-all;
+    }
+
     // Some descriptions end in <br> tags
     // which add unwanted line breaks
     & > :last-child > br:last-child {
