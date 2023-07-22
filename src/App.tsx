@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ErrorBoundary } from './ErrorBoundary';
+import { ErrorBoundary } from 'react-error-boundary';
 import { EpisodeSearch } from './EpisodesSearch';
 import { UnderConstructionBanner } from './UnderConstructionBanner';
 
@@ -73,7 +73,14 @@ export const App = () => {
         <h1>transcript.fish</h1>
         <UnderConstructionBanner />
         <img className="nstaaf-logo" src="/images/logo.jpg" />
-        <ErrorBoundary>
+        <ErrorBoundary
+          fallback={
+            <div style={{ textAlign: 'center' }}>
+              <h3>Something went wrong.</h3>
+              <div>Please reload page.</div>
+            </div>
+          }
+        >
           <EpisodeSearch />
         </ErrorBoundary>
       </div>
