@@ -24,7 +24,7 @@ const formatTimestamp = (duration: number) => {
   const seconds = Math.floor(duration % 60)
     .toString()
     .padStart(2, '0');
-  return `[${minutes}:${seconds}]`;
+  return `${minutes}:${seconds}`;
 };
 
 const makeKey = (w: Word) => {
@@ -69,7 +69,6 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
 
 const StyledTd = styled.td`
   cursor: pointer;
-  text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -81,15 +80,13 @@ const StyledTd = styled.td`
   }
 
   .episode-published-date {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    opacity: 0.5;
-    font-weight: 600;
-    margin-bottom: 16px;
+    font-style: italic;
+    margin-bottom: 1em;
   }
 
   .episode-description {
+    text-align: justify;
+
     // Some descriptions end in <br> tags
     // which add unwanted line breaks
     & > :last-child > br:last-child {
@@ -104,22 +101,29 @@ const StyledTd = styled.td`
   }
 
   .episode-duration {
-    opacity: 0.5;
     font-weight: 600;
-    margin-top: 16px;
+    font-style: italic;
+    margin-top: 1em;
   }
 
-  .episode-words {
-    margin-bottom: 0;
-  }
-
-  & + td {
-    text-align: left;
+  & + .episode-words-cell {
     padding: 0 3vw 4vw 3vw;
 
+    .episode-words {
+      text-align: justify;
+      margin-bottom: 0;
+    }
     .timestamp {
       margin: 1rem 0;
-      font-weight: 400;
+      font-style: italic;
+
+      &::before {
+        content: '[';
+      }
+
+      &::after {
+        content: ']';
+      }
     }
   }
 
@@ -166,11 +170,11 @@ export const EpisodeRow = ({
         <span className="episode-duration">{formatDuration(duration)}</span>
       </StyledTd>
       {isOpen && episodeWords && (
-        <td>
+        <td className="episode-words-cell">
           <p className="episode-words">
             {episodeWords.map((word, i) => (
               <>
-                {i > 0 && i % 500 === 0 && (
+                {i > 0 && i % 200 === 0 && (
                   // Timestamp every 500 words
                   <h4 className="timestamp" aria-label="timestamp">
                     {formatTimestamp(word.startTime)}

@@ -7,12 +7,14 @@ import { throttle } from 'throttle-debounce';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   input {
     border: 0;
+    font-family: TTE;
     opacity: 0.5;
     padding: 1rem;
-    font-size: 16px;
+    font-size: 1em;
 
     &:focus {
       outline: 2px solid #d2bb3d;
