@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 
   input {
     border: 0;
-    font-family: TTE;
+    font-family: TTE, 'Courier New', Courier, monospace;
     opacity: 0.5;
     padding: 1rem;
     font-size: 1em;
