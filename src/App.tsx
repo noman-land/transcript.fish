@@ -30,6 +30,7 @@ const Wrapper = styled.div`
       align-items: center;
       justify-content: center;
       margin-bottom: 1.5em;
+      text-align: center;
 
       h2 {
         margin-left: 1vw;
