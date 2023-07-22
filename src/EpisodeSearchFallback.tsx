@@ -1,4 +1,10 @@
 import { useCallback, useEffect } from 'react';
+import { styled } from 'styled-components';
+
+const StyledDiv = styled.div`
+  text-align: center;
+  margin: 0 6vw 6vw 6vw;
+`;
 
 export const EpisodeSearchFallback = ({ error }: { error: Error }) => {
   const reload = useCallback(() => {
@@ -10,11 +16,15 @@ export const EpisodeSearchFallback = ({ error }: { error: Error }) => {
   }, [error]);
 
   return (
-    <div className="text-center">
+    <StyledDiv>
       <h3>Something went wrong.</h3>
       <div>
-        Please <a onClick={reload}>reload page</a>.
+        Please{' '}
+        <a href="" onClick={reload}>
+          reload page
+        </a>
+        .
       </div>
-    </div>
+    </StyledDiv>
   );
 };
