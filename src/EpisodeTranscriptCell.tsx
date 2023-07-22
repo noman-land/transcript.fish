@@ -46,17 +46,11 @@ const StyledTd = styled.td`
   }
 `;
 
-interface EpisodeTranscriptCellProps {
-  episodeWords: Word[];
-}
-
-export const EpisodeTranscriptCell = ({
-  episodeWords,
-}: EpisodeTranscriptCellProps) => {
+export const EpisodeTranscriptCell = ({ words }: { words: Word[] }) => {
   return (
     <StyledTd>
       <div className="episode-words">
-        {episodeWords.map((word, i) => (
+        {words.map((word, i) => (
           <Fragment key={`${i}-${word}`}>
             {i > 0 && i % 200 === 0 && (
               <h4 className="timestamp" aria-label="timestamp">

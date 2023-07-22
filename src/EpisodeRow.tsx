@@ -68,9 +68,7 @@ export const EpisodeRow = ({
         pubDate={pubDate}
         duration={duration}
       />
-      {isOpen && episodeWords && (
-        <EpisodeTranscriptCell episodeWords={episodeWords} />
-      )}
+      {isOpen && episodeWords && <EpisodeTranscriptCell words={episodeWords} />}
     </TrWithBackground>
   );
 };
