@@ -24,5 +24,5 @@ def download_episode_image(episode):
         urllib.request.urlretrieve(image_url, image_path)
 
 def get_rss_episodes():
-    return feedparser.parse('https://audioboom.com/channels/2399216.rss')['entries']
+    return reversed(feedparser.parse('https://audioboom.com/channels/2399216.rss')['entries'])
 
