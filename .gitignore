@@ -1,9 +1,11 @@
-audio/
-__pycache__
+/audio/
 _audio/
 _data/
+__audio/
+__data/
 *.db
 *.db-journal
+__pycache__
 
 # Logs
 logs
