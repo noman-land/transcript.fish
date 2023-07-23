@@ -31,7 +31,7 @@ def insert_words(episode_num, words):
     cur = con.cursor()
     cur.executemany(f'INSERT INTO words VALUES (?, ?, ?, ?, {episode_num})', words)
 
-def insert_episode(episode, word_count):
+def upsert_episode(episode, word_count):
     episode_row = make_episode_row(episode, word_count)
     cur = con.cursor()
     cur.execute(f'INSERT INTO episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (wordCount) DO UPDATE SET wordCount = {word_count}', episode_row)
