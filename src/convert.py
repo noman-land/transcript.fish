@@ -3,7 +3,7 @@ import fetch
 import utils
 import whisper
 
-for episode in fetch.get_new_episodes():
+for episode in fetch.get_rss_episodes():
     fetch.download_episode_audio(episode)
     fetch.download_episode_image(episode)
     episode_num = utils.get_episode_num(episode)

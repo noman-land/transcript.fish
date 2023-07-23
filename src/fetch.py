@@ -1,5 +1,4 @@
 from pathlib import Path
-import database
 import feedparser
 import urllib.request
 import utils
@@ -27,11 +26,3 @@ def download_episode_image(episode):
 def get_rss_episodes():
     return feedparser.parse('https://audioboom.com/channels/2399216.rss')['entries']
 
-def get_new_episodes():
-    last_episode_num, pub_date = database.get_last_episode()
-    date = utils.format_pub_date(pub_date)
-    # Oldest first
-    rss_eps = reversed(get_rss_episodes())
-    new_eps = list(filter(lambda ep: utils.is_new_episode(ep, last_episode_num), rss_eps))
-    print(f'-- Found {len(new_eps)} new episodes since Episode {last_episode_num} from {date}.')
-    return new_eps
