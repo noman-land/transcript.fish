@@ -4,14 +4,6 @@ import utils
 
 con = sqlite3.connect('data/transcript.db')
 
-def get_last_episode():
-    cur = con.cursor()
-    result = cur.execute('SELECT episode, pubDate FROM episodes ORDER BY episode DESC LIMIT 1').fetchone()
-    if result:
-        return result
-    else:
-        return (0, None)
-    
 def make_episode_row(episode, word_count):
     # "   7: Episode Title" -> "Episode Title"
     # "2361: Episode Title" -> "Episode Title"
