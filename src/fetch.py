@@ -3,7 +3,6 @@ import database
 import feedparser
 import urllib.request
 import utils
-import os
 
 def download_episode_audio(episode):
     episode_num = utils.get_episode_num(episode)
@@ -18,9 +17,7 @@ def download_episode_audio(episode):
 def download_episode_image(episode):
     episode_num = utils.get_episode_num(episode)
     image_url = utils.get_image_url(episode)
-    # file extension includes dot at the beginning
-    file_extension = os.path.splitext(image_url)[1]
-    image_path = utils.make_image_file_path(episode_num, file_extension)
+    image_path = utils.make_image_file_path(episode_num, image_url)
     if Path(image_path).exists():
         utils.log(episode_num, 'Already downloaded image. Skipping.')
     else:
