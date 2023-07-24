@@ -14,6 +14,12 @@ def download_episode_audio(episode):
         utils.log(episode_num, f'Downloading audio at {audio_url}.')
         urllib.request.urlretrieve(audio_url, audio_path)
 
+opener = urllib.request.build_opener()
+opener.addheaders = [(
+    'User-Agent',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36'
+)]
+
 def download_episode_image(episode):
     episode_num = utils.get_episode_num(episode)
     image_url = utils.get_image_url(episode)
@@ -22,6 +28,7 @@ def download_episode_image(episode):
         utils.log(episode_num, 'Already downloaded image. Skipping.')
     else:
         utils.log(episode_num, f'Downloading image at {image_url}.')
+        urllib.request.install_opener(opener)
         urllib.request.urlretrieve(image_url, image_path)
 
 def get_rss_episodes():
