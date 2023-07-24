@@ -18,6 +18,9 @@ def make_image_file_path(episode_num, image_url):
 def get_episode_num(episode):
     return int(episode['itunes_episode'])
 
+def is_episode(episode):
+    return True if getattr(episode,'itunes_episode', None) else False
+
 def is_audio(media):
     return media['medium'] == 'audio'
 
