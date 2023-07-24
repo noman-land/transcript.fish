@@ -24,12 +24,18 @@ def get_transcription_segments(episode):
     return segments
 
 def transcribe(episode):
-    word_count = 0
     episode_num = utils.get_episode_num(episode)
+    saved_word_count = database.select_word_count(episode_num)
+    if saved_word_count > 0:
+        utils.log(episode_num, f'Already transcribed with {saved_word_count} words. Skipping.')
+        return
+
     utils.log(episode_num, 'Starting transcription.')
+    word_count = 0
     for segment in get_transcription_segments(episode):
         words = getattr(segment,'words', [])
         word_count += len(words)
         database.insert_words(episode_num, words)
     database.upsert_episode(episode, word_count)
+    database.commit()
     utils.log(episode_num, f'Transcription complete with {word_count} words.')
