@@ -36,6 +36,10 @@ def upsert_episode(episode, word_count):
     cur = con.cursor()
     cur.execute('INSERT INTO episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (episode) DO UPDATE SET wordCount = excluded.wordCount', episode_row)
 
+def vacuum():
+    cur = con.cursor()
+    cur.execute('VACUUM')
+
 def commit():
     con.commit()
 

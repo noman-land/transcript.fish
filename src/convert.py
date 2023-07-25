@@ -7,4 +7,5 @@ for episode in fetch.get_rss_episodes():
     fetch.download_episode_image(episode)
     whisper.transcribe(episode)
 
+database.vacuum()
 database.close()
