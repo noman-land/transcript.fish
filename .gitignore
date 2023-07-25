@@ -1,6 +1,7 @@
 /audio/
-/images/episodes
-/db/
+/images/
+/db/config.json
+/db/db.sqlite3.*
 /_data/
 
 # SQLite
