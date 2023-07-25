@@ -5,7 +5,7 @@
   "main": "src/main.tsx",
   "type": "module",
   "scripts": {
-    "convert": "python src/convert.py",
+    "convert": "python src/main.py",
     "convert:js": "npx ts-node --esm src/convert.ts",
     "dev": "vite",
     "build": "tsc && vite build",
@@ -15,9 +15,12 @@
     "prettier": "npx prettier --check .",
     "prettier:write": "npx prettier --write .",
     "prepare": "husky install",
-    "splitdb": "./create_db.sh ./data/transcript.db ./public/db",
-    "syncdb": "rclone sync -P ./data/transcript.db cf:transcript-fish/",
-    "getnew": "npm run convert && npm run splitdb && npm run syncdb"
+    "split:db": "./scripts/create_db.sh ./data/db/transcript.db ./public/db",
+    "sync:db": "rclone sync -P ./public/db cf:transcript-fish/db/",
+    "sync:audio": "rclone sync -P ./public/audio cf:transcript-fish/audio/",
+    "sync:images": "rclone sync -P ./public/images cf:transcript-fish/images/",
+    "sync": "npm run sync:db && npm run sync:images && npm run sync:audio",
+    "all": "npm run convert && npm run sync"
   },
   "author": "Noman",
   "license": "MIT",
@@ -29,7 +32,7 @@
     "throttle-debounce": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.4.2",
+    "@types/node": "^20.4.4",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@types/styled-components": "^5.1.26",
@@ -49,7 +52,7 @@
     "react-dom": "^18.2.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
-    "vite": "^4.4.4",
+    "vite": "^4.4.7",
     "vite-tsconfig-paths": "^4.2.0",
     "wrangler": "^3.2.0"
   },
