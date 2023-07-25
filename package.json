@@ -20,7 +20,7 @@
     "sync:audio": "rclone sync -P ./audio cf:transcript-fish/audio/",
     "sync:images": "rclone sync -P ./images cf:transcript-fish/images/",
     "sync": "npm run sync:db && npm run sync:images && npm run sync:audio",
-    "all": "npm run convert && npm run sync"
+    "all": "npm run convert && npm run split:db && npm run sync"
   },
   "author": "Noman",
   "license": "MIT",
