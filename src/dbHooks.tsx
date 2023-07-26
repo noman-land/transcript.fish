@@ -16,7 +16,7 @@ const worker = await createDbWorker(
   [
     {
       from: 'jsonconfig',
-      configUrl: `/db/config.json?ep=${CACHE_BUST_PARAM}`,
+      configUrl: `https://media.transcript.fish/db/config.json?ep=${CACHE_BUST_PARAM}`,
     },
   ],
   workerUrl.toString(),

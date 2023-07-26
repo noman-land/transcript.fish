@@ -29,7 +29,10 @@ const BannerWrapper = styled.div`
 `;
 
 const ConstructionSign = () => (
-  <img className="construction-sign" src="/images/construction-sign.gif" />
+  <img
+    className="construction-sign"
+    src="https://media.transcript.fish/images/construction-sign.gif"
+  />
 );
 
 export const UnderConstructionBanner = () => (
