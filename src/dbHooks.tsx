@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Episode, Word } from './types';
-import { selectEpisode, selectEpisodes } from './database';
+import { selectEpisodeWords, selectEpisodes } from './database';
 
 export const useDb = () => {
   const [episodes, setEpisodes] = useState<Episode[]>();
@@ -11,7 +11,7 @@ export const useDb = () => {
   }, []);
 
   const getEpisode = useCallback((episode: number) => {
-    selectEpisode({ episode }).then(setEpisodeWords);
+    selectEpisodeWords(episode).then(setEpisodeWords);
   }, []);
 
   return { episodes, episodeWords, getEpisode };

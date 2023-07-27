@@ -30,25 +30,16 @@ const selectEpisodesQuery = `
     episode, title, pubDate, image, description, duration 
   FROM 
     episodes 
-  WHERE
-    episode > ?
   ORDER BY 
     episode DESC
-  LIMIT ?
 `;
 
-type SelectEpisodes = (pagination?: {
-  episode?: number;
-  limit?: number;
-}) => Promise<Episode[]>;
+type SelectEpisodes = () => Promise<Episode[]>;
 
-export const selectEpisodes: SelectEpisodes = ({
-  episode = 0,
-  limit = 20,
-} = {}) => {
+export const selectEpisodes: SelectEpisodes = () => {
   return new Promise((resolve, reject) => {
     worker.db
-      .query(selectEpisodesQuery, [episode, limit])
+      .query(selectEpisodesQuery)
       .then(result => resolve(result as Episode[]), reject)
       .catch((err: Error) =>
         console.error(
@@ -66,27 +57,16 @@ const selectEpisodeQuery = `
     words 
   WHERE 
     episode = ? 
-  AND
-    startTime > ?
   ORDER BY 
     startTime
-  LIMIT ?
 `;
 
-type SelectEpisode = (pagination: {
-  episode: number;
-  startTime?: number;
-  limit?: number;
-}) => Promise<Word[]>;
+type SelectEpisode = (episode: number) => Promise<Word[]>;
 
-export const selectEpisode: SelectEpisode = ({
-  episode,
-  startTime = 0,
-  limit = 200,
-}) => {
+export const selectEpisodeWords: SelectEpisode = async (episode: number) => {
   return new Promise((resolve, reject) => {
     worker.db
-      .query(selectEpisodeQuery, [episode, startTime, limit])
+      .query(selectEpisodeQuery, [episode])
       .then(value => resolve(value as Word[]), reject)
       .catch((err: Error) =>
         console.error(

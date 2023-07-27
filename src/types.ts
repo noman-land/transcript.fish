@@ -5,6 +5,7 @@ export interface Episode {
   episode: number;
   title: string;
   pubDate: string;
+  wordCount: number;
 }
 
 export interface Word {
