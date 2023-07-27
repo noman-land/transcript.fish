@@ -2,7 +2,7 @@ import re
 import sqlite3
 import utils
 
-con = sqlite3.connect('data/transcript.db')
+con = sqlite3.connect('db/transcript.db')
 
 def make_episode_row(episode, word_count):
     # "   7: Episode Title" -> "Episode Title"

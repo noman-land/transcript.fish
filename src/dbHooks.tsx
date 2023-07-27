@@ -10,13 +10,13 @@ const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
 const maxBytesToRead = 10 * 1024 * 1024;
 
-const CACHE_BUST_PARAM = '488b';
+const CACHE_BUST_PARAM = '488c';
 
 const worker = await createDbWorker(
   [
     {
       from: 'jsonconfig',
-      configUrl: `/db/config.json?ep=${CACHE_BUST_PARAM}`,
+      configUrl: `https://media.transcript.fish/db/config.json?ep=${CACHE_BUST_PARAM}`,
     },
   ],
   workerUrl.toString(),
@@ -31,10 +31,10 @@ export const useDb = () => {
   useEffect(() => {
     worker.db
       .query(
-        'SELECT episode, title, pubDate, image, description, duration FROM episodes ORDER BY episode DESC'
+        'SELECT episode, title, pubDate, image, description, duration FROM episodes ORDER BY episode'
       )
       .then(
-        result => setEpisodes(result as Episode[]),
+        result => setEpisodes(result.reverse() as Episode[]),
         err => console.error('Error selecting from db:', err)
       )
       .catch((err: Error) =>

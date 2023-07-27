@@ -10,7 +10,7 @@
 //   path: string;
 // }
 
-// const db = new sqlite3.Database('data/transcript.db');
+// const db = new sqlite3.Database('db/transcript.db');
 
 // const dbAll = async <Result>(...params: Parameters<typeof db.all>) =>
 //   new Promise<Result[]>((resolve, reject) => {

@@ -1,10 +1,14 @@
 /audio/
-_audio/
-_data/
-__audio/
-__data/
+/images/
+/db/config.json
+/db/db.sqlite3.*
+/_data/
+
+# SQLite
 *.db
 *.db-journal
+
+# Python
 __pycache__
 
 # Logs
@@ -16,6 +20,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# npm/vite
 node_modules
 dist
 dist-ssr
