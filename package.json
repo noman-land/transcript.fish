@@ -15,7 +15,7 @@
     "prettier": "npx prettier --check .",
     "prettier:write": "npx prettier --write .",
     "prepare": "husky install",
-    "split:db": "./scripts/create_db.sh ./db/transcript.db ./db",
+    "split:db": "sqlite3 ./db/transcript.db 'VACUUM' && ./scripts/create_db.sh ./db/transcript.db ./db",
     "sync:db": "rclone sync -P ./db cf:transcript-fish/db/",
     "sync:audio": "rclone sync -P ./audio cf:transcript-fish/audio/",
     "sync:images": "rclone sync -P ./images cf:transcript-fish/images/",
