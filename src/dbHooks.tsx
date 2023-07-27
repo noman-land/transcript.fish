@@ -31,10 +31,10 @@ export const useDb = () => {
   useEffect(() => {
     worker.db
       .query(
-        'SELECT episode, title, pubDate, image, description, duration FROM episodes ORDER BY episode DESC'
+        'SELECT episode, title, pubDate, image, description, duration FROM episodes ORDER BY episode'
       )
       .then(
-        result => setEpisodes(result as Episode[]),
+        result => setEpisodes(result.reverse() as Episode[]),
         err => console.error('Error selecting from db:', err)
       )
       .catch((err: Error) =>
