@@ -23,19 +23,32 @@ const worker = await createDbWorker(
   maxBytesToRead // optional, defaults to Infinity
 );
 
+window.sql = worker.db.query;
+
 const selectEpisodesQuery = `
   SELECT 
     episode, title, pubDate, image, description, duration 
   FROM 
-    episodes   
+    episodes 
+  WHERE
+    episode > ?
   ORDER BY 
     episode DESC
+  LIMIT ?
 `;
 
-export const selectEpisodes = (): Promise<Episode[]> => {
+type SelectEpisodes = (pagination?: {
+  episode?: number;
+  limit?: number;
+}) => Promise<Episode[]>;
+
+export const selectEpisodes: SelectEpisodes = ({
+  episode = 0,
+  limit = 20,
+} = {}) => {
   return new Promise((resolve, reject) => {
     worker.db
-      .query(selectEpisodesQuery)
+      .query(selectEpisodesQuery, [episode, limit])
       .then(result => resolve(result as Episode[]), reject)
       .catch((err: Error) =>
         console.error(
@@ -53,14 +66,27 @@ const selectEpisodeQuery = `
     words 
   WHERE 
     episode = ? 
+  AND
+    startTime > ?
   ORDER BY 
     startTime
+  LIMIT ?
 `;
 
-export const selectEpisode = (episode: number): Promise<Word[]> => {
+type SelectEpisode = (pagination: {
+  episode: number;
+  startTime?: number;
+  limit?: number;
+}) => Promise<Word[]>;
+
+export const selectEpisode: SelectEpisode = ({
+  episode,
+  startTime = 0,
+  limit = 200,
+}) => {
   return new Promise((resolve, reject) => {
     worker.db
-      .query(selectEpisodeQuery, [episode])
+      .query(selectEpisodeQuery, [episode, startTime, limit])
       .then(value => resolve(value as Word[]), reject)
       .catch((err: Error) =>
         console.error(

@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { useCallback, useState } from 'react';
 import { useDb } from './dbHooks';
-import { Episode } from './types';
+import { Episode, Word } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
+import { selectEpisode, selectEpisodes } from './database';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
   background-color: ${({ $isOpen }) => $isOpen && '#fff189'};
@@ -54,15 +55,15 @@ export const EpisodeRow = ({
   episode: Episode;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { episodeWords, getEpisode } = useDb();
+  const [episodeWords, setEpisodeWords] = useState<Word[]>();
 
   const handleClick = useCallback(() => {
     if (!episodeWords) {
-      getEpisode(episode);
+      selectEpisode({ episode }).then(setEpisodeWords);
     }
 
     setIsOpen(open => !open);
-  }, [episode, episodeWords, getEpisode]);
+  }, [episode, episodeWords]);
 
   return (
     <TrWithBackground

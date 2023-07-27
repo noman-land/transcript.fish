@@ -11,7 +11,7 @@ export const useDb = () => {
   }, []);
 
   const getEpisode = useCallback((episode: number) => {
-    selectEpisode(episode).then(setEpisodeWords);
+    selectEpisode({ episode }).then(setEpisodeWords);
   }, []);
 
   return { episodes, episodeWords, getEpisode };
