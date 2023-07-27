@@ -19,6 +19,7 @@
     "sync:db": "rclone sync -P ./db cf:transcript-fish/db/",
     "sync:audio": "rclone sync -P ./audio cf:transcript-fish/audio/",
     "sync:images": "rclone sync -P ./images cf:transcript-fish/images/",
+    "sync:fonts": "rclone sync -P ./fonts cf:transcript-fish/fonts/",
     "sync": "npm run sync:db && npm run sync:images && npm run sync:audio",
     "all": "npm run convert && npm run split:db && npm run sync"
   },

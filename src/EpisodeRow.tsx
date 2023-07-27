@@ -41,6 +41,13 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
   }
 `;
 
+const makeImageUrl = (episode: number, imageUrl: string) => {
+  const extension = imageUrl.split('.').pop();
+  return extension
+    ? `https://media.transcript.fish/images/episodes/${episode}.${extension}`
+    : '';
+};
+
 export const EpisodeRow = ({
   episode: { image, episode, title, description, pubDate, duration },
 }: {
@@ -58,7 +65,11 @@ export const EpisodeRow = ({
   }, [episode, episodeWords, getEpisode]);
 
   return (
-    <TrWithBackground $isOpen={isOpen} $image={image} key={episode}>
+    <TrWithBackground
+      $isOpen={isOpen}
+      $image={makeImageUrl(episode, image)}
+      key={episode}
+    >
       <EpisodeSummaryCell
         isOpen={isOpen}
         onClick={handleClick}
