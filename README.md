@@ -50,8 +50,10 @@ Unofficial No Such Thing As A Fish episode transcripts.
 
    - Run `npm run split:db`
 
-4. (Optional) Sync database, audio, and images to (Cloudflare) R2. Needs [`rclone`](https://rclone.org/) installed.
+4. (Optional) Sync database, audio, images, and fonts to (Cloudflare) R2. Needs [`rclone`](https://rclone.org/) installed.
 
    - Run `npm run sync`
 
 5. Update episode number query param in [dbHooks.tsx](/src/dbHooks.tsx#L19) for cache busting purposes
+
+   **TODO:** Automate this
