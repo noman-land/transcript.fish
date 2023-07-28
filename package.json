@@ -21,7 +21,8 @@
     "sync:audio": "rclone sync -P ./audio cf:transcript-fish/audio/",
     "sync:images": "rclone sync -P ./images cf:transcript-fish/images/",
     "sync:fonts": "rclone sync -P ./fonts cf:transcript-fish/fonts/",
-    "sync": "npm run sync:db && npm run sync:images && npm run sync:audio && npm run sync:fonts",
+    "sync:libs": "rclone sync -P ./node_modules/sql.js-httpvfs/dist cf:transcript-fish/libs/sql/",
+    "sync": "npm run sync:db && npm run sync:images && npm run sync:audio && npm run sync:fonts && npm run sync:libs",
     "all": "npm run convert && npm run split:db && npm run sync"
   },
   "author": "Noman",

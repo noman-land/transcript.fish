@@ -2,12 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { createDbWorker } from 'sql.js-httpvfs';
 import { Episode, Word } from './types';
 
-const workerUrl = new URL(
-  'sql.js-httpvfs/dist/sqlite.worker.js',
-  import.meta.url
-);
-const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
-
 const maxBytesToRead = 10 * 1024 * 1024;
 
 const response = await fetch('https://media.transcript.fish/db/latest.json');
@@ -20,8 +14,8 @@ const worker = await createDbWorker(
       configUrl: `https://media.transcript.fish/db/${latest}/config.json`,
     },
   ],
-  workerUrl.toString(),
-  wasmUrl.toString(),
+  'https://media.transcript.fish/libs/sql/sqlite.worker.js',
+  'https://media.transcript.fish/libs/sql/sql-wasm.wasm',
   maxBytesToRead // optional, defaults to Infinity
 );
 
