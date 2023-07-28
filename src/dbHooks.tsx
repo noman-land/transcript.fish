@@ -10,13 +10,14 @@ const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
 const maxBytesToRead = 10 * 1024 * 1024;
 
-const CACHE_BUST_PARAM = '489';
+const response = await fetch('https://media.transcript.fish/db/latest.json');
+const { latest } = await response.json();
 
 const worker = await createDbWorker(
   [
     {
       from: 'jsonconfig',
-      configUrl: `https://media.transcript.fish/db/config.json?ep=${CACHE_BUST_PARAM}`,
+      configUrl: `https://media.transcript.fish/db/${latest}/config.json`,
     },
   ],
   workerUrl.toString(),
