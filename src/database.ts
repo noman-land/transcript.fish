@@ -32,7 +32,7 @@ const selectEpisodesQuery = `
   FROM 
     episodes 
   ORDER BY 
-    episode DESC
+    episode
 `;
 
 type SelectEpisodes = () => Promise<Episode[]>;
@@ -41,7 +41,7 @@ export const selectEpisodes: SelectEpisodes = () => {
   return new Promise((resolve, reject) => {
     worker.db
       .query(selectEpisodesQuery)
-      .then(result => resolve(result as Episode[]), reject)
+      .then(result => resolve(result.reverse() as Episode[]), reject)
       .catch((err: Error) =>
         console.error(
           'Something unexpected happened while getting episodes from database.',
