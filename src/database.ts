@@ -24,8 +24,6 @@ const worker = await createDbWorker(
   maxBytesToRead // optional, defaults to Infinity
 );
 
-window.sql = worker.db.query;
-
 const selectEpisodesQuery = `
   SELECT 
     episode, title, pubDate, image, description, duration 
