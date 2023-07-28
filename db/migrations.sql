@@ -12,6 +12,8 @@ CREATE TABLE "episodes" (
   PRIMARY KEY("episode")
 );
 
+CREATE INDEX "episodes_index" ON "episodes"("episode");
+
 CREATE TABLE "words" (
   "startTime" NUMERIC NOT NULL,
   "endTime" NUMERIC NOT NULL,
@@ -20,3 +22,5 @@ CREATE TABLE "words" (
   "episode" INTEGER NOT NULL,
   FOREIGN KEY("episode") REFERENCES "episodes"("episode")
 );
+
+CREATE INDEX "words_index" ON "words" ("episode", "startTime", "endTime", "word");
