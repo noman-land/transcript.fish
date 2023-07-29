@@ -28,7 +28,7 @@ def transcribe(episode):
     saved_word_count = database.select_word_count(episode_num)
     if saved_word_count > 0:
         utils.log(episode_num, f'Already transcribed with {saved_word_count} words. Skipping.')
-        return
+        return 0
 
     utils.log(episode_num, 'Starting transcription.')
     word_count = 0
@@ -39,3 +39,4 @@ def transcribe(episode):
     database.upsert_episode(episode, word_count)
     database.commit()
     utils.log(episode_num, f'Transcription complete with {word_count} words.')
+    return 1
