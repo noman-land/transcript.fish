@@ -55,6 +55,8 @@ export const EpisodeSearch = () => {
     );
   });
 
+  const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
+
   return (
     <Wrapper>
       <input
@@ -63,11 +65,9 @@ export const EpisodeSearch = () => {
         onInput={handleSearch}
       />
       <EpisodesTable episodes={filteredEpisodes} page={page} />
-      <Paginator
-        page={page}
-        totalPages={Math.ceil(filteredEpisodes.length / PAGE_SIZE)}
-        onPageChange={setPage}
-      />
+      {totalPages > 1 && (
+        <Paginator page={page} totalPages={totalPages} onPageChange={setPage} />
+      )}
     </Wrapper>
   );
 };

@@ -130,6 +130,8 @@ export const Paginator = ({
     onPageChange(totalPages - 1);
   }, [onPageChange, totalPages]);
 
+  const value = typeof localValue === 'number' ? localValue + 1 : '';
+
   return (
     <StyledPaginator>
       <Button name="first-page" disabled={isFirstPage} onClick={handleFirst}>
@@ -147,7 +149,7 @@ export const Paginator = ({
             onChange={handleChange}
             className="page-number"
             onKeyDown={handleKeyDown}
-            value={typeof localValue === 'number' ? localValue + 1 : ''}
+            value={value}
           />
         </form>
         of <span>{totalPages}</span>
