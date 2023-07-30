@@ -65,7 +65,7 @@ export const EpisodeSearch = () => {
       <EpisodesTable episodes={filteredEpisodes} page={page} />
       <Paginator
         page={page}
-        totalPages={Math.ceil(episodes.length / PAGE_SIZE)}
+        totalPages={Math.ceil(filteredEpisodes.length / PAGE_SIZE)}
         onPageChange={setPage}
       />
     </Wrapper>

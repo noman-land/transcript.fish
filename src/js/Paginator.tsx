@@ -4,6 +4,7 @@ import {
   FormEventHandler,
   KeyboardEventHandler,
   useCallback,
+  useEffect,
   useState,
 } from 'react';
 import { styled } from 'styled-components';
@@ -68,9 +69,14 @@ export const Paginator = ({
   totalPages,
   onPageChange,
 }: PaginatorProps) => {
-  const [value, setValue] = useState<number | ''>(page);
+  const [localValue, setLocalValue] = useState<number | ''>(page);
   const isFirstPage = page === 0;
   const isLastPage = page === totalPages - 1;
+
+  // Mirror external value to internal one.
+  // This allows independent control of the
+  // internal value for validation purposes
+  useEffect(() => setLocalValue(page), [page]);
 
   const handleFocus: FocusEventHandler<HTMLInputElement> = useCallback(
     e => e.target.select(),
@@ -78,22 +84,21 @@ export const Paginator = ({
   );
 
   const handleBlur = useCallback(() => {
-    if (value === '') {
-      setValue(page);
+    if (localValue === '') {
+      setLocalValue(page);
     } else {
-      onPageChange(value);
-      setValue(value);
+      onPageChange(localValue);
     }
-  }, [value, page, onPageChange]);
+  }, [localValue, page, onPageChange]);
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     e => {
       if (e.target.value === '') {
-        return setValue('');
+        return setLocalValue('');
       }
       const number = Number(e.target.value);
       if (number > 0 && number <= totalPages) {
-        setValue(number - 1);
+        setLocalValue(number - 1);
       }
     },
     [totalPages]
@@ -115,7 +120,6 @@ export const Paginator = ({
         name="first-page-button"
         disabled={isFirstPage}
         onClick={() => {
-          setValue(0);
           onPageChange(0);
         }}
       >
@@ -125,7 +129,6 @@ export const Paginator = ({
         name="previous-page-button"
         disabled={isFirstPage}
         onClick={() => {
-          setValue(page - 1);
           onPageChange(page - 1);
         }}
       >
@@ -140,7 +143,7 @@ export const Paginator = ({
             onChange={handleChange}
             className="page-number"
             onKeyDown={handleKeyDown}
-            value={typeof value === 'number' ? value + 1 : ''}
+            value={typeof localValue === 'number' ? localValue + 1 : ''}
           />
         </form>
         of <span>{totalPages}</span>
@@ -149,7 +152,6 @@ export const Paginator = ({
         name="next-page-button"
         disabled={isLastPage}
         onClick={() => {
-          setValue(page + 1);
           onPageChange(page + 1);
         }}
       >
@@ -159,7 +161,6 @@ export const Paginator = ({
         name="last-page-button"
         disabled={isLastPage}
         onClick={() => {
-          setValue(totalPages - 1);
           onPageChange(totalPages - 1);
         }}
       >
