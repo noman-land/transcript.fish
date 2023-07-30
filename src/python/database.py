@@ -8,7 +8,7 @@ def recreate_fts_table():
     cur = con.cursor()
     cur.execute('DROP TABLE IF EXISTS fts_words')
     cur.execute('CREATE VIRTUAL TABLE fts_words USING fts5(episode, words)')
-    cur.execute('INSERT INTO fts_words (episode, words) SELECT episode, GROUP_CONCAT(word) AS words FROM words GROUP BY episode')
+    cur.execute('INSERT INTO fts_words (episode, words) SELECT episode, GROUP_CONCAT(word, "") AS words FROM words GROUP BY episode')
     con.commit()
 
 def make_episode_row(episode, word_count):

@@ -10,8 +10,6 @@ const workerUrl = new URL(
 );
 const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
-const maxBytesToRead = 10 * 1024 * 1024;
-
 const worker = await createDbWorker(
   [
     {
@@ -20,16 +18,15 @@ const worker = await createDbWorker(
     },
   ],
   workerUrl.toString(),
-  wasmUrl.toString(),
-  maxBytesToRead // optional, defaults to Infinity
+  wasmUrl.toString()
 );
 
 const selectEpisodesQuery = `
-  SELECT 
-    episode, title, pubDate, image, description, duration 
-  FROM 
-    episodes 
-  ORDER BY 
+  SELECT
+    episode, title, pubDate, image, description, duration
+  FROM
+    episodes
+  ORDER BY
     episode
 `;
 
