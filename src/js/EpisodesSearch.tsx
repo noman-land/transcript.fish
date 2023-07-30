@@ -4,13 +4,14 @@ import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { throttle } from 'throttle-debounce';
 import { PAGE_SIZE } from './constants';
+import { Paginator } from './Paginator';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
 
-  input {
+  .search-bar {
     border: 0;
     font-family: TTE, 'Courier New', Courier, monospace;
     opacity: 0.5;
@@ -21,35 +22,12 @@ const Wrapper = styled.div`
       outline: 2px solid #d2bb3d;
     }
   }
-
-  .button-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 0;
-
-    .page-numbers {
-      padding: 1rem 2rem;
-    }
-
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: TTE, 'Courier New', Courier, monospace;
-      font-size: 1em;
-      padding: 1rem 2rem;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
 `;
 
 export const EpisodeSearch = () => {
   const { episodes } = useDb();
-  const [search, setSearch] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
@@ -77,21 +55,19 @@ export const EpisodeSearch = () => {
     );
   });
 
-  const totalPages = Math.ceil(episodes.length / PAGE_SIZE);
-
   return (
     <Wrapper>
-      <input placeholder="Search" onInput={handleSearch} />
+      <input
+        className="search-bar"
+        placeholder="Search"
+        onInput={handleSearch}
+      />
       <EpisodesTable episodes={filteredEpisodes} page={page} />
-      <div className="button-wrapper">
-        {page > 0 && <button onClick={prevPage}>{'< Prev'}</button>}
-        <span className="page-numbers">
-          page <span>{page + 1}</span> of <span>{totalPages}</span>
-        </span>
-        {page < totalPages - 1 && (
-          <button onClick={nextPage}>{'Next >'}</button>
-        )}
-      </div>
+      <Paginator
+        page={page}
+        totalPages={Math.ceil(episodes.length / PAGE_SIZE)}
+        onPageChange={setPage}
+      />
     </Wrapper>
   );
 };
