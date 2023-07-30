@@ -34,7 +34,7 @@ const StyledPaginator = styled.div`
   }
 `;
 
-const StyledButton = styled.button`
+const Button = styled.button`
   background: none;
   border: none;
   font-family: TTE, 'Courier New', Courier, monospace;
@@ -114,26 +114,30 @@ export const Paginator = ({
     [handleBlur]
   );
 
+  const handleFirst = useCallback(() => {
+    onPageChange(0);
+  }, [onPageChange]);
+
+  const handlePrev = useCallback(() => {
+    onPageChange(page - 1);
+  }, [onPageChange, page]);
+
+  const handleNext = useCallback(() => {
+    onPageChange(page + 1);
+  }, [onPageChange, page]);
+
+  const handleLast = useCallback(() => {
+    onPageChange(totalPages - 1);
+  }, [onPageChange, totalPages]);
+
   return (
     <StyledPaginator>
-      <StyledButton
-        name="first-page-button"
-        disabled={isFirstPage}
-        onClick={() => {
-          onPageChange(0);
-        }}
-      >
+      <Button name="first-page" disabled={isFirstPage} onClick={handleFirst}>
         {'<<'}
-      </StyledButton>
-      <StyledButton
-        name="previous-page-button"
-        disabled={isFirstPage}
-        onClick={() => {
-          onPageChange(page - 1);
-        }}
-      >
+      </Button>
+      <Button name="previous-page" disabled={isFirstPage} onClick={handlePrev}>
         {'<'}
-      </StyledButton>
+      </Button>
       <span className="page-numbers">
         page
         <form style={{ display: 'inline' }} onSubmit={preventDefault}>
@@ -148,24 +152,12 @@ export const Paginator = ({
         </form>
         of <span>{totalPages}</span>
       </span>
-      <StyledButton
-        name="next-page-button"
-        disabled={isLastPage}
-        onClick={() => {
-          onPageChange(page + 1);
-        }}
-      >
+      <Button name="next-page" disabled={isLastPage} onClick={handleNext}>
         {'>'}
-      </StyledButton>
-      <StyledButton
-        name="last-page-button"
-        disabled={isLastPage}
-        onClick={() => {
-          onPageChange(totalPages - 1);
-        }}
-      >
+      </Button>
+      <Button name="last-page" disabled={isLastPage} onClick={handleLast}>
         {'>>'}
-      </StyledButton>
+      </Button>
     </StyledPaginator>
   );
 };
