@@ -20,7 +20,7 @@ const StyledPaginator = styled.div`
     text-align: center;
     min-width: 150px;
 
-    @media (max-width: 380px) {
+    @media (max-width: 360px) {
       padding: 0;
     }
   }
@@ -42,7 +42,7 @@ const Button = styled.button`
   background: none;
   border: none;
   font-family: TTE, 'Courier New', Courier, monospace;
-  font-size: 1em;
+  font-size: 1.2em;
   min-width: 50px;
   max-width: 50px;
   padding: 1rem 0;
@@ -51,17 +51,13 @@ const Button = styled.button`
     min-width: 40px;
     max-width: 40px;
   }
-  @media (max-width: 350px) {
-    min-width: 35px;
-    max-width: 35px;
+  @media (max-width: 340px) {
+    min-width: 36px;
+    max-width: 36px;
   }
-  @media (max-width: 325px) {
-    min-width: 30px;
-    max-width: 30px;
-  }
-  @media (max-width: 300px) {
-    min-width: 25px;
-    max-width: 25px;
+  @media (max-width: 320px) {
+    min-width: 32px;
+    max-width: 32px;
   }
 
   ${({ disabled }) =>
