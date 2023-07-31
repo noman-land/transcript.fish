@@ -4,6 +4,13 @@ import utils
 
 con = sqlite3.connect('db/transcript.db')
 
+def recreate_fts_table():
+    cur = con.cursor()
+    cur.execute('DROP TABLE IF EXISTS fts_words')
+    cur.execute('CREATE VIRTUAL TABLE fts_words USING fts5(episode, words)')
+    cur.execute('INSERT INTO fts_words (episode, words) SELECT episode, GROUP_CONCAT(word, "") AS words FROM words GROUP BY episode')
+    con.commit()
+
 def make_episode_row(episode, word_count):
     # "   7: Episode Title" -> "Episode Title"
     # "2361: Episode Title" -> "Episode Title"
@@ -35,6 +42,12 @@ def upsert_episode(episode, word_count):
     episode_row = make_episode_row(episode, word_count)
     cur = con.cursor()
     cur.execute('INSERT INTO episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (episode) DO UPDATE SET wordCount = excluded.wordCount', episode_row)
+
+def vacuum():
+    cur = con.cursor()
+    cur.execute('VACUUM')
+    con.commit()
+    print('Database vacuumed.')
 
 def commit():
     con.commit()

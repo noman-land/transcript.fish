@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { useCallback, useState } from 'react';
-import { useDb } from './dbHooks';
 import { Episode } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
+import { useDb } from './dbHooks';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
   background-color: ${({ $isOpen }) => $isOpen && '#fff189'};
@@ -48,11 +48,13 @@ const makeImageUrl = (episode: number, imageUrl: string) => {
     : '';
 };
 
+interface EpisodeRowProps {
+  episode: Episode;
+}
+
 export const EpisodeRow = ({
   episode: { image, episode, title, description, pubDate, duration },
-}: {
-  episode: Episode;
-}) => {
+}: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { episodeWords, getEpisode } = useDb();
 

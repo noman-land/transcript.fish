@@ -44,16 +44,16 @@ Unofficial No Such Thing As A Fish episode transcripts.
 
      The other good news is you can kill the script (`Ctrl + C`) and restart it at any time and it will pick back up after the last fully transcribed episode.
 
-     **NOTE:** This script also [downloads](/src/convert.py#L7-L8) all the audio files for the episodes as well as each episode's album art. As of 25 July 2023 this amounts to 487 episodes, ~20GB audio, ~130MB images.
+     **NOTE:** This script also [downloads](/src/python/convert.py#L7-L8) all the audio files for the episodes as well as each episode's album art. As of 25 July 2023 this amounts to 487 episodes, ~20GB audio, ~130MB images.
 
 3. Split database into chunks
 
    - Run `npm run split:db`
 
-4. (Optional) Sync database, audio, images, and fonts to (Cloudflare) R2. Needs [`rclone`](https://rclone.org/) installed.
+4. (Optional) Sync database, audio, images, and fonts to (Cloudflare) R2. Needs [`rclone`](https://rclone.org/) and [`jq`](https://jqlang.github.io/jq/) installed.
 
    - Run `npm run sync`
 
-5. Update episode number query param in [dbHooks.tsx](/src/dbHooks.tsx#L19) for cache busting purposes
+5. Update episode number query param in [dbHooks.tsx](/src/js/dbHooks.tsx#L19) for cache busting purposes
 
    **TODO:** Automate this

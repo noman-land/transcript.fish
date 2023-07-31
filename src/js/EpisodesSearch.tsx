@@ -3,13 +3,15 @@ import { FormEvent, useCallback, useState } from 'react';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { throttle } from 'throttle-debounce';
+import { PAGE_SIZE } from './constants';
+import { Paginator } from './Paginator';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
 
-  input {
+  .search-bar {
     border: 0;
     font-family: TTE, 'Courier New', Courier, monospace;
     opacity: 0.5;
@@ -24,14 +26,16 @@ const Wrapper = styled.div`
 
 export const EpisodeSearch = () => {
   const { episodes } = useDb();
-  const [search, setSearch] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
     throttle(
       100,
       ({ target }: FormEvent) => {
-        setSearch((target as HTMLInputElement).value);
+        setSearchTerm((target as HTMLInputElement).value);
+        setPage(0);
       },
       { noLeading: true }
     ),
@@ -43,7 +47,7 @@ export const EpisodeSearch = () => {
   }
 
   const filteredEpisodes = episodes.filter(ep => {
-    const lowercaseSearch = search.toLocaleLowerCase();
+    const lowercaseSearch = searchTerm.toLocaleLowerCase();
     return (
       ep.title.toLocaleLowerCase().includes(lowercaseSearch) ||
       ep.description.toLocaleLowerCase().includes(lowercaseSearch) ||
@@ -51,10 +55,21 @@ export const EpisodeSearch = () => {
     );
   });
 
+  const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
+
   return (
     <Wrapper>
-      <input placeholder="Search" onInput={handleSearch} />
-      <EpisodesTable episodes={filteredEpisodes} />
+      <input
+        className="search-bar"
+        placeholder="Search"
+        onInput={handleSearch}
+      />
+      <EpisodesTable episodes={filteredEpisodes} page={page} />
+      {totalPages > 1 ? (
+        <Paginator page={page} totalPages={totalPages} onPageChange={setPage} />
+      ) : (
+        <div style={{ height: 116.2 }} />
+      )}
     </Wrapper>
   );
 };
