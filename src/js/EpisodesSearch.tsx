@@ -27,17 +27,19 @@ const Wrapper = styled.div`
 `;
 
 const searchFns: SearchFunctions = {
-  episode: (ep, searchTerm) => String(ep.episode).includes(searchTerm),
-  title: (ep, searchTerm) => ep.title.toLocaleLowerCase().includes(searchTerm),
+  episode: (ep, searchTerm) =>
+    String(ep.episode).includes(searchTerm.toLowerCase()),
+  title: (ep, searchTerm) =>
+    ep.title.toLocaleLowerCase().includes(searchTerm.toLowerCase()),
   description: (ep, searchTerm) =>
-    ep.description.toLocaleLowerCase().includes(searchTerm),
+    ep.description.toLocaleLowerCase().includes(searchTerm.toLowerCase()),
 };
 
 export const EpisodeSearch = () => {
   const { episodes } = useDb();
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
-  const [filters, setFilters] = useState<FiltersState>({
+  const [selectedFilters, setFilters] = useState<FiltersState>({
     episode: true,
     title: true,
     description: true,
@@ -70,17 +72,10 @@ export const EpisodeSearch = () => {
     return null;
   }
 
-  const filteredEpisodes = episodes.filter(ep => {
-    const lowercaseSearch = searchTerm.toLocaleLowerCase();
-    return (
-      Object.entries(searchFns)
-        // Filter only by selected filters
-        .filter(([field]) => filters[field as SearchField])
-        .some(([field]) => {
-          const fn = searchFns[field as SearchField];
-          return fn(ep, lowercaseSearch);
-        })
-    );
+  const filteredEpisodes = episodes.filter(episode => {
+    return Object.entries(searchFns)
+      .filter(([name]) => selectedFilters[name as SearchField])
+      .some(([, search]) => search(episode, searchTerm));
   });
 
   const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
@@ -92,7 +87,7 @@ export const EpisodeSearch = () => {
         placeholder="Search"
         onInput={handleSearch}
       />
-      <FilterBar filters={filters} onToggle={handleFilterToggle} />
+      <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
       <EpisodesTable episodes={filteredEpisodes} page={page} />
       {totalPages > 1 ? (
         <Paginator page={page} totalPages={totalPages} onPageChange={setPage} />
