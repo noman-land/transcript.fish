@@ -5,6 +5,8 @@ import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
 import { Paginator } from './Paginator';
+import { SearchFunctions, FiltersState, SearchField } from './types';
+import { FilterBar } from './FilterBar';
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,105 +26,18 @@ const Wrapper = styled.div`
   }
 `;
 
-type Field = 'episode' | 'title' | 'description';
-
-type Filters = {
-  [k in Field]: boolean;
-};
-
-const StyledFilterBar = styled.div`
-  display: flex;
-  padding: 1rem 2vw;
-  align-items: center;
-
-  @media (max-width: 1280px) {
-    padding: 1rem 3vw;
-  }
-  @media (max-width: 900px) {
-    padding: 1rem 4.5vw;
-  }
-  @media (max-width: 650px) {
-    padding: 1rem 6vw;
-    flex-direction: column;
-    align-items: start;
-  }
-
-  .filters-label {
-    font-style: bold;
-    margin-right: 1.4rem;
-
-    @media (max-width: 650px) {
-      margin-right: 0;
-      margin-bottom: 0.6rem;
-    }
-  }
-
-  .filters {
-    display: flex;
-    align-items: center;
-
-    @media (max-width: 420px) {
-      flex-direction: column;
-      align-items: start;
-    }
-
-    label {
-      margin-right: 1.6rem;
-      display: flex;
-      align-items: center;
-
-      @media (max-width: 420px) {
-        margin-right: 0;
-      }
-    }
-
-    input {
-      margin-left: 0;
-      margin-right: 0.3rem;
-      height: 1.2rem;
-      width: 1.2rem;
-    }
-  }
-`;
-
-interface FilterBarProps {
-  filters: Filters;
-  onToggle: (args: { name: string; checked: boolean }) => void;
-}
-
-const FilterBar = ({ filters, onToggle }: FilterBarProps) => {
-  const handleToggle = useCallback(
-    ({ target: { name, checked } }: { target: HTMLInputElement }) => {
-      onToggle({ name, checked });
-    },
-    [onToggle]
-  );
-
-  return (
-    <StyledFilterBar>
-      <span className="filters-label bold">Search filters:</span>
-      <div className="filters">
-        {Object.entries(filters).map(([name, checked]) => (
-          <label key={name}>
-            <input
-              onChange={handleToggle}
-              type="checkbox"
-              name={name}
-              checked={checked}
-            />
-            {name}
-          </label>
-        ))}
-      </div>
-    </StyledFilterBar>
-  );
+const searchFns: SearchFunctions = {
+  episode: (ep, searchTerm) => String(ep.episode).includes(searchTerm),
+  title: (ep, searchTerm) => ep.title.toLocaleLowerCase().includes(searchTerm),
+  description: (ep, searchTerm) =>
+    ep.description.toLocaleLowerCase().includes(searchTerm),
 };
 
 export const EpisodeSearch = () => {
   const { episodes } = useDb();
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FiltersState>({
     episode: true,
     title: true,
     description: true,
@@ -158,9 +73,13 @@ export const EpisodeSearch = () => {
   const filteredEpisodes = episodes.filter(ep => {
     const lowercaseSearch = searchTerm.toLocaleLowerCase();
     return (
-      ep.title.toLocaleLowerCase().includes(lowercaseSearch) ||
-      ep.description.toLocaleLowerCase().includes(lowercaseSearch) ||
-      String(ep.episode).includes(lowercaseSearch)
+      Object.entries(searchFns)
+        // Filter only by selected filters
+        .filter(([field]) => filters[field as SearchField])
+        .some(([field]) => {
+          const fn = searchFns[field as SearchField];
+          return fn(ep, lowercaseSearch);
+        })
     );
   });
 
