@@ -65,8 +65,10 @@ export const EpisodeSearch = () => {
         onInput={handleSearch}
       />
       <EpisodesTable episodes={filteredEpisodes} page={page} />
-      {totalPages > 1 && (
+      {totalPages > 1 ? (
         <Paginator page={page} totalPages={totalPages} onPageChange={setPage} />
+      ) : (
+        <div style={{ height: 116.2 }} />
       )}
     </Wrapper>
   );
