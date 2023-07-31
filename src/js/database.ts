@@ -47,19 +47,19 @@ export const selectEpisodes: SelectEpisodes = () => {
 };
 
 const selectEpisodeQuery = `
-  SELECT 
-    startTime, endTime, word, probability 
-  FROM 
-    words 
-  WHERE 
-    episode = ? 
-  ORDER BY 
+  SELECT
+    startTime, endTime, word, probability
+  FROM
+    words
+  WHERE
+    episode = ?
+  ORDER BY
     startTime
 `;
 
 type SelectEpisode = (episode: number) => Promise<Word[]>;
 
-export const selectEpisodeWords: SelectEpisode = async (episode: number) => {
+export const selectEpisodeWords: SelectEpisode = async episode => {
   return new Promise((resolve, reject) => {
     worker.db
       .query(selectEpisodeQuery, [episode])
@@ -67,6 +67,31 @@ export const selectEpisodeWords: SelectEpisode = async (episode: number) => {
       .catch((err: Error) =>
         console.error(
           'Something unexpected happened while getting episode transcript from database.',
+          err
+        )
+      );
+  });
+};
+
+const searchEpisodeWordsQuery = `
+  SELECT
+    episode
+  FROM
+    fts_words
+  WHERE
+    words MATCH "?"
+`;
+
+type SearchEpisodeWords = (searchTerm: string) => Promise<number[]>;
+
+export const searchEpisodeWords: SearchEpisodeWords = async searchTerm => {
+  return new Promise((resolve, reject) => {
+    worker.db
+      .query(searchEpisodeWordsQuery, [searchTerm])
+      .then(episodes => resolve(episodes.reverse() as number[]), reject)
+      .catch((err: Error) =>
+        console.error(
+          'Something unexpected happened while searching the database.',
           err
         )
       );
