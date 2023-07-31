@@ -21,6 +21,9 @@ const worker = await createDbWorker(
   wasmUrl.toString()
 );
 
+// @ts-expect-error no sql on window
+window.sql = worker.db.query;
+
 const selectEpisodesQuery = `
   SELECT
     episode, title, pubDate, image, description, duration
