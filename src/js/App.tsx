@@ -1,8 +1,10 @@
 import styled from 'styled-components';
+import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { EpisodeSearch } from './EpisodesSearch';
 import { UnderConstructionBanner } from './UnderConstructionBanner';
 import { EpisodeSearchFallback } from './EpisodeSearchFallback';
+import { useObserver } from './hooks/useObserver';
 
 const Wrapper = styled.div`
   display: flex;
@@ -57,6 +59,12 @@ const Wrapper = styled.div`
 `;
 
 export const App = () => {
+  const { entry, ref } = useObserver();
+
+  useEffect(() => {
+    console.info(entry);
+  }, [entry]);
+
   return (
     <Wrapper>
       <header>
@@ -71,6 +79,7 @@ export const App = () => {
         <h1>transcript.fish</h1>
         <UnderConstructionBanner />
         <img
+          ref={ref}
           className="nstaaf-logo"
           src="https://media.transcript.fish/images/logo.jpg"
         />
