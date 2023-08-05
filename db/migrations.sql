@@ -1,3 +1,5 @@
+PRAGMA page_size = 16384;
+
 CREATE TABLE "episodes" (
   "episode" INTEGER NOT NULL UNIQUE,
   "title" TEXT,
@@ -12,7 +14,7 @@ CREATE TABLE "episodes" (
   PRIMARY KEY("episode")
 );
 
-CREATE UNIQUE INDEX "episodes_episode" ON "episodes"("episode");
+CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
 
 CREATE TABLE "words" (
   "startTime" NUMERIC NOT NULL,
@@ -27,7 +29,7 @@ CREATE TABLE "words" (
     "word",
     "probability"
   ),
-  FOREIGN KEY("episode") REFERENCES "episodes"("episode"),
+  FOREIGN KEY("episode") REFERENCES "episodes"("episode")
 );
 
 CREATE INDEX "words_episode" ON "words" ("episode");

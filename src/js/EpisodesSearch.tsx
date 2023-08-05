@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FormEvent, useCallback, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { throttle } from 'throttle-debounce';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
@@ -36,7 +36,13 @@ const searchFns: SearchFunctions = {
 };
 
 export const EpisodeSearch = () => {
-  const { episodes } = useDb();
+  const { episodes, searchResults, search } = useDb();
+
+  useEffect(() => {
+    // @ts-expect-error no search on window
+    window.search = search;
+  }, [search]);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [selectedFilters, setFilters] = useState<FiltersState>({
@@ -54,6 +60,8 @@ export const EpisodeSearch = () => {
     },
     []
   );
+
+  console.log(searchResults);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
