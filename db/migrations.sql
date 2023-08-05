@@ -12,7 +12,7 @@ CREATE TABLE "episodes" (
   PRIMARY KEY("episode")
 );
 
-CREATE UNIQUE INDEX "episodes_index" ON "episodes"("episode");
+CREATE UNIQUE INDEX "episodes_episode" ON "episodes"("episode");
 
 CREATE TABLE "words" (
   "startTime" NUMERIC NOT NULL,
@@ -20,20 +20,28 @@ CREATE TABLE "words" (
   "word" TEXT NOT NULL COLLATE NOCASE,
   "probability" NUMERIC NOT NULL,
   "episode" INTEGER NOT NULL,
-  FOREIGN KEY("episode") REFERENCES "episodes"("episode"),
   PRIMARY KEY(
     "episode",
     "startTime",
     "endTime",
     "word",
     "probability"
-  )
+  ),
+  FOREIGN KEY("episode") REFERENCES "episodes"("episode"),
 );
 
+CREATE INDEX "words_episode" ON "words" ("episode" ASC);
+
+CREATE INDEX "words_startTime" ON "words" ("startTime" ASC);
+
+CREATE INDEX "words_endTime" ON "words" ("endTime" ASC);
+
+CREATE INDEX "words_word" ON "words" ("word" ASC);
+
 CREATE UNIQUE INDEX "words_index" ON "words" (
-  "episode",
-  "startTime",
-  "endTime",
-  "word",
-  "probability"
+  "episode" ASC,
+  "startTime" ASC,
+  "endTime" ASC,
+  "word" ASC,
+  "probability" ASC
 );
