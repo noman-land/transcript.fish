@@ -80,7 +80,7 @@ const searchEpisodeWordsQuery = `
   SELECT
     episode
   FROM
-    fts_words
+    words_fts
   WHERE
     words MATCH "?"
 `;
