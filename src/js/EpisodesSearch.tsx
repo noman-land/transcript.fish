@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { FormEvent, useCallback, useState } from 'react';
+import { throttle } from 'throttle-debounce';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
-import { throttle } from 'throttle-debounce';
 import { PAGE_SIZE } from './constants';
 import { Paginator } from './Paginator';
+import { SearchFunctions, FiltersState, SearchField } from './types';
+import { FilterBar } from './FilterBar';
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,10 +26,34 @@ const Wrapper = styled.div`
   }
 `;
 
+const searchFns: SearchFunctions = {
+  episode: (ep, searchTerm) =>
+    String(ep.episode).includes(searchTerm.toLowerCase()),
+  title: (ep, searchTerm) =>
+    ep.title.toLocaleLowerCase().includes(searchTerm.toLowerCase()),
+  description: (ep, searchTerm) =>
+    ep.description.toLocaleLowerCase().includes(searchTerm.toLowerCase()),
+};
+
 export const EpisodeSearch = () => {
   const { episodes } = useDb();
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
+  const [selectedFilters, setFilters] = useState<FiltersState>({
+    episode: true,
+    title: true,
+    description: true,
+  });
+
+  const handleFilterToggle = useCallback(
+    ({ name, checked }: { name: string; checked: boolean }) => {
+      setFilters(current => ({
+        ...current,
+        [name]: checked,
+      }));
+    },
+    []
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
@@ -46,13 +72,10 @@ export const EpisodeSearch = () => {
     return null;
   }
 
-  const filteredEpisodes = episodes.filter(ep => {
-    const lowercaseSearch = searchTerm.toLocaleLowerCase();
-    return (
-      ep.title.toLocaleLowerCase().includes(lowercaseSearch) ||
-      ep.description.toLocaleLowerCase().includes(lowercaseSearch) ||
-      String(ep.episode).includes(lowercaseSearch)
-    );
+  const filteredEpisodes = episodes.filter(episode => {
+    return Object.entries(searchFns)
+      .filter(([name]) => selectedFilters[name as SearchField])
+      .some(([, search]) => search(episode, searchTerm));
   });
 
   const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
@@ -64,6 +87,7 @@ export const EpisodeSearch = () => {
         placeholder="Search"
         onInput={handleSearch}
       />
+      <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
       <EpisodesTable episodes={filteredEpisodes} page={page} />
       {totalPages > 1 ? (
         <Paginator page={page} totalPages={totalPages} onPageChange={setPage} />

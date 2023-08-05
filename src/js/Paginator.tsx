@@ -13,7 +13,7 @@ const StyledPaginator = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 0;
+  padding: 0.6rem 0;
 
   .page-numbers {
     padding: 0 0.6rem;
@@ -63,7 +63,7 @@ const Button = styled.button`
   ${({ disabled }) =>
     disabled
       ? `
-      visibility: hidden;  
+      opacity: 0.5;
       `
       : `
       cursor: pointer;
