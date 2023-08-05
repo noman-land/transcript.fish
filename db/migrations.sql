@@ -30,18 +30,18 @@ CREATE TABLE "words" (
   FOREIGN KEY("episode") REFERENCES "episodes"("episode"),
 );
 
-CREATE INDEX "words_episode" ON "words" ("episode" ASC);
+CREATE INDEX "words_episode" ON "words" ("episode");
 
-CREATE INDEX "words_startTime" ON "words" ("startTime" ASC);
+CREATE INDEX "words_startTime" ON "words" ("startTime");
 
-CREATE INDEX "words_endTime" ON "words" ("endTime" ASC);
+CREATE INDEX "words_endTime" ON "words" ("endTime");
 
-CREATE INDEX "words_word" ON "words" ("word" ASC);
+CREATE INDEX "words_word" ON "words" ("word");
 
 CREATE UNIQUE INDEX "words_index" ON "words" (
-  "episode" ASC,
-  "startTime" ASC,
-  "endTime" ASC,
-  "word" ASC,
-  "probability" ASC
+  "episode",
+  "startTime",
+  "endTime",
+  "word",
+  "probability"
 );
