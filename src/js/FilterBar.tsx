@@ -42,6 +42,7 @@ const StyledFilterBar = styled.div`
       margin-right: 1.6rem;
       display: flex;
       align-items: center;
+      cursor: pointer;
 
       @media (max-width: 420px) {
         margin-right: 0;
@@ -53,6 +54,7 @@ const StyledFilterBar = styled.div`
       margin-right: 0.3rem;
       height: 1.2rem;
       width: 1.2rem;
+      cursor: pointer;
     }
   }
 `;
