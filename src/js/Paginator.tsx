@@ -35,6 +35,10 @@ const StyledPaginator = styled.div`
     background: none;
     border: none;
     outline: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
