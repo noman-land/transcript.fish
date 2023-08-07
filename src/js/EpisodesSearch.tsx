@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { throttle } from 'throttle-debounce';
+import { FormEvent, useCallback, useState } from 'react';
+import { debounce } from 'throttle-debounce';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
 import { Paginator } from './Paginator';
-import { SearchFunctions, FiltersState, SearchField } from './types';
+import { FiltersState } from './types';
 import { FilterBar } from './FilterBar';
 
 const Wrapper = styled.div`
@@ -26,24 +26,9 @@ const Wrapper = styled.div`
   }
 `;
 
-const searchFns: SearchFunctions = {
-  episode: (ep, searchTerm) =>
-    String(ep.episode).includes(searchTerm.toLowerCase()),
-  title: (ep, searchTerm) =>
-    ep.title.toLocaleLowerCase().includes(searchTerm.toLowerCase()),
-  description: (ep, searchTerm) =>
-    ep.description.toLocaleLowerCase().includes(searchTerm.toLowerCase()),
-};
-
 export const EpisodeSearch = () => {
-  const { episodes, searchResults, search } = useDb();
-
-  useEffect(() => {
-    // @ts-expect-error no search on window
-    window.search = search;
-  }, [search]);
-
-  const [searchTerm, setSearchTerm] = useState('');
+  const { episodes, search, error } = useDb();
+  const [setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [selectedFilters, setFilters] = useState<FiltersState>({
     episode: true,
@@ -61,17 +46,19 @@ export const EpisodeSearch = () => {
     []
   );
 
-  console.log(searchResults);
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
-    throttle(
-      100,
+    debounce(
+      400,
       ({ target }: FormEvent) => {
-        setSearchTerm((target as HTMLInputElement).value);
-        setPage(0);
+        const { value } = target as HTMLInputElement;
+        setSearchTerm(value);
+        if (value.length === 0 || value.length > 2) {
+          search(value);
+          setPage(0);
+        }
       },
-      { noLeading: true }
+      { atBegin: false }
     ),
     []
   );
@@ -80,13 +67,7 @@ export const EpisodeSearch = () => {
     return null;
   }
 
-  const filteredEpisodes = episodes.filter(episode => {
-    return Object.entries(searchFns)
-      .filter(([name]) => selectedFilters[name as SearchField])
-      .some(([, search]) => search(episode, searchTerm));
-  });
-
-  const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
+  const totalPages = Math.ceil(episodes.length / PAGE_SIZE);
 
   return (
     <Wrapper>
@@ -96,11 +77,21 @@ export const EpisodeSearch = () => {
         onInput={handleSearch}
       />
       <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
-      <EpisodesTable episodes={filteredEpisodes} page={page} />
-      {totalPages > 1 ? (
-        <Paginator page={page} totalPages={totalPages} onPageChange={setPage} />
+      {error ? (
+        <div>{error.message}</div>
       ) : (
-        <div style={{ height: 116.2 }} />
+        <>
+          <EpisodesTable episodes={episodes} page={page} />
+          {totalPages > 1 ? (
+            <Paginator
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          ) : (
+            <div style={{ height: 116.2 }} />
+          )}
+        </>
       )}
     </Wrapper>
   );

@@ -6,9 +6,26 @@ con = sqlite3.connect('db/transcript.db')
 
 def recreate_fts_table():
     cur = con.cursor()
-    cur.execute('DROP TABLE IF EXISTS words_fts;')
-    cur.execute('CREATE VIRTUAL TABLE words_fts USING FTS5(episode, words);')
-    cur.execute('INSERT INTO words_fts (episode, words) SELECT episode, GROUP_CONCAT(word, "") AS words FROM words GROUP BY episode;')
+    cur.execute('''
+        DROP TABLE IF EXISTS words_fts;
+
+        CREATE VIRTUAL TABLE words_fts USING FTS5 (episode, title, description, words);
+
+        INSERT INTO
+            words_fts (episode, title, description, words)
+        SELECT
+            words.episode,
+            episodes.title,
+            episodes.description,
+            GROUP_CONCAT(words.word, "") AS words
+        FROM
+            words,
+            episodes
+        WHERE
+            words.episode = episodes.episode
+        GROUP BY
+            words.episode;
+    ''')
     con.commit()
 
 def make_episode_row(episode, word_count):
