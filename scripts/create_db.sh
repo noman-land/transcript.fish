@@ -26,7 +26,7 @@ if ! test -d "$output_dir"; then
     "requestChunkSize": '$request_chunk_size',
     "databaseLengthBytes": '$bytes',
     "serverChunkSize": '$server_chunk_size',
-    "urlPrefix": '$url_prefix',
+    "urlPrefix": "'$url_prefix'",
     "suffixLength": '$suffix_length'
   }' > "$output_dir/config.json"
 else
