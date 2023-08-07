@@ -11,7 +11,7 @@ CREATE TABLE "episodes" (
   "pubDate" TEXT,
   "guid" TEXT UNIQUE,
   "wordCount" INTEGER,
-  PRIMARY KEY("episode")
+  PRIMARY KEY ("episode")
 );
 
 CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
@@ -22,14 +22,14 @@ CREATE TABLE "words" (
   "word" TEXT NOT NULL COLLATE NOCASE,
   "probability" NUMERIC NOT NULL,
   "episode" INTEGER NOT NULL,
-  PRIMARY KEY(
+  PRIMARY KEY (
     "episode",
     "startTime",
     "endTime",
     "word",
     "probability"
   ),
-  FOREIGN KEY("episode") REFERENCES "episodes"("episode")
+  FOREIGN KEY ("episode") REFERENCES "episodes" ("episode")
 );
 
 CREATE INDEX "words_episode" ON "words" ("episode");
@@ -40,7 +40,7 @@ CREATE INDEX "words_endTime" ON "words" ("endTime");
 
 CREATE INDEX "words_word" ON "words" ("word");
 
-CREATE UNIQUE INDEX "words_index" ON "words" (
+CREATE UNIQUE INDEX "words_unique" ON "words" (
   "episode",
   "startTime",
   "endTime",

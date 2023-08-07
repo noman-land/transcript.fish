@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { mediaUrl } from './utils';
 
 const BannerWrapper = styled.div`
   font-size: 0.8em;
@@ -31,7 +32,7 @@ const BannerWrapper = styled.div`
 const ConstructionSign = () => (
   <img
     className="construction-sign"
-    src="https://media.transcript.fish/images/construction-sign.gif"
+    src={`${mediaUrl()}/images/construction-sign.gif`}
   />
 );
 

@@ -1,7 +1,8 @@
 import { createDbWorker } from 'sql.js-httpvfs';
 import { Episode, Word } from './types';
+import { mediaUrl } from './utils';
 
-const response = await fetch('https://media.transcript.fish/db/latest.json');
+const response = await fetch(`${mediaUrl()}/db/latest.json`);
 const { latest } = await response.json();
 
 const workerUrl = new URL(
@@ -14,7 +15,7 @@ const worker = await createDbWorker(
   [
     {
       from: 'jsonconfig',
-      configUrl: `https://media.transcript.fish/db/${latest}/config.json`,
+      configUrl: `${mediaUrl()}/db/${latest}/config.json`,
     },
   ],
   workerUrl.toString(),
@@ -36,7 +37,7 @@ export const selectEpisodes: SelectEpisodes = () => {
   return new Promise((resolve, reject) => {
     worker.db
       .query(selectEpisodesQuery)
-      .then(result => resolve(result.reverse() as Episode[]), reject)
+      .then(episodes => resolve(episodes.reverse() as Episode[]), reject)
       .catch((err: Error) =>
         console.error(
           'Something unexpected happened while getting episodes from database.',
@@ -73,15 +74,13 @@ export const selectEpisodeWords: SelectEpisode = async episode => {
   });
 };
 
-const searchEpisodeWordsQuery = `
+const searchEpisodeWordsQuery = (searchTerm: string) => `
   SELECT
     episode
   FROM
     words_fts
   WHERE
-    words MATCH "?"
-  ORDER BY
-    episode
+    words MATCH "${searchTerm}"
 `;
 
 type SearchEpisodeWords = (searchTerm: string) => Promise<number[]>;
@@ -89,13 +88,13 @@ type SearchEpisodeWords = (searchTerm: string) => Promise<number[]>;
 export const searchEpisodeWords: SearchEpisodeWords = async searchTerm => {
   return new Promise((resolve, reject) => {
     worker.db
-      .query(searchEpisodeWordsQuery, [searchTerm])
+      .query(searchEpisodeWordsQuery(searchTerm))
       .then(episodes => resolve(episodes.reverse() as number[]), reject)
-      .catch((err: Error) =>
+      .catch((err: Error) => {
         console.error(
-          'Something unexpected happened while searching the database.',
+          'Something unexpected happened while searching the database.\n\n',
           err
-        )
-      );
+        );
+      });
   });
 };
