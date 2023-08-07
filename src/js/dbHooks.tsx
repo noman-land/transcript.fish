@@ -60,13 +60,13 @@ export const useDb = () => {
       });
   }, []);
 
-  const filteredEpisodes = useMemo(() => {
-    if (!searchResults) {
-      return episodes;
-    }
-
-    return (episodes || []).filter(({ episode }) => searchResults[episode]);
-  }, [episodes, searchResults]);
+  const filteredEpisodes = useMemo(
+    () =>
+      searchResults
+        ? (episodes || []).filter(({ episode }) => searchResults[episode])
+        : episodes,
+    [episodes, searchResults]
+  );
 
   return {
     episodes: filteredEpisodes,
@@ -74,6 +74,5 @@ export const useDb = () => {
     error,
     getEpisode,
     search,
-    searchResults,
   };
 };
