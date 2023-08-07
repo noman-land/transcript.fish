@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 
 export const EpisodeSearch = () => {
   const { episodes, search, error } = useDb();
-  const [setSearchTerm] = useState('');
+  const [, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [selectedFilters, setFilters] = useState<FiltersState>({
     episode: true,
