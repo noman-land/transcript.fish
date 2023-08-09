@@ -26,7 +26,9 @@ CREATE TABLE "episodes" (
   FOREIGN KEY("presenter5") REFERENCES "presenters"("id"),
   FOREIGN KEY("venue") REFERENCES "venues"("id"),
   PRIMARY KEY("episode")
-) CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
+);
+
+CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
 
 CREATE TABLE "presenters" (
   "id" INTEGER NOT NULL UNIQUE,
