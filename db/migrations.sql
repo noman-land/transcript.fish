@@ -11,10 +11,52 @@ CREATE TABLE "episodes" (
   "pubDate" TEXT,
   "guid" TEXT UNIQUE,
   "wordCount" INTEGER,
-  PRIMARY KEY ("episode")
+  "presenter1" INTEGER,
+  "presenter2" INTEGER,
+  "presenter3" INTEGER,
+  "presenter4" INTEGER,
+  "presenter5" INTEGER,
+  "venue" INTEGER,
+  "live" INTEGER,
+  "compilation" INTEGER,
+  FOREIGN KEY("presenter1") REFERENCES "presenters"("id"),
+  FOREIGN KEY("presenter2") REFERENCES "presenters"("id"),
+  FOREIGN KEY("presenter3") REFERENCES "presenters"("id"),
+  FOREIGN KEY("presenter4") REFERENCES "presenters"("id"),
+  FOREIGN KEY("presenter5") REFERENCES "presenters"("id"),
+  FOREIGN KEY("venue") REFERENCES "venues"("id"),
+  PRIMARY KEY("episode")
+) CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
+
+CREATE TABLE "presenters" (
+  "id" INTEGER NOT NULL UNIQUE,
+  "firstName" TEXT NOT NULL,
+  "middleName" TEXT,
+  "lastName" TEXT NOT NULL,
+  "qiElf" INTEGER,
+  "guest" INTEGER,
+  PRIMARY KEY("id" AUTOINCREMENT),
+  UNIQUE("firstName", "middleName", "lastName")
 );
 
-CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
+CREATE UNIQUE INDEX "presenters_index" ON "presenters" (
+  "firstName",
+  "middleName",
+  "lastName",
+  "qiElf",
+  "guest"
+);
+
+CREATE TABLE "venues" (
+  "id" INTEGER NOT NULL UNIQUE,
+  "name" TEXT NOT NULL,
+  "city" TEXT,
+  "state" TEXT,
+  "country" TEXT,
+  PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+CREATE UNIQUE INDEX "venues_index" ON "venues" ("id");
 
 CREATE TABLE "words" (
   "startTime" NUMERIC NOT NULL,

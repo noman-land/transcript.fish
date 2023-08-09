@@ -6,6 +6,14 @@ export interface Episode {
   title: string;
   pubDate: string;
   wordCount: number;
+  presenter1: string;
+  presenter2: string;
+  presenter3: string;
+  presenter4: string;
+  presenter5: string;
+  venue: number;
+  live: number;
+  compilation: number;
 }
 
 export interface Word {
