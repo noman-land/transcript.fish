@@ -20,12 +20,12 @@ const formatDuration = (duration: number) => {
 const Tag = styled.span`
   background: black;
   color: white;
-  padding: 0.4rem 0.6rem;
-  margin-bottom: 1em;
+  padding: 0.3rem 0.5rem;
+  margin-bottom: 0.8em;
   border-radius: 2px;
 
   & + & {
-    margin-left: 1em;
+    margin-left: 0.8em;
   }
 `;
 
