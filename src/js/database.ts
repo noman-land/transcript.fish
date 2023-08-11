@@ -33,7 +33,20 @@ let worker = await createWorker();
 
 const selectEpisodesQuery = `
   SELECT
-    episode, title, pubDate, image, description, duration
+    episode,
+    title,
+    pubDate,
+    image,
+    description,
+    duration,
+    presenter1,
+    presenter2,
+    presenter3,
+    presenter4,
+    presenter5,
+    venue,
+    live,
+    compilation
   FROM
     episodes
   ORDER BY
