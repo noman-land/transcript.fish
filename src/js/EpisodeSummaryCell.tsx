@@ -52,7 +52,7 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
   .episode-title-wrapper {
     display: flex;
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       flex-direction: column-reverse;
     }
   }
@@ -62,7 +62,7 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     margin-right: 1em;
     flex-grow: 1;
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       margin-right: 0;
     }
   }
