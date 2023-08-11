@@ -54,7 +54,16 @@ interface EpisodeRowProps {
 }
 
 export const EpisodeRow = ({
-  episode: { image, episode, title, description, pubDate, duration },
+  episode: {
+    image,
+    episode,
+    title,
+    description,
+    pubDate,
+    duration,
+    live,
+    compilation,
+  },
 }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { episodeWords, getEpisode } = useDb();
@@ -81,6 +90,8 @@ export const EpisodeRow = ({
         description={description}
         pubDate={pubDate}
         duration={duration}
+        live={Boolean(live)}
+        compilation={Boolean(compilation)}
       />
       {isOpen && episodeWords && <EpisodeTranscriptCell words={episodeWords} />}
     </TrWithBackground>

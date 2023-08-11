@@ -17,6 +17,24 @@ const formatDuration = (duration: number) => {
   return `${Math.floor(duration / 60)} minutes`;
 };
 
+const Tag = styled.span`
+  background: black;
+  color: white;
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 1em;
+  border-radius: 2px;
+
+  & + & {
+    margin-left: 1em;
+  }
+`;
+
+const TagWrapper = styled.div`
+  display: flex;
+  align-items: start;
+  justify-content: start;
+`;
+
 const StyledTd = styled.td<{ $isOpen: boolean }>`
   cursor: pointer;
   display: flex;
@@ -31,9 +49,22 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
   }
 
+  .episode-title-wrapper {
+    display: flex;
+
+    @media (max-width: 600px) {
+      flex-direction: column-reverse;
+    }
+  }
+
   .episode-title {
     margin-top: 0;
+    margin-right: 1em;
     flex-grow: 1;
+
+    @media (max-width: 600px) {
+      margin-right: 0;
+    }
   }
 
   .episode-published-date {
@@ -92,6 +123,8 @@ interface EpisodeSummaryCellProps {
   pubDate: string;
   description: string;
   duration: number;
+  live: boolean;
+  compilation: boolean;
 }
 
 export const EpisodeSummaryCell = ({
@@ -102,12 +135,20 @@ export const EpisodeSummaryCell = ({
   pubDate,
   description,
   duration,
+  live,
+  compilation,
 }: EpisodeSummaryCellProps) => {
   return (
     <StyledTd $isOpen={isOpen} onClick={onClick}>
-      <h3 className="episode-title">
-        <span>{episodeNum}</span>: {title}
-      </h3>
+      <div className="episode-title-wrapper">
+        <h3 className="episode-title">
+          <span>{episodeNum}</span>: {title}
+        </h3>
+        <TagWrapper>
+          {compilation && <Tag>Compilation</Tag>}
+          {live && <Tag>Live</Tag>}
+        </TagWrapper>
+      </div>
       <div className="episode-published-date">{formatDate(pubDate)}</div>
       <span
         onClick={stopPropagation}
