@@ -8,7 +8,7 @@ import {
 } from './types';
 import { mediaUrl } from './utils';
 
-const response = await fetch(`${mediaUrl()}/db/latest.json`);
+const response = await fetch(`${mediaUrl()}/db/latest.json?t=${Date.now()}`);
 const { latest } = await response.json();
 
 const workerUrl = new URL(
