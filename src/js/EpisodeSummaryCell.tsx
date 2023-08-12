@@ -103,9 +103,16 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     margin: 1.8em 0;
   }
 
-  &:hover,
-  &:hover + td {
+  &:hover {
     background-color: #fff189;
+
+    .episode-title {
+      text-decoration: underline;
+    }
+
+    & + td {
+      background-color: #fff189;
+    }
   }
 `;
 

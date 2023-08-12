@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { Fragment } from 'react';
 import type { Word } from './types';
-import { Timestamp } from './Timestamp';
+import { TimePrefixedWord } from './TimePrefixedWord';
 
 const makeKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
@@ -28,10 +27,13 @@ export const EpisodeTranscriptCell = ({ words }: { words: Word[] }) => {
     <StyledTd>
       <div className="episode-words">
         {words.map((word, i) => (
-          <Fragment key={`${i}-${word}`}>
-            {i > 0 && i % 200 === 0 && <Timestamp value={word.startTime} />}
-            <span key={makeKey(word)}>{word.word}</span>
-          </Fragment>
+          <TimePrefixedWord
+            key={makeKey(word)}
+            $timestamp={word.startTime}
+            $showPrefix={i > 0 && i % 200 === 0}
+          >
+            {word.word}
+          </TimePrefixedWord>
         ))}
       </div>
     </StyledTd>
