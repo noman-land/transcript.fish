@@ -1,5 +1,6 @@
 import { MouseEvent } from 'react';
 import styled from 'styled-components';
+import { Tag, TagWrapper } from './Tag';
 
 const formatDate = (date: string) => {
   if (!date) {
@@ -16,24 +17,6 @@ const formatDate = (date: string) => {
 const formatDuration = (duration: number) => {
   return `${Math.floor(duration / 60)} minutes`;
 };
-
-const Tag = styled.span`
-  background: black;
-  color: white;
-  padding: 0.3rem 0.5rem;
-  margin-bottom: 0.8em;
-  border-radius: 2px;
-
-  & + & {
-    margin-left: 0.8em;
-  }
-`;
-
-const TagWrapper = styled.div`
-  display: flex;
-  align-items: start;
-  justify-content: start;
-`;
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
   cursor: pointer;
