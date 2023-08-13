@@ -96,7 +96,10 @@ export const EpisodeSearch = () => {
       <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
       {error ? (
         <>
-          <EmptyState title={error.message} body="Please try again." />
+          <EmptyState
+            title={error.message}
+            body="This sometimes happens and I don't know why yet but I hope to fix it soon. Please try a different search."
+          />
           <PaginationSpacer />
         </>
       ) : (
