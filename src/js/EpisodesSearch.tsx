@@ -10,11 +10,14 @@ import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
 import { Total } from './Total';
 import { preventDefault } from './utils';
+import { fadeIn } from './styleUtils';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  opacity: 0;
+  ${fadeIn}
 `;
 
 export const EpisodeSearch = () => {
