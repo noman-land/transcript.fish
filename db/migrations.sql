@@ -1,3 +1,5 @@
+PRAGMA page_size = 16384;
+
 CREATE TABLE "episodes" (
   "episode" INTEGER NOT NULL UNIQUE,
   "title" TEXT,
@@ -9,10 +11,54 @@ CREATE TABLE "episodes" (
   "pubDate" TEXT,
   "guid" TEXT UNIQUE,
   "wordCount" INTEGER,
+  "presenter1" INTEGER,
+  "presenter2" INTEGER,
+  "presenter3" INTEGER,
+  "presenter4" INTEGER,
+  "presenter5" INTEGER,
+  "venue" INTEGER,
+  "live" INTEGER,
+  "compilation" INTEGER,
+  FOREIGN KEY("presenter1") REFERENCES "presenters"("id"),
+  FOREIGN KEY("presenter2") REFERENCES "presenters"("id"),
+  FOREIGN KEY("presenter3") REFERENCES "presenters"("id"),
+  FOREIGN KEY("presenter4") REFERENCES "presenters"("id"),
+  FOREIGN KEY("presenter5") REFERENCES "presenters"("id"),
+  FOREIGN KEY("venue") REFERENCES "venues"("id"),
   PRIMARY KEY("episode")
 );
 
-CREATE UNIQUE INDEX "episodes_index" ON "episodes"("episode");
+CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
+
+CREATE TABLE "presenters" (
+  "id" INTEGER NOT NULL UNIQUE,
+  "firstName" TEXT NOT NULL,
+  "middleName" TEXT,
+  "lastName" TEXT NOT NULL,
+  "qiElf" INTEGER,
+  "guest" INTEGER,
+  PRIMARY KEY("id" AUTOINCREMENT),
+  UNIQUE("firstName", "middleName", "lastName")
+);
+
+CREATE UNIQUE INDEX "presenters_index" ON "presenters" (
+  "firstName",
+  "middleName",
+  "lastName",
+  "qiElf",
+  "guest"
+);
+
+CREATE TABLE "venues" (
+  "id" INTEGER NOT NULL UNIQUE,
+  "name" TEXT NOT NULL,
+  "city" TEXT,
+  "state" TEXT,
+  "country" TEXT,
+  PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+CREATE UNIQUE INDEX "venues_index" ON "venues" ("id");
 
 CREATE TABLE "words" (
   "startTime" NUMERIC NOT NULL,
@@ -20,17 +66,25 @@ CREATE TABLE "words" (
   "word" TEXT NOT NULL COLLATE NOCASE,
   "probability" NUMERIC NOT NULL,
   "episode" INTEGER NOT NULL,
-  FOREIGN KEY("episode") REFERENCES "episodes"("episode"),
-  PRIMARY KEY(
+  PRIMARY KEY (
     "episode",
     "startTime",
     "endTime",
     "word",
     "probability"
-  )
+  ),
+  FOREIGN KEY ("episode") REFERENCES "episodes" ("episode")
 );
 
-CREATE UNIQUE INDEX "words_index" ON "words" (
+CREATE INDEX "words_episode" ON "words" ("episode");
+
+CREATE INDEX "words_startTime" ON "words" ("startTime");
+
+CREATE INDEX "words_endTime" ON "words" ("endTime");
+
+CREATE INDEX "words_word" ON "words" ("word");
+
+CREATE UNIQUE INDEX "words_unique" ON "words" (
   "episode",
   "startTime",
   "endTime",

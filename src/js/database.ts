@@ -1,7 +1,15 @@
 import { createDbWorker } from 'sql.js-httpvfs';
-import { Episode, Word } from './types';
+import {
+  Episode,
+  FiltersState,
+  SearchEpisodeWords,
+  SearchEpisodeWordsResult,
+  SelectEpisodeWords,
+  Word,
+} from './types';
+import { mediaUrl } from './utils';
 
-const response = await fetch('https://media.transcript.fish/db/latest.json');
+const response = await fetch(`${mediaUrl()}/db/latest.json?t=${Date.now()}`);
 const { latest } = await response.json();
 
 const workerUrl = new URL(
@@ -10,20 +18,36 @@ const workerUrl = new URL(
 );
 const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
-const worker = await createDbWorker(
-  [
-    {
-      from: 'jsonconfig',
-      configUrl: `https://media.transcript.fish/db/${latest}/config.json`,
-    },
-  ],
-  workerUrl.toString(),
-  wasmUrl.toString()
-);
+const createWorker = async () =>
+  await createDbWorker(
+    [
+      {
+        from: 'jsonconfig',
+        configUrl: `${mediaUrl()}/db/${latest}/config.json`,
+      },
+    ],
+    workerUrl.toString(),
+    wasmUrl.toString()
+  );
+
+let worker = await createWorker();
 
 const selectEpisodesQuery = `
   SELECT
-    episode, title, pubDate, image, description, duration
+    episode,
+    title,
+    pubDate,
+    image,
+    description,
+    duration,
+    presenter1,
+    presenter2,
+    presenter3,
+    presenter4,
+    presenter5,
+    venue,
+    live,
+    compilation
   FROM
     episodes
   ORDER BY
@@ -36,7 +60,7 @@ export const selectEpisodes: SelectEpisodes = () => {
   return new Promise((resolve, reject) => {
     worker.db
       .query(selectEpisodesQuery)
-      .then(result => resolve(result.reverse() as Episode[]), reject)
+      .then(episodes => resolve(episodes.reverse() as Episode[]), reject)
       .catch((err: Error) =>
         console.error(
           'Something unexpected happened while getting episodes from database.',
@@ -47,19 +71,17 @@ export const selectEpisodes: SelectEpisodes = () => {
 };
 
 const selectEpisodeQuery = `
-  SELECT 
-    startTime, endTime, word, probability 
-  FROM 
-    words 
-  WHERE 
-    episode = ? 
-  ORDER BY 
+  SELECT
+    startTime, endTime, word, probability
+  FROM
+    words
+  WHERE
+    episode = ?
+  ORDER BY
     startTime
 `;
 
-type SelectEpisode = (episode: number) => Promise<Word[]>;
-
-export const selectEpisodeWords: SelectEpisode = async (episode: number) => {
+export const selectEpisodeWords: SelectEpisodeWords = async episode => {
   return new Promise((resolve, reject) => {
     worker.db
       .query(selectEpisodeQuery, [episode])
@@ -71,4 +93,45 @@ export const selectEpisodeWords: SelectEpisode = async (episode: number) => {
         )
       );
   });
+};
+
+const searchEpisodeWordsQuery = (searchTerm: string) => `
+  SELECT
+    episode
+  FROM
+    words_fts
+  WHERE
+    words_fts MATCH '${searchTerm}'
+`;
+
+const makeSearchFilters = (searchTerm: string, filters: FiltersState) => {
+  return Object.entries(filters)
+    .filter(([, enabled]) => enabled)
+    .map(([column]) => `${column}:${searchTerm}`)
+    .join(' OR ');
+};
+export const searchEpisodeWords: SearchEpisodeWords = async (
+  searchTerm,
+  filters
+) => {
+  const filtersQuery = makeSearchFilters(searchTerm, filters);
+  if (!filtersQuery) {
+    return Promise.resolve([]);
+  }
+  const query = searchEpisodeWordsQuery(filtersQuery);
+  return new Promise((resolve, reject) => {
+    worker.db
+      .query(query)
+      .then(episodes => resolve(episodes as SearchEpisodeWordsResult[]), reject)
+      .catch((err: Error) => {
+        console.error(
+          'Something unexpected happened while searching the database.\n\n',
+          err
+        );
+      });
+  });
+};
+
+export const resetDbWorker = async () => {
+  worker = await createWorker();
 };

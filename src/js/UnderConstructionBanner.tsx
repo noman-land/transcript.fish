@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { mediaUrl } from './utils';
 
 const BannerWrapper = styled.div`
   font-size: 0.8em;
@@ -17,13 +18,7 @@ const BannerWrapper = styled.div`
     width: 50px;
 
     @media (max-width: 400px) {
-      width: 40px;
-    }
-    @media (max-width: 360px) {
-      width: 32px;
-    }
-    @media (max-width: 320px) {
-      width: 24px;
+      width: 12.5vw;
     }
   }
 `;
@@ -31,7 +26,7 @@ const BannerWrapper = styled.div`
 const ConstructionSign = () => (
   <img
     className="construction-sign"
-    src="https://media.transcript.fish/images/construction-sign.gif"
+    src={`${mediaUrl()}/images/construction-sign.gif`}
   />
 );
 

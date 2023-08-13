@@ -1,25 +1,35 @@
 set -eu
 
-indb="$1"
-outdir="$2"
+db_path="./db/transcript.db"
+# last modified date of database
+latest=$(date -r "$db_path" "+%s")
+output_dir="./db/$latest"
 
-# for chunked mode, we need to know the database size in bytes beforehand
-bytes="$(stat -f "%z" "$indb")"
-# set chunk size to 8MiB (needs to be a multiple of the `pragma page_size`!)
-serverChunkSize=$((8 * 1024 * 1024))
-suffixLength=3
-rm -f "$outdir/db.sqlite3"*
-split -d -b $serverChunkSize -a $suffixLength "$indb" "$outdir/db.sqlite3."
+if ! test -d "$output_dir"; then
+  # database size in bytes for chunked mode
+  bytes="$(stat -f "%z" "$db_path")"
+  # size of database chunk files. needs to be a multiple of `pragma page_size`
+  server_chunk_size=$((4 * 1024 * 1024))
+  # set request chunk size to match page size
+  request_chunk_size="$(sqlite3 "$db_path" 'pragma page_size')"
+  url_prefix="db.sqlite3."
+  suffix_length=3
 
-# set request chunk size to match page size
-requestChunkSize="$(sqlite3 "$indb" 'pragma page_size')"
+  mkdir "$output_dir";
+  split -d -b $server_chunk_size -a $suffix_length "$db_path" "$output_dir/$url_prefix"
 
-# write a json config
-echo '{
-  "serverMode": "chunked",
-  "requestChunkSize": '$requestChunkSize',
-  "databaseLengthBytes": '$bytes',
-  "serverChunkSize": '$serverChunkSize',
-  "urlPrefix": "db.sqlite3.",
-  "suffixLength": '$suffixLength'
-}' > "$outdir/config.json"
+  # write timestamp of database modified date for FE cache busting
+  echo '{ "latest": '$latest' }' > ./db/latest.json
+  # write json config for database
+  echo '{
+    "serverMode": "chunked",
+    "requestChunkSize": '$request_chunk_size',
+    "databaseLengthBytes": '$bytes',
+    "serverChunkSize": '$server_chunk_size',
+    "urlPrefix": "'$url_prefix'",
+    "suffixLength": '$suffix_length'
+  }' > "$output_dir/config.json"
+else
+  echo '-- Remote database is up to date. Skipping upload.'
+fi
+

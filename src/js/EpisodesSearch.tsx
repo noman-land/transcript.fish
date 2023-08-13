@@ -1,48 +1,31 @@
 import styled from 'styled-components';
-import { FormEvent, useCallback, useState } from 'react';
-import { throttle } from 'throttle-debounce';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { debounce } from 'throttle-debounce';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
-import { Paginator } from './Paginator';
-import { SearchFunctions, FiltersState, SearchField } from './types';
+import { PaginationSpacer, Paginator } from './Paginator';
+import { FiltersState } from './types';
 import { FilterBar } from './FilterBar';
+import { EmptyState } from './EmptyState';
+import { SearchBar } from './SearchBar';
+import { Total } from './Total';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-
-  .search-bar {
-    border: 0;
-    font-family: TTE, 'Courier New', Courier, monospace;
-    opacity: 0.5;
-    padding: 1rem;
-    font-size: 1em;
-
-    &:focus {
-      outline: 2px solid #d2bb3d;
-    }
-  }
 `;
 
-const searchFns: SearchFunctions = {
-  episode: (ep, searchTerm) =>
-    String(ep.episode).includes(searchTerm.toLowerCase()),
-  title: (ep, searchTerm) =>
-    ep.title.toLocaleLowerCase().includes(searchTerm.toLowerCase()),
-  description: (ep, searchTerm) =>
-    ep.description.toLocaleLowerCase().includes(searchTerm.toLowerCase()),
-};
-
 export const EpisodeSearch = () => {
-  const { episodes } = useDb();
+  const { episodes, search, error, loading, total } = useDb();
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [selectedFilters, setFilters] = useState<FiltersState>({
     episode: true,
     title: true,
     description: true,
+    words: true,
   });
 
   const handleFilterToggle = useCallback(
@@ -55,15 +38,22 @@ export const EpisodeSearch = () => {
     []
   );
 
+  useEffect(() => {
+    if (searchTerm.length === 0 || searchTerm.length > 2) {
+      search(searchTerm, selectedFilters);
+      setPage(0);
+    }
+  }, [search, searchTerm, selectedFilters]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
-    throttle(
-      100,
+    debounce(
+      400,
       ({ target }: FormEvent) => {
-        setSearchTerm((target as HTMLInputElement).value);
-        setPage(0);
+        const { value } = target as HTMLInputElement;
+        setSearchTerm(value);
       },
-      { noLeading: true }
+      { atBegin: false }
     ),
     []
   );
@@ -72,27 +62,42 @@ export const EpisodeSearch = () => {
     return null;
   }
 
-  const filteredEpisodes = episodes.filter(episode => {
-    return Object.entries(searchFns)
-      .filter(([name]) => selectedFilters[name as SearchField])
-      .some(([, search]) => search(episode, searchTerm));
-  });
-
-  const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
+  const totalPages = Math.ceil(episodes.length / PAGE_SIZE);
+  const episodesLength = error ? 0 : episodes.length;
 
   return (
     <Wrapper>
-      <input
-        className="search-bar"
-        placeholder="Search"
-        onInput={handleSearch}
-      />
+      <SearchBar placeholder="Search" onInput={handleSearch} />
       <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
-      <EpisodesTable episodes={filteredEpisodes} page={page} />
-      {totalPages > 1 ? (
-        <Paginator page={page} totalPages={totalPages} onPageChange={setPage} />
+      {!!total && (
+        <Total
+          searchTerm={searchTerm}
+          loading={loading}
+          results={episodesLength}
+          total={total}
+        />
+      )}
+      {error ? (
+        <>
+          <EmptyState
+            title={error.message}
+            body="Sorry about that. A report has been filed. Please try a different search."
+          />
+          <PaginationSpacer />
+        </>
       ) : (
-        <div style={{ height: 116.2 }} />
+        <>
+          <EpisodesTable episodes={episodes} page={page} />
+          {totalPages > 1 ? (
+            <Paginator
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          ) : (
+            <PaginationSpacer />
+          )}
+        </>
       )}
     </Wrapper>
   );

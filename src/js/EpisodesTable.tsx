@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { EmptyStateRow } from './EmptyStateRow';
+import { EmptyState } from './EmptyState';
 import { EpisodeRow } from './EpisodeRow';
 import { Episode } from './types';
 import { PAGE_SIZE } from './constants';
@@ -25,7 +25,14 @@ export const EpisodesTable = ({ episodes, page }: EpisodesTableProps) => {
               <EpisodeRow episode={episode} key={episode.episode} />
             ))
         ) : (
-          <EmptyStateRow />
+          <tr>
+            <td>
+              <EmptyState
+                title="No results found"
+                body="Try doing another search."
+              />
+            </td>
+          </tr>
         )}
       </tbody>
     </StyledTable>

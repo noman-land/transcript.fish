@@ -1,5 +1,6 @@
 import { MouseEvent } from 'react';
 import styled from 'styled-components';
+import { Tag, TagWrapper } from './Tag';
 
 const formatDate = (date: string) => {
   if (!date) {
@@ -31,9 +32,22 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
   }
 
+  .episode-title-wrapper {
+    display: flex;
+
+    @media (max-width: 700px) {
+      flex-direction: column-reverse;
+    }
+  }
+
   .episode-title {
     margin-top: 0;
+    margin-right: 1em;
     flex-grow: 1;
+
+    @media (max-width: 700px) {
+      margin-right: 0;
+    }
   }
 
   .episode-published-date {
@@ -72,9 +86,16 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     margin: 1.8em 0;
   }
 
-  &:hover,
-  &:hover + td {
+  &:hover {
     background-color: #fff189;
+
+    .episode-title {
+      text-decoration: underline;
+    }
+
+    & + td {
+      background-color: #fff189;
+    }
   }
 `;
 
@@ -92,6 +113,8 @@ interface EpisodeSummaryCellProps {
   pubDate: string;
   description: string;
   duration: number;
+  live: boolean;
+  compilation: boolean;
 }
 
 export const EpisodeSummaryCell = ({
@@ -102,12 +125,20 @@ export const EpisodeSummaryCell = ({
   pubDate,
   description,
   duration,
+  live,
+  compilation,
 }: EpisodeSummaryCellProps) => {
   return (
     <StyledTd $isOpen={isOpen} onClick={onClick}>
-      <h3 className="episode-title">
-        <span>{episodeNum}</span>: {title}
-      </h3>
+      <div className="episode-title-wrapper">
+        <h3 className="episode-title">
+          <span>{episodeNum}</span>: {title}
+        </h3>
+        <TagWrapper>
+          {live && <Tag>Live</Tag>}
+          {compilation && <Tag>Compilation</Tag>}
+        </TagWrapper>
+      </div>
       <div className="episode-published-date">{formatDate(pubDate)}</div>
       <span
         onClick={stopPropagation}

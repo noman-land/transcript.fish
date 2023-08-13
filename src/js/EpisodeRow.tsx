@@ -4,6 +4,7 @@ import { Episode } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
 import { useDb } from './dbHooks';
+import { mediaUrl } from './utils';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
   background-color: ${({ $isOpen }) => $isOpen && '#fff189'};
@@ -44,7 +45,7 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
 const makeImageUrl = (episode: number, imageUrl: string) => {
   const extension = imageUrl.split('.').pop();
   return extension
-    ? `https://media.transcript.fish/images/episodes/${episode}.${extension}`
+    ? `${mediaUrl()}/images/episodes/${episode}.${extension}`
     : '';
 };
 
@@ -53,7 +54,16 @@ interface EpisodeRowProps {
 }
 
 export const EpisodeRow = ({
-  episode: { image, episode, title, description, pubDate, duration },
+  episode: {
+    image,
+    episode,
+    title,
+    description,
+    pubDate,
+    duration,
+    live,
+    compilation,
+  },
 }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { episodeWords, getEpisode } = useDb();
@@ -80,6 +90,8 @@ export const EpisodeRow = ({
         description={description}
         pubDate={pubDate}
         duration={duration}
+        live={Boolean(live)}
+        compilation={Boolean(compilation)}
       />
       {isOpen && episodeWords && <EpisodeTranscriptCell words={episodeWords} />}
     </TrWithBackground>

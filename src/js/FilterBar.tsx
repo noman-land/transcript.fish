@@ -1,37 +1,52 @@
 import styled from 'styled-components';
 import { useCallback } from 'react';
-import { FilterBarProps } from './types';
+import { FilterBarProps, SearchField } from './types';
 
 const StyledFilterBar = styled.div`
   display: flex;
-  padding: 1rem 2vw;
   align-items: center;
+  flex-wrap: wrap;
+  margin: 1rem 3vw 0 0;
 
-  @media (max-width: 1280px) {
-    padding: 1rem 3vw;
-  }
   @media (max-width: 900px) {
-    padding: 1rem 4.5vw;
+    margin: 1rem 4.5vw 0 0;
   }
   @media (max-width: 650px) {
-    padding: 1rem 6vw;
+    margin: 1rem 6vw 0 0;
+  }
+
+  @media (max-width: 480px) {
     flex-direction: column;
     align-items: start;
   }
 
   .filters-label {
     font-style: bold;
-    margin-right: 1.4rem;
+    white-space: nowrap;
+    margin: 0 0 1rem 3vw;
 
+    @media (max-width: 900px) {
+      margin: 0 0 1rem 4.5vw;
+    }
     @media (max-width: 650px) {
-      margin-right: 0;
-      margin-bottom: 0.6rem;
+      margin: 0 0 1rem 6vw;
     }
   }
 
   .filters {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    margin: 0 0 1rem 3vw;
+
+    @media (max-width: 900px) {
+      margin: 0 0 1rem 4.5vw;
+    }
+
+    @media (max-width: 650px) {
+      margin: 0 0 1rem 6vw;
+    }
 
     @media (max-width: 420px) {
       flex-direction: column;
@@ -43,6 +58,7 @@ const StyledFilterBar = styled.div`
       display: flex;
       align-items: center;
       cursor: pointer;
+      white-space: nowrap;
 
       @media (max-width: 420px) {
         margin-right: 0;
@@ -58,6 +74,17 @@ const StyledFilterBar = styled.div`
     }
   }
 `;
+
+type FilterLabels = {
+  [k in SearchField]: string;
+};
+
+const filterLabels: FilterLabels = {
+  description: 'description',
+  episode: 'episode number',
+  title: 'title',
+  words: 'transcript',
+};
 
 export const FilterBar = ({ filters, onToggle }: FilterBarProps) => {
   const handleToggle = useCallback(
@@ -79,7 +106,7 @@ export const FilterBar = ({ filters, onToggle }: FilterBarProps) => {
               name={name}
               checked={checked}
             />
-            {name}
+            {filterLabels[name as SearchField]}
           </label>
         ))}
       </div>

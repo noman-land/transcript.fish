@@ -6,9 +6,25 @@ con = sqlite3.connect('db/transcript.db')
 
 def recreate_fts_table():
     cur = con.cursor()
-    cur.execute('DROP TABLE IF EXISTS fts_words')
-    cur.execute('CREATE VIRTUAL TABLE fts_words USING fts5(episode, words)')
-    cur.execute('INSERT INTO fts_words (episode, words) SELECT episode, GROUP_CONCAT(word, "") AS words FROM words GROUP BY episode')
+    cur.execute('DROP TABLE IF EXISTS words_fts;')
+    cur.execute('CREATE VIRTUAL TABLE words_fts USING FTS5 (episode, title, description, words);')
+    cur.execute('''
+        INSERT INTO
+            words_fts (episode, title, description, words)
+        SELECT
+            w.episode,
+            e.title,
+            e.description,
+            GROUP_CONCAT(w.word, "") AS words
+        FROM
+            words w,
+            episodes e
+        WHERE
+            w.episode = e.episode
+        GROUP BY
+            w.episode;
+    ''')
+    cur.execute('VACUUM;')
     con.commit()
 
 def make_episode_row(episode, word_count):
@@ -25,12 +41,20 @@ def make_episode_row(episode, word_count):
         episode['summary'], # description
         episode['published'], # pubDate
         episode['id'], # guid
-        word_count, # wordCount 
+        word_count, # wordCount
+        None, # presenter1
+        None, # presenter2
+        None, # presenter3
+        None, # presenter4
+        None, # presenter5
+        None, # venue
+        None, # live
+        None # compilation
     )
 
 def select_word_count(episode_num):
     cur = con.cursor()
-    result = cur.execute('SELECT count(*) from words where episode = ? GROUP BY episode', [episode_num]).fetchone()
+    result = cur.execute('SELECT COUNT(*) FROM words WHERE episode = ? GROUP BY episode', [episode_num]).fetchone()
     word_count = result[0] if result and result[0] > 0 else 0 
     return word_count
 
@@ -39,15 +63,19 @@ def insert_words(episode_num, words):
     cur.executemany(f'INSERT INTO words VALUES (?, ?, ?, ?, {episode_num})', words)
 
 def upsert_episode(episode, word_count):
+    upsert_episode_sql = '''
+        INSERT INTO
+            episodes
+        VALUES
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT
+            (episode)
+        DO UPDATE SET
+            wordCount = excluded.wordCount
+    '''
     episode_row = make_episode_row(episode, word_count)
     cur = con.cursor()
-    cur.execute('INSERT INTO episodes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (episode) DO UPDATE SET wordCount = excluded.wordCount', episode_row)
-
-def vacuum():
-    cur = con.cursor()
-    cur.execute('VACUUM')
-    con.commit()
-    print('Database vacuumed.')
+    cur.execute(upsert_episode_sql, episode_row)
 
 def commit():
     con.commit()
