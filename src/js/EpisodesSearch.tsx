@@ -7,7 +7,7 @@ import { PAGE_SIZE } from './constants';
 import { Paginator } from './Paginator';
 import { FiltersState } from './types';
 import { FilterBar } from './FilterBar';
-import { EmptyStateRow } from './EmptyStateRow';
+import { EmptyState } from './EmptyState';
 
 const Wrapper = styled.div`
   display: flex;
@@ -15,9 +15,9 @@ const Wrapper = styled.div`
   width: 100%;
 
   .search-bar {
+    background: #efe284;
     border: 0;
     font-family: TTE, 'Courier New', Courier, monospace;
-    opacity: 0.5;
     padding: 1em 3vw;
     font-size: 1em;
 
@@ -96,7 +96,7 @@ export const EpisodeSearch = () => {
       <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
       {error ? (
         <>
-          <EmptyStateRow title={error.message} body="Please try again." />
+          <EmptyState title={error.message} body="Please try again." />
           <PaginationSpacer />
         </>
       ) : (
