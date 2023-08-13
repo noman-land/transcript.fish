@@ -18,13 +18,7 @@ const BannerWrapper = styled.div`
     width: 50px;
 
     @media (max-width: 400px) {
-      width: 40px;
-    }
-    @media (max-width: 360px) {
-      width: 32px;
-    }
-    @media (max-width: 320px) {
-      width: 24px;
+      width: 12.5vw;
     }
   }
 `;

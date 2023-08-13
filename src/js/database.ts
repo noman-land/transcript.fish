@@ -1,6 +1,7 @@
 import { createDbWorker } from 'sql.js-httpvfs';
 import {
   Episode,
+  FiltersState,
   SearchEpisodeWords,
   SearchEpisodeWordsResult,
   SelectEpisodeWords,
@@ -94,19 +95,33 @@ export const selectEpisodeWords: SelectEpisodeWords = async episode => {
   });
 };
 
-const searchEpisodeWordsQuery = `
+const searchEpisodeWordsQuery = (searchTerm: string) => `
   SELECT
     episode
   FROM
     words_fts
   WHERE
-    words_fts MATCH ?
+    words_fts MATCH '${searchTerm}'
 `;
 
-export const searchEpisodeWords: SearchEpisodeWords = async searchTerm => {
+const makeSearchFilters = (searchTerm: string, filters: FiltersState) => {
+  return Object.entries(filters)
+    .filter(([, enabled]) => enabled)
+    .map(([column]) => `${column}:${searchTerm}`)
+    .join(' OR ');
+};
+export const searchEpisodeWords: SearchEpisodeWords = async (
+  searchTerm,
+  filters
+) => {
+  const filtersQuery = makeSearchFilters(searchTerm, filters);
+  if (!filtersQuery) {
+    return Promise.resolve([]);
+  }
+  const query = searchEpisodeWordsQuery(filtersQuery);
   return new Promise((resolve, reject) => {
     worker.db
-      .query(searchEpisodeWordsQuery, [searchTerm])
+      .query(query)
       .then(episodes => resolve(episodes as SearchEpisodeWordsResult[]), reject)
       .catch((err: Error) => {
         console.error(

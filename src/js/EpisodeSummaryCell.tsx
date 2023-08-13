@@ -135,8 +135,8 @@ export const EpisodeSummaryCell = ({
           <span>{episodeNum}</span>: {title}
         </h3>
         <TagWrapper>
-          {compilation && <Tag>Compilation</Tag>}
           {live && <Tag>Live</Tag>}
+          {compilation && <Tag>Compilation</Tag>}
         </TagWrapper>
       </div>
       <div className="episode-published-date">{formatDate(pubDate)}</div>

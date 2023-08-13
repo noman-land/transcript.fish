@@ -23,6 +23,14 @@ const StyledPaginator = styled.div`
     @media (max-width: 360px) {
       padding: 0;
     }
+
+    @media (max-width: 300px) {
+      min-width: 80px;
+
+      .total-pages {
+        display: none;
+      }
+    }
   }
 
   .page-number {
@@ -35,6 +43,10 @@ const StyledPaginator = styled.div`
     background: none;
     border: none;
     outline: none;
+
+    @media (max-width: 300px) {
+      padding: 1rem 0 1rem 0.6rem;
+    }
 
     &:hover {
       text-decoration: underline;
@@ -174,7 +186,7 @@ export const Paginator = ({
             value={value}
           />
         </form>
-        of <span>{totalPages}</span>
+        <span className="total-pages">of {totalPages}</span>
       </span>
       <Button name="next-page" disabled={isLastPage} onClick={handleNext}>
         {'>'}

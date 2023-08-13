@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Episode, SearchResults, Word } from './types';
+import { Episode, FiltersState, SearchResults, Word } from './types';
 import {
   searchEpisodeWords,
   selectEpisodeWords,
@@ -23,42 +23,45 @@ export const useDb = () => {
     selectEpisodeWords(episode).then(setEpisodeWords).catch(setError);
   }, []);
 
-  const search = useCallback((searchTerm: string) => {
-    setError(undefined);
-    if (!searchTerm) {
-      setSearchResults(undefined);
-      return;
-    }
-    searchEpisodeWords(searchTerm)
-      .then(results => {
-        const normalized = results.reduce<SearchResults>(
-          (accum, { episode }) => {
-            accum[episode] = true;
-            return accum;
-          },
-          {}
-        );
-        setSearchResults(normalized);
-      })
-      .catch(async (e: Error) => {
-        if (e.message.includes('doXHR failed (bug)!')) {
-          setError(new Error('Error while searching. Please try again.'));
-          return await resetDbWorker();
-        }
+  const search = useCallback(
+    (searchTerm: string, selectedFilters: FiltersState) => {
+      setError(undefined);
+      if (!searchTerm) {
+        setSearchResults(undefined);
+        return;
+      }
+      searchEpisodeWords(searchTerm, selectedFilters)
+        .then(results => {
+          const normalized = results.reduce<SearchResults>(
+            (accum, { episode }) => {
+              accum[episode] = true;
+              return accum;
+            },
+            {}
+          );
+          setSearchResults(normalized);
+        })
+        .catch(async (e: Error) => {
+          if (e.message.includes('doXHR failed (bug)!')) {
+            setError(new Error('Error while searching. Please try again.'));
+            return await resetDbWorker();
+          }
 
-        if (e.message.includes('recursively defined fts5 content table')) {
-          setError(new Error('Error while searching. Please try again.'));
-          return await resetDbWorker();
-        }
+          if (e.message.includes('recursively defined fts5 content table')) {
+            setError(new Error('Error while searching. Please try again.'));
+            return await resetDbWorker();
+          }
 
-        if (e.message.includes('syntax error near')) {
-          setError(new Error(e.message));
-          return;
-        }
+          if (e.message.includes('syntax error near')) {
+            setError(new Error(e.message));
+            return;
+          }
 
-        setError(e);
-      });
-  }, []);
+          setError(e);
+        });
+    },
+    []
+  );
 
   const filteredEpisodes = useMemo(
     () =>

@@ -27,25 +27,13 @@ const Wrapper = styled.div`
 
     h1 {
       @media (max-width: 400px) {
-        font-size: 1.8em;
-      }
-      @media (max-width: 360px) {
-        font-size: 1.6em;
-      }
-      @media (max-width: 320px) {
-        font-size: 1.4em;
+        font-size: 9.5vw;
       }
     }
 
     h2 {
       @media (max-width: 400px) {
-        font-size: 1.4em;
-      }
-      @media (max-width: 360px) {
-        font-size: 1.2em;
-      }
-      @media (max-width: 320px) {
-        font-size: 1em;
+        font-size: 5.7vw;
       }
     }
 

@@ -1,5 +1,11 @@
 import { styled } from 'styled-components';
 
+export const TagWrapper = styled.div`
+  display: flex;
+  align-items: start;
+  justify-content: start;
+`;
+
 export const Tag = styled.span`
   background: black;
   color: white;
@@ -10,10 +16,4 @@ export const Tag = styled.span`
   & + & {
     margin-left: 0.8em;
   }
-`;
-
-export const TagWrapper = styled.div`
-  display: flex;
-  align-items: start;
-  justify-content: start;
 `;

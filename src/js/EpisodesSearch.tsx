@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FormEvent, useCallback, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { debounce } from 'throttle-debounce';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
@@ -17,8 +17,18 @@ const Wrapper = styled.div`
     border: 0;
     font-family: TTE, 'Courier New', Courier, monospace;
     opacity: 0.5;
-    padding: 1rem;
+    padding: 1em 3vw;
     font-size: 1em;
+
+    @media (max-width: 900px) {
+      padding: 1em 4.5vw;
+    }
+    @media (max-width: 650px) {
+      padding: 1em 6vw;
+    }
+    @media (max-width: 500px) {
+      padding: 1em 6vw;
+    }
 
     &:focus {
       outline: 2px solid #d2bb3d;
@@ -28,12 +38,13 @@ const Wrapper = styled.div`
 
 export const EpisodeSearch = () => {
   const { episodes, search, error } = useDb();
-  const [, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [selectedFilters, setFilters] = useState<FiltersState>({
     episode: true,
     title: true,
     description: true,
+    words: true,
   });
 
   const handleFilterToggle = useCallback(
@@ -46,6 +57,13 @@ export const EpisodeSearch = () => {
     []
   );
 
+  useEffect(() => {
+    if (searchTerm.length === 0 || searchTerm.length > 2) {
+      search(searchTerm, selectedFilters);
+      setPage(0);
+    }
+  }, [search, searchTerm, selectedFilters]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
     debounce(
@@ -53,10 +71,6 @@ export const EpisodeSearch = () => {
       ({ target }: FormEvent) => {
         const { value } = target as HTMLInputElement;
         setSearchTerm(value);
-        if (value.length === 0 || value.length > 2) {
-          search(value);
-          setPage(0);
-        }
       },
       { atBegin: false }
     ),

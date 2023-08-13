@@ -23,7 +23,7 @@ export interface Word {
   probability: number;
 }
 
-export type SearchField = 'episode' | 'title' | 'description';
+export type SearchField = 'episode' | 'title' | 'description' | 'words';
 
 export type FiltersState = {
   [k in SearchField]: boolean;
@@ -41,7 +41,8 @@ export interface SearchEpisodeWordsResult {
 }
 
 export type SearchEpisodeWords = (
-  searchTerm: string
+  searchTerm: string,
+  filters: FiltersState
 ) => Promise<SearchEpisodeWordsResult[]>;
 
 export type SearchResults = Record<number, boolean>;
