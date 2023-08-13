@@ -22,19 +22,48 @@ const StyledTd = styled.td`
   }
 `;
 
-export const EpisodeTranscriptCell = ({ words }: { words: Word[] }) => {
+function findSubarrayIndex(a: Word[], b: string[]) {
+  for (let i = 0; i <= a.length - b.length; i++) {
+    let match = true;
+    for (let j = 0; j < b.length; j++) {
+      if (
+        a[i + j].word.trim().toLocaleLowerCase() !== b[j].toLocaleLowerCase()
+      ) {
+        match = false;
+        break;
+      }
+    }
+    if (match) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+export const EpisodeTranscriptCell = ({
+  words,
+  searchTerm,
+}: {
+  words: Word[];
+  searchTerm: string;
+}) => {
+  const searchWords = searchTerm.split(' ');
+  const start = findSubarrayIndex(words, searchWords);
   return (
     <StyledTd>
       <div className="episode-words">
-        {words.map((word, i) => (
-          <TimePrefixedWord
-            key={makeKey(word)}
-            $timestamp={word.startTime}
-            $showPrefix={i > 0 && i % 200 === 0}
-          >
-            {word.word}
-          </TimePrefixedWord>
-        ))}
+        {words.map((word, i) => {
+          return (
+            <TimePrefixedWord
+              key={makeKey(word)}
+              $timestamp={word.startTime}
+              $showPrefix={i > 0 && i % 200 === 0}
+              $found={i >= start && i <= start + searchWords.length - 1}
+            >
+              {word.word}
+            </TimePrefixedWord>
+          );
+        })}
       </div>
     </StyledTd>
   );
