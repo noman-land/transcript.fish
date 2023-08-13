@@ -70,13 +70,18 @@ export const EpisodeSearch = () => {
       <SearchBar placeholder="Search" onInput={handleSearch} />
       <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
       {!!total && (
-        <Total loading={loading} results={episodesLength} total={total} />
+        <Total
+          searchTerm={searchTerm}
+          loading={loading}
+          results={episodesLength}
+          total={total}
+        />
       )}
       {error ? (
         <>
           <EmptyState
             title={error.message}
-            body="This sometimes happens and I don't know why yet but I hope to fix it soon. Please try a different search."
+            body="Sorry about that. A report has been filed. Please try a different search."
           />
           <PaginationSpacer />
         </>

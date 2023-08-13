@@ -24,16 +24,18 @@ export const StyledDiv = styled.div`
 `;
 
 export const Total = ({
+  searchTerm,
   loading,
   results,
   total,
 }: {
+  searchTerm: string;
   loading: boolean;
   results: number;
   total: number;
 }) => (
   <StyledDiv>
     showing <span className="results">{loading ? <Spinner /> : results}</span>{' '}
-    of {total} episodes
+    of {total} episodes {searchTerm && `containing "${searchTerm}"`}
   </StyledDiv>
 );
