@@ -53,24 +53,13 @@ interface EpisodeRowProps {
   episode: Episode;
 }
 
-export const EpisodeRow = ({
-  episode: {
-    image,
-    episode,
-    title,
-    description,
-    pubDate,
-    duration,
-    live,
-    compilation,
-  },
-}: EpisodeRowProps) => {
+export const EpisodeRow = ({ episode }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { episodeWords, getEpisode } = useDb();
 
   const handleClick = useCallback(() => {
     if (!episodeWords) {
-      getEpisode(episode);
+      getEpisode(episode.episode);
     }
 
     setIsOpen(open => !open);
@@ -79,19 +68,13 @@ export const EpisodeRow = ({
   return (
     <TrWithBackground
       $isOpen={isOpen}
-      $image={makeImageUrl(episode, image)}
-      key={episode}
+      $image={makeImageUrl(episode.episode, episode.image)}
+      key={episode.episode}
     >
       <EpisodeSummaryCell
         isOpen={isOpen}
         onClick={handleClick}
-        episodeNum={episode}
-        title={title}
-        description={description}
-        pubDate={pubDate}
-        duration={duration}
-        live={Boolean(live)}
-        compilation={Boolean(compilation)}
+        episode={episode}
       />
       {isOpen && episodeWords && <EpisodeTranscriptCell words={episodeWords} />}
     </TrWithBackground>
