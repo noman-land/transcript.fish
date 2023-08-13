@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useCallback } from 'react';
-import { FilterBarProps, SearchField } from './types';
+import { FilterBarProps, FilterLabels, SearchField } from './types';
 
 const StyledFilterBar = styled.div`
   display: flex;
@@ -74,10 +74,6 @@ const StyledFilterBar = styled.div`
     }
   }
 `;
-
-type FilterLabels = {
-  [k in SearchField]: string;
-};
 
 const filterLabels: FilterLabels = {
   description: 'description',

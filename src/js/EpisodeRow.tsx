@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { useCallback, useState } from 'react';
-import { Episode } from './types';
+import { EpisodeRowProps } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
 import { useDb } from './dbHooks';
-import { mediaUrl } from './utils';
+import { makeImageUrl } from './utils';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
   background-color: ${({ $isOpen }) => $isOpen && '#fff189'};
@@ -41,17 +41,6 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
     background-image: url(${({ $image }) => $image});
   }
 `;
-
-const makeImageUrl = (episode: number, imageUrl: string) => {
-  const extension = imageUrl.split('.').pop();
-  return extension
-    ? `${mediaUrl()}/images/episodes/${episode}.${extension}`
-    : '';
-};
-
-interface EpisodeRowProps {
-  episode: Episode;
-}
 
 export const EpisodeRow = ({ episode }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);

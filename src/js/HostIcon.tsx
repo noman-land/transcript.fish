@@ -1,9 +1,9 @@
 import { css, styled } from 'styled-components';
 import { mediaUrl } from './utils';
-import { Hosts } from './types';
+import { Host } from './types';
 
 export const HostIcon = styled.img.attrs<{
-  $host: Hosts;
+  $host: Host;
   $absent: boolean;
 }>(({ $host }) => ({
   src: `${mediaUrl()}/images/hosts/${$host}.png`,
