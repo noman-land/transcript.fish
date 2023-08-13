@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import styled from 'styled-components';
-import { Tag, TagWrapper } from './Tag';
+import { Tags } from './Tags';
 import { EpisodeSummaryCellProps } from './types';
 import { Hosts } from './Hosts';
 import { Separator } from './Separator';
@@ -10,20 +11,6 @@ const TitleWrapper = styled.div`
 
   @media (max-width: 700px) {
     flex-direction: column-reverse;
-  }
-`;
-
-const Title = styled.h3`
-  margin-top: 0;
-  margin-right: 1em;
-  flex-grow: 1;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 700px) {
-    margin-right: 0;
   }
 `;
 
@@ -80,6 +67,20 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
   }
 `;
 
+const Title = styled.h3`
+  margin-top: 0;
+  margin-right: 1em;
+  flex-grow: 1;
+
+  ${StyledTd}:hover & {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 700px) {
+    margin-right: 0;
+  }
+`;
+
 export const EpisodeSummaryCell = ({
   isOpen,
   onClick,
@@ -97,17 +98,17 @@ export const EpisodeSummaryCell = ({
     presenter4,
   },
 }: EpisodeSummaryCellProps) => {
-  const presenters = [presenter1, presenter2, presenter3, presenter4];
+  const presenters = useMemo(
+    () => [presenter1, presenter2, presenter3, presenter4],
+    [presenter1, presenter2, presenter3, presenter4]
+  );
   return (
     <StyledTd $isOpen={isOpen} onClick={onClick}>
       <TitleWrapper>
         <Title>
           <span>{episodeNum}</span>: {title}
         </Title>
-        <TagWrapper>
-          {!!live && <Tag>Live</Tag>}
-          {!!compilation && <Tag>Compilation</Tag>}
-        </TagWrapper>
+        <Tags live={live} compilation={compilation} />
       </TitleWrapper>
       <PublishedDate>{formatDate(pubDate)}</PublishedDate>
       <Description
