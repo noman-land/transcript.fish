@@ -1,16 +1,32 @@
-export const EmptyStateRow = () => (
+import { styled } from 'styled-components';
+
+const StyledTd = styled.td`
+  background-color: #f8e44f;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  padding: 4vw 3vw;
+
+  @media (max-width: 900px) {
+    padding: 6vw 4.5vw;
+  }
+  @media (max-width: 650px) {
+    padding: 8vw 6vw;
+  }
+`;
+
+export const EmptyStateRow = ({
+  title,
+  body,
+}: {
+  title: string;
+  body: string;
+}) => (
   <tr>
-    <td
-      style={{
-        textAlign: 'left',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'stretch',
-        padding: '4vw 3vw',
-      }}
-    >
-      <h3 style={{ marginTop: 0, flexGrow: 1 }}>No results found</h3>
-      <span>Try doing another search</span>
-    </td>
+    <StyledTd>
+      <h3 style={{ marginTop: 0, flexGrow: 1 }}>{title}</h3>
+      <span>{body}</span>
+    </StyledTd>
   </tr>
 );

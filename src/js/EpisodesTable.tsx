@@ -25,7 +25,10 @@ export const EpisodesTable = ({ episodes, page }: EpisodesTableProps) => {
               <EpisodeRow episode={episode} key={episode.episode} />
             ))
         ) : (
-          <EmptyStateRow />
+          <EmptyStateRow
+            title="No results found"
+            body="Try doing another search."
+          />
         )}
       </tbody>
     </StyledTable>

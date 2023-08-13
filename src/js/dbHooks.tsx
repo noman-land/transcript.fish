@@ -42,13 +42,15 @@ export const useDb = () => {
           setSearchResults(normalized);
         })
         .catch(async (e: Error) => {
+          console.error(e);
+
           if (e.message.includes('doXHR failed (bug)!')) {
-            setError(new Error('Error while searching. Please try again.'));
+            setError(new Error('Error while searching'));
             return await resetDbWorker();
           }
 
           if (e.message.includes('recursively defined fts5 content table')) {
-            setError(new Error('Error while searching. Please try again.'));
+            setError(new Error('Error while searching'));
             return await resetDbWorker();
           }
 

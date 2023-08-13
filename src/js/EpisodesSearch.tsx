@@ -7,6 +7,7 @@ import { PAGE_SIZE } from './constants';
 import { Paginator } from './Paginator';
 import { FiltersState } from './types';
 import { FilterBar } from './FilterBar';
+import { EmptyStateRow } from './EmptyStateRow';
 
 const Wrapper = styled.div`
   display: flex;
@@ -35,6 +36,8 @@ const Wrapper = styled.div`
     }
   }
 `;
+
+const PaginationSpacer = () => <div style={{ height: 116.2 }} />;
 
 export const EpisodeSearch = () => {
   const { episodes, search, error } = useDb();
@@ -92,7 +95,10 @@ export const EpisodeSearch = () => {
       />
       <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
       {error ? (
-        <div>{error.message}</div>
+        <>
+          <EmptyStateRow title={error.message} body="Please try again." />
+          <PaginationSpacer />
+        </>
       ) : (
         <>
           <EpisodesTable episodes={episodes} page={page} />
@@ -103,7 +109,7 @@ export const EpisodeSearch = () => {
               onPageChange={setPage}
             />
           ) : (
-            <div style={{ height: 116.2 }} />
+            <PaginationSpacer />
           )}
         </>
       )}
