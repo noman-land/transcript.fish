@@ -107,7 +107,7 @@ const searchEpisodeWordsQuery = (searchTerm: string) => `
 const makeSearchFilters = (searchTerm: string, filters: FiltersState) => {
   return Object.entries(filters)
     .filter(([, enabled]) => enabled)
-    .map(([column]) => `${column}:${searchTerm}`)
+    .map(([column]) => `${column}:"${searchTerm}"`)
     .join(' OR ');
 };
 export const searchEpisodeWords: SearchEpisodeWords = async (
