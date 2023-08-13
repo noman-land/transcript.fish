@@ -6,11 +6,11 @@ export interface Episode {
   title: string;
   pubDate: string;
   wordCount: number;
-  presenter1: string;
-  presenter2: string;
-  presenter3: string;
-  presenter4: string;
-  presenter5: string;
+  presenter1: number;
+  presenter2: number;
+  presenter3: number;
+  presenter4: number;
+  presenter5: number;
   venue: number;
   live: number;
   compilation: number;
@@ -46,3 +46,5 @@ export type SearchEpisodeWords = (
 ) => Promise<SearchEpisodeWordsResult[]>;
 
 export type SearchResults = Record<number, boolean>;
+
+export type Hosts = 'dan' | 'james' | 'anna' | 'andy';

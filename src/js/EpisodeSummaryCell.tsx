@@ -1,6 +1,8 @@
 import { MouseEvent } from 'react';
 import styled from 'styled-components';
 import { Tag, TagWrapper } from './Tag';
+import { HostIcon } from './HostIcon';
+import { Episode } from './types';
 
 const formatDate = (date: string) => {
   if (!date) {
@@ -32,7 +34,7 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
   }
 
-  .episode-title-wrapper {
+  .title-wrapper {
     display: flex;
 
     @media (max-width: 700px) {
@@ -40,7 +42,7 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     }
   }
 
-  .episode-title {
+  .title {
     margin-top: 0;
     margin-right: 1em;
     flex-grow: 1;
@@ -50,12 +52,12 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     }
   }
 
-  .episode-published-date {
+  .published-date {
     font-style: italic;
     margin-bottom: 1em;
   }
 
-  .episode-description {
+  .description {
     text-align: justify;
 
     a {
@@ -75,9 +77,13 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
     }
   }
 
-  .episode-duration {
+  .duration {
     font-weight: 600;
     font-style: italic;
+    margin-top: 1em;
+  }
+
+  .hosts {
     margin-top: 1em;
   }
 
@@ -89,7 +95,7 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
   &:hover {
     background-color: #fff189;
 
-    .episode-title {
+    .title {
       text-decoration: underline;
     }
 
@@ -108,44 +114,51 @@ const stopPropagation = (event: MouseEvent) => {
 interface EpisodeSummaryCellProps {
   isOpen: boolean;
   onClick: () => void;
-  episodeNum: number;
-  title: string;
-  pubDate: string;
-  description: string;
-  duration: number;
-  live: boolean;
-  compilation: boolean;
+  episode: Episode;
 }
 
 export const EpisodeSummaryCell = ({
   isOpen,
   onClick,
-  episodeNum,
-  title,
-  pubDate,
-  description,
-  duration,
-  live,
-  compilation,
+  episode: {
+    episode: episodeNum,
+    duration,
+    title,
+    live,
+    compilation,
+    pubDate,
+    description,
+    presenter1,
+    presenter2,
+    presenter3,
+    presenter4,
+  },
 }: EpisodeSummaryCellProps) => {
+  const presenters = [presenter1, presenter2, presenter3, presenter4];
   return (
     <StyledTd $isOpen={isOpen} onClick={onClick}>
-      <div className="episode-title-wrapper">
-        <h3 className="episode-title">
+      <div className="title-wrapper">
+        <h3 className="title">
           <span>{episodeNum}</span>: {title}
         </h3>
         <TagWrapper>
-          {live && <Tag>Live</Tag>}
-          {compilation && <Tag>Compilation</Tag>}
+          {!!live && <Tag>Live</Tag>}
+          {!!compilation && <Tag>Compilation</Tag>}
         </TagWrapper>
       </div>
-      <div className="episode-published-date">{formatDate(pubDate)}</div>
+      <div className="published-date">{formatDate(pubDate)}</div>
       <span
         onClick={stopPropagation}
-        className="episode-description"
+        className="description"
         dangerouslySetInnerHTML={{ __html: description }}
       />
-      <span className="episode-duration">{formatDuration(duration)}</span>
+      <div className="hosts">
+        <HostIcon $host="dan" $absent={!presenters.includes(12)} />
+        <HostIcon $host="james" $absent={!presenters.includes(22)} />
+        <HostIcon $host="anna" $absent={!presenters.includes(7)} />
+        <HostIcon $host="andy" $absent={!presenters.includes(6)} />
+      </div>
+      <span className="duration">{formatDuration(duration)}</span>
       {isOpen && <div className="separator">* * *</div>}
     </StyledTd>
   );
