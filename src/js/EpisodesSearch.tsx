@@ -39,16 +39,18 @@ export const EpisodeSearch = () => {
   );
 
   useEffect(() => {
-    if (searchTerm.length === 0 || searchTerm.length > 2) {
-      search(searchTerm, selectedFilters);
-      setPage(0);
-    }
+    search(searchTerm, selectedFilters);
+    setPage(0);
   }, [search, searchTerm, selectedFilters]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     preventDefault(e);
     const formData = new FormData(e.target as HTMLFormElement);
-    setSearchTerm(formData.get('searchTerm') as string);
+    const searchTerm = (formData.get('searchTerm') as string).trim();
+
+    if (searchTerm.length === 0 || searchTerm.length > 2) {
+      setSearchTerm(searchTerm);
+    }
   }, []);
 
   if (!episodes) {

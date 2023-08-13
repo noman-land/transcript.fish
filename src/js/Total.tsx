@@ -35,14 +35,14 @@ export const Total = ({
   total: number;
 }) => {
   const showingAll = results === total;
+  const maybeResults = loading ? <Spinner /> : results;
   return (
     <StyledDiv>
-      {showingAll && !loading ? (
+      {showingAll && !loading && !searchTerm ? (
         <>showing all </>
       ) : (
         <>
-          found{' '}
-          <span className="results">{loading ? <Spinner /> : results}</span> of{' '}
+          found <span className="results">{maybeResults}</span> of{' '}
         </>
       )}
       <>
