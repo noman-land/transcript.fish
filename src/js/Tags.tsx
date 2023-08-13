@@ -17,3 +17,22 @@ export const Tag = styled.span`
     margin-left: 0.8em;
   }
 `;
+
+export const Tags = ({
+  live,
+  compilation,
+}: {
+  live: number;
+  compilation: number;
+}) => {
+  const isLive = !!live;
+  const isComp = !!compilation;
+  return (
+    (isLive || isComp) && (
+      <TagWrapper>
+        {isLive && <Tag>Live</Tag>}
+        {isComp && <Tag>Compilation</Tag>}
+      </TagWrapper>
+    )
+  );
+};

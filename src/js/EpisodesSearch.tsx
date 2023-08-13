@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { debounce } from 'throttle-debounce';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
@@ -10,6 +9,7 @@ import { FilterBar } from './FilterBar';
 import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
 import { Total } from './Total';
+import { preventDefault } from './utils';
 
 const Wrapper = styled.div`
   display: flex;
@@ -45,18 +45,11 @@ export const EpisodeSearch = () => {
     }
   }, [search, searchTerm, selectedFilters]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleSearch = useCallback(
-    debounce(
-      400,
-      ({ target }: FormEvent) => {
-        const { value } = target as HTMLInputElement;
-        setSearchTerm(value);
-      },
-      { atBegin: false }
-    ),
-    []
-  );
+  const handleSubmit = useCallback((e: FormEvent) => {
+    preventDefault(e);
+    const formData = new FormData(e.target as HTMLFormElement);
+    setSearchTerm(formData.get('searchTerm') as string);
+  }, []);
 
   if (!episodes) {
     return null;
@@ -67,7 +60,10 @@ export const EpisodeSearch = () => {
 
   return (
     <Wrapper>
-      <SearchBar placeholder="Search" onInput={handleSearch} />
+      <SearchBar
+        placeholder="no such thing as a search bar"
+        onSubmit={handleSubmit}
+      />
       <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
       {!!total && (
         <Total
