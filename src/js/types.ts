@@ -29,6 +29,10 @@ export type FiltersState = {
   [k in SearchField]: boolean;
 };
 
+export type FilterLabels = {
+  [k in SearchField]: string;
+};
+
 export interface FilterBarProps {
   filters: FiltersState;
   onToggle: (args: { name: string; checked: boolean }) => void;
@@ -47,4 +51,21 @@ export type SearchEpisodeWords = (
 
 export type SearchResults = Record<number, boolean>;
 
-export type Hosts = 'dan' | 'james' | 'anna' | 'andy';
+// These match the image names for the icons (e.g. anna.png)
+export type Host = 'dan' | 'james' | 'anna' | 'andy';
+
+export interface EpisodeSummaryCellProps {
+  isOpen: boolean;
+  onClick: () => void;
+  episode: Episode;
+}
+
+export interface EpisodeRowProps {
+  episode: Episode;
+}
+
+export interface PaginatorProps {
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}

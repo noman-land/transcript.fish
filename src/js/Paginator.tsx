@@ -1,13 +1,14 @@
 import {
   ChangeEventHandler,
   FocusEventHandler,
-  FormEventHandler,
   KeyboardEventHandler,
   useCallback,
   useEffect,
   useState,
 } from 'react';
 import { styled } from 'styled-components';
+import { PaginatorProps } from './types';
+import { preventDefault } from './utils';
 
 const StyledPaginator = styled.div`
   display: flex;
@@ -89,14 +90,6 @@ const Button = styled.button`
       }
     `}
 `;
-
-interface PaginatorProps {
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-const preventDefault: FormEventHandler = e => e.preventDefault();
 
 export const PaginationSpacer = styled.div`
   height: 116.2px;
