@@ -33,9 +33,21 @@ export const Total = ({
   loading: boolean;
   results: number;
   total: number;
-}) => (
-  <StyledDiv>
-    showing <span className="results">{loading ? <Spinner /> : results}</span>{' '}
-    of {total} episodes {searchTerm && `containing "${searchTerm}"`}
-  </StyledDiv>
-);
+}) => {
+  const showingAll = results === total;
+  return (
+    <StyledDiv>
+      {showingAll && !loading ? (
+        <>showing all </>
+      ) : (
+        <>
+          found{' '}
+          <span className="results">{loading ? <Spinner /> : results}</span> of{' '}
+        </>
+      )}
+      <>
+        {total} episodes {searchTerm && `containing "${searchTerm}"`}
+      </>
+    </StyledDiv>
+  );
+};
