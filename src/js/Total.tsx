@@ -3,11 +3,16 @@ import { Spinner } from './Spinner';
 
 export const StyledDiv = styled.div`
   position: relative;
+  text-align: left;
   font-size: 90%;
   margin: 0.6rem 3vw;
   opacity: 0.6;
-  max-height: 19px;
   bottom: 0;
+
+  .results {
+    display: inline-block;
+    max-height: 19px;
+  }
 
   @media (max-width: 900px) {
     margin: 0.6rem 4.5vw;
@@ -28,6 +33,7 @@ export const Total = ({
   total: number;
 }) => (
   <StyledDiv>
-    showing {loading ? <Spinner /> : results} of {total} episodes
+    showing <span className="results">{loading ? <Spinner /> : results}</span>{' '}
+    of {total} episodes
   </StyledDiv>
 );
