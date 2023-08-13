@@ -4,11 +4,13 @@ import { EpisodeSearch } from './EpisodesSearch';
 import { UnderConstructionBanner } from './UnderConstructionBanner';
 import { EpisodeSearchFallback } from './EpisodeSearchFallback';
 import { mediaUrl } from './utils';
+import { fadeIn } from './styleUtils';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   line-height: 1.1;
+  ${fadeIn}
 
   & header {
     display: flex;
