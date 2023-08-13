@@ -10,5 +10,6 @@ const fadeInKeyframes = keyframes`
 `;
 
 export const fadeIn = css`
+  opacity: 0;
   animation: ${fadeInKeyframes} 150ms ease-in-out forwards;
 `;
