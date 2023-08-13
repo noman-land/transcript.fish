@@ -4,43 +4,21 @@ import { debounce } from 'throttle-debounce';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
-import { Paginator } from './Paginator';
+import { PaginationSpacer, Paginator } from './Paginator';
 import { FiltersState } from './types';
 import { FilterBar } from './FilterBar';
 import { EmptyState } from './EmptyState';
+import { SearchBar } from './SearchBar';
+import { Total } from './Total';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-
-  .search-bar {
-    background: #efe284;
-    border: 0;
-    font-family: TTE, 'Courier New', Courier, monospace;
-    padding: 1em 3vw;
-    font-size: 1em;
-
-    @media (max-width: 900px) {
-      padding: 1em 4.5vw;
-    }
-    @media (max-width: 650px) {
-      padding: 1em 6vw;
-    }
-    @media (max-width: 500px) {
-      padding: 1em 6vw;
-    }
-
-    &:focus {
-      outline: 2px solid #d2bb3d;
-    }
-  }
 `;
 
-const PaginationSpacer = () => <div style={{ height: 116.2 }} />;
-
 export const EpisodeSearch = () => {
-  const { episodes, search, error } = useDb();
+  const { episodes, search, error, loading, total } = useDb();
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [selectedFilters, setFilters] = useState<FiltersState>({
@@ -85,15 +63,15 @@ export const EpisodeSearch = () => {
   }
 
   const totalPages = Math.ceil(episodes.length / PAGE_SIZE);
+  const episodesLength = error ? 0 : episodes.length;
 
   return (
     <Wrapper>
-      <input
-        className="search-bar"
-        placeholder="Search"
-        onInput={handleSearch}
-      />
+      <SearchBar placeholder="Search" onInput={handleSearch} />
       <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
+      {!!total && (
+        <Total loading={loading} results={episodesLength} total={total} />
+      )}
       {error ? (
         <>
           <EmptyState

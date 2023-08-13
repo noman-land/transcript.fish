@@ -98,6 +98,10 @@ interface PaginatorProps {
 
 const preventDefault: FormEventHandler = e => e.preventDefault();
 
+export const PaginationSpacer = styled.div`
+  height: 116.2px;
+`;
+
 export const Paginator = ({
   page,
   totalPages,

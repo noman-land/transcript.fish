@@ -12,6 +12,7 @@ export const useDb = () => {
   const [episodeWords, setEpisodeWords] = useState<Word[]>();
   const [searchResults, setSearchResults] = useState<SearchResults>();
   const [error, setError] = useState<Error>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setError(undefined);
@@ -30,6 +31,7 @@ export const useDb = () => {
         setSearchResults(undefined);
         return;
       }
+      setLoading(true);
       searchEpisodeWords(searchTerm, selectedFilters)
         .then(results => {
           const normalized = results.reduce<SearchResults>(
@@ -60,7 +62,8 @@ export const useDb = () => {
           }
 
           setError(e);
-        });
+        })
+        .finally(() => setLoading(false));
     },
     []
   );
@@ -75,8 +78,10 @@ export const useDb = () => {
 
   return {
     episodes: filteredEpisodes,
+    total: episodes?.length,
     episodeWords,
     error,
+    loading,
     getEpisode,
     search,
   };
