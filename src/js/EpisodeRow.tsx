@@ -51,6 +51,7 @@ const makeImageUrl = (episode: number, imageUrl: string) => {
 
 interface EpisodeRowProps {
   episode: Episode;
+  searchTerm: string;
 }
 
 export const EpisodeRow = ({
@@ -64,6 +65,7 @@ export const EpisodeRow = ({
     live,
     compilation,
   },
+  searchTerm,
 }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { episodeWords, getEpisode } = useDb();
@@ -93,7 +95,9 @@ export const EpisodeRow = ({
         live={Boolean(live)}
         compilation={Boolean(compilation)}
       />
-      {isOpen && episodeWords && <EpisodeTranscriptCell words={episodeWords} />}
+      {isOpen && episodeWords && (
+        <EpisodeTranscriptCell words={episodeWords} searchTerm={searchTerm} />
+      )}
     </TrWithBackground>
   );
 };

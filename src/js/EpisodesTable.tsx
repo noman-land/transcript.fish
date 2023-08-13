@@ -12,9 +12,14 @@ const StyledTable = styled.table`
 interface EpisodesTableProps {
   episodes: Episode[];
   page: number;
+  searchTerm: string;
 }
 
-export const EpisodesTable = ({ episodes, page }: EpisodesTableProps) => {
+export const EpisodesTable = ({
+  episodes,
+  page,
+  searchTerm,
+}: EpisodesTableProps) => {
   return (
     <StyledTable>
       <tbody>
@@ -22,7 +27,11 @@ export const EpisodesTable = ({ episodes, page }: EpisodesTableProps) => {
           episodes
             .slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
             .map(episode => (
-              <EpisodeRow episode={episode} key={episode.episode} />
+              <EpisodeRow
+                episode={episode}
+                key={episode.episode}
+                searchTerm={searchTerm}
+              />
             ))
         ) : (
           <tr>

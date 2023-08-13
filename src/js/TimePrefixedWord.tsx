@@ -13,7 +13,14 @@ const formatTimestamp = (duration: number) => {
 export const TimePrefixedWord = styled.span<{
   $timestamp: number;
   $showPrefix: boolean;
+  $found: boolean;
 }>`
+  ${({ $found }) =>
+    $found &&
+    css`
+      background: green;
+    `}
+
   ${({ $showPrefix, $timestamp }) =>
     $showPrefix &&
     css`
