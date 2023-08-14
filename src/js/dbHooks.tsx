@@ -8,20 +8,27 @@ import {
 } from './database';
 
 export const useDb = () => {
+  const [error, setError] = useState<Error>();
+  const [loading, setLoading] = useState(false);
   const [episodes, setEpisodes] = useState<Episode[]>();
   const [episodeWords, setEpisodeWords] = useState<Word[]>();
   const [searchResults, setSearchResults] = useState<SearchResults>();
-  const [error, setError] = useState<Error>();
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setError(undefined);
-    selectEpisodes().then(setEpisodes).catch(setError);
+    selectEpisodes()
+      .then(setEpisodes)
+      .catch(setError)
+      .finally(() => setLoading);
   }, []);
 
   const getEpisode = useCallback((episode: number) => {
     setError(undefined);
-    selectEpisodeWords(episode).then(setEpisodeWords).catch(setError);
+    setLoading(true);
+    selectEpisodeWords(episode)
+      .then(setEpisodeWords)
+      .catch(setError)
+      .finally(() => setLoading(false));
   }, []);
 
   const search = useCallback(
@@ -47,17 +54,17 @@ export const useDb = () => {
           console.error(e);
 
           if (e.message.includes('doXHR failed (bug)!')) {
-            setError(new Error('Error while searching'));
+            setError(new Error('Problem while searching', { cause: e }));
             return await resetDbWorker();
           }
 
           if (e.message.includes('recursively defined fts5 content table')) {
-            setError(new Error('Error while searching'));
+            setError(new Error('Problem while searching', { cause: e }));
             return await resetDbWorker();
           }
 
           if (e.message.includes('syntax error near')) {
-            setError(new Error(e.message));
+            setError(new Error(e.message, { cause: e }));
             return;
           }
 

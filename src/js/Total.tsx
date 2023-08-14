@@ -1,5 +1,4 @@
 import { styled } from 'styled-components';
-import { Spinner } from './Spinner';
 
 export const StyledDiv = styled.div`
   position: relative;
@@ -8,11 +7,6 @@ export const StyledDiv = styled.div`
   margin: 0.6rem 3vw;
   opacity: 0.6;
   bottom: 0;
-
-  .results {
-    display: inline-block;
-    max-height: 19px;
-  }
 
   @media (max-width: 900px) {
     margin: 0.6rem 4.5vw;
@@ -34,20 +28,20 @@ export const Total = ({
   results: number;
   total: number;
 }) => {
-  const showingAll = results === total;
-  const maybeResults = loading ? <Spinner /> : results;
-  return (
-    <StyledDiv>
-      {showingAll && !loading && !searchTerm ? (
-        <>showing all </>
-      ) : (
-        <>
-          found <span className="results">{maybeResults}</span> of{' '}
-        </>
-      )}
-      <>
-        {total} episodes {searchTerm && `containing "${searchTerm}"`}
-      </>
-    </StyledDiv>
+  const containingText = <>episodes containing "{searchTerm}"</>;
+  const isShowingAll = results === total && !searchTerm;
+  const foundResults = isShowingAll ? (
+    <>showing all {total} episodes</>
+  ) : (
+    <>
+      found {results} of {total} {containingText}
+    </>
   );
+  const maybeResults = loading ? (
+    <>searching for {containingText}</>
+  ) : (
+    foundResults
+  );
+
+  return <StyledDiv>{maybeResults}</StyledDiv>;
 };
