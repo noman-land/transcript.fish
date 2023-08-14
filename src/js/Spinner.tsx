@@ -1,15 +1,7 @@
-import { keyframes, styled } from 'styled-components';
+import { styled } from 'styled-components';
+import { spin } from './styleUtils';
 
-const spin = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
-
-export const Spinner = styled.span.attrs({
+export const Spinner = styled.span.attrs<{ $size?: string }>({
   children: (
     <span className="wrapper">
       <span className="dot">*</span>
@@ -20,13 +12,14 @@ export const Spinner = styled.span.attrs({
     display: inline-block;
     position: relative;
     height: 0.4em;
-    width: 0.8em;
+    width: 0.7em;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: ${({ $size = '1.2rem' }) => $size};
+
     .dot {
-      animation: ${spin} 1s linear infinite;
-      top: -6px;
-      left: 4px;
+      ${spin}
+      top: -8px;
+      left: 0px;
       transform-origin: 7px 9px;
       position: absolute;
     }

@@ -1,5 +1,18 @@
 import { css, keyframes } from 'styled-components';
 
+const spinKeyframes = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+export const spin = css`
+  animation: ${spinKeyframes} 500ms linear infinite;
+`;
+
 const fadeInKeyframes = keyframes`
   from {
     opacity: 0;
@@ -11,5 +24,5 @@ const fadeInKeyframes = keyframes`
 
 export const fadeIn = css`
   opacity: 0;
-  animation: ${fadeInKeyframes} 150ms ease-in-out forwards;
+  animation: ${fadeInKeyframes} 151ms ease-in-out forwards;
 `;

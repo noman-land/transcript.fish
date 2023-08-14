@@ -87,8 +87,8 @@ export const EpisodeSearch = () => {
         </>
       ) : (
         <>
-          <EpisodesTable episodes={episodes} page={page} />
-          {totalPages > 1 ? (
+          <EpisodesTable episodes={episodes} page={page} loading={loading} />
+          {totalPages > 1 && !loading ? (
             <Paginator
               page={page}
               totalPages={totalPages}
