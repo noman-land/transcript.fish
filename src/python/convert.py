@@ -10,4 +10,5 @@ def convert():
         transcribed += whisper.transcribe(episode)
     if (transcribed > 0):
         database.recreate_fts_table()
+        database.vacuum()
     database.close()

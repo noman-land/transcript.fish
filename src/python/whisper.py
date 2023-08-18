@@ -1,13 +1,13 @@
 from faster_whisper import WhisperModel
-from bs4 import BeautifulSoup
 import database 
 import utils
 
-model_size = 'medium.en'
+model_size = 'large-v2'
 
 model = WhisperModel(
     model_size_or_path=model_size,
     compute_type='int8',
+    # Change this to False if you want to use/download a different model
     local_files_only=True,
     num_workers=4,
     cpu_threads=8
@@ -15,7 +15,7 @@ model = WhisperModel(
 
 def get_transcription_segments(episode):
     episode_num = utils.get_episode_num(episode)
-    summary = BeautifulSoup(episode['summary'], 'html.parser').get_text()
+    summary = utils.strip_html(episode['summary'])
     segments, _ = model.transcribe(
         utils.make_audio_file_path(episode_num),
         word_timestamps=True,

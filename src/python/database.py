@@ -24,7 +24,6 @@ def recreate_fts_table():
         GROUP BY
             w.episode;
     ''')
-    cur.execute('VACUUM;')
     con.commit()
 
 def make_episode_row(episode, word_count):
@@ -51,6 +50,11 @@ def make_episode_row(episode, word_count):
         None, # live
         None # compilation
     )
+
+def vacuum():
+    cur = con.cursor()
+    cur.execute('VACUUM;')
+    cur = con.commit()
 
 def select_word_count(episode_num):
     cur = con.cursor()
