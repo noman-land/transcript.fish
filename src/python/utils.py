@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+from bs4 import BeautifulSoup
 
 def log(episode_num, *msg):
     print(f'-- {now()} -- Episode {episode_num} --', *msg)
@@ -30,3 +31,6 @@ def get_audio_url(episode):
 
 def get_image_url(episode):
     return episode['image']['href']
+
+def strip_html(htmlString):
+    return BeautifulSoup(htmlString, 'html.parser').get_text()
