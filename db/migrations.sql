@@ -51,10 +51,13 @@ CREATE UNIQUE INDEX "presenters_index" ON "presenters" (
 
 CREATE TABLE "venues" (
   "id" INTEGER NOT NULL UNIQUE,
-  "name" TEXT NOT NULL,
+  "name" TEXT,
+  "streetAddress" TEXT,
+  "region" TEXT,
   "city" TEXT,
   "state" TEXT,
   "country" TEXT,
+  "event" TEXT,
   PRIMARY KEY("id" AUTOINCREMENT)
 );
 
