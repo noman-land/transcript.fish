@@ -1,22 +1,20 @@
 import { FormEventHandler } from 'react';
 import { styled } from 'styled-components';
+import { Colors } from './constants';
 
 const StyledForm = styled.form`
   display: flex;
   align-items: stretch;
+  /* color: #6b9293; */
 
   input {
-    background: #efe284;
+    background: ${Colors.citrineLighter};
     border: 0;
     flex-grow: 1;
     font-family: TTE, 'Courier New', Courier, monospace;
     padding: 1em 3vw;
     font-size: 1em;
     min-width: 100px;
-
-    &::placeholder {
-      opacity: 0.3;
-    }
 
     @media (max-width: 900px) {
       padding: 1em 4.5vw;
@@ -26,7 +24,7 @@ const StyledForm = styled.form`
     }
 
     &:focus {
-      outline: 2px solid #d2bb3d;
+      outline: 2px solid ${Colors.citrineDark};
     }
   }
 
@@ -35,8 +33,8 @@ const StyledForm = styled.form`
     font-size: 1.1rem;
     padding-left: 2rem;
     padding-right: 2rem;
-    background: #2f2a2a;
-    color: #ddd9ba;
+    background: ${Colors.night};
+    color: white;
     border: none;
     cursor: pointer;
     @media (max-width: 450px) {

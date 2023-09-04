@@ -1,4 +1,6 @@
 import { styled } from 'styled-components';
+import { Presenter } from './types';
+import { formatName } from './utils';
 
 export const StyledDiv = styled.div`
   position: relative;
@@ -19,22 +21,33 @@ export const StyledDiv = styled.div`
 
 export const Total = ({
   searchTerm,
+  presenters,
+  error,
   loading,
   results,
   total,
 }: {
   searchTerm: string;
+  presenters: Presenter[];
+  error?: boolean;
   loading: boolean;
   results: number;
   total: number;
 }) => {
-  const containingText = <>episodes containing "{searchTerm}"</>;
+  const presentersText = presenters.map((p, i, list) => {
+    const separator = i < list.length - 1 ? ', ' : ' or ';
+    return `${i > 0 ? separator : ''}${formatName(p)}`;
+  });
+  const containingText = searchTerm && <>episodes containing "{searchTerm}"</>;
   const isShowingAll = results === total && !searchTerm;
   const foundResults = isShowingAll ? (
     <>showing all {total} episodes</>
   ) : (
     <>
-      found {results} of {total} {containingText}
+      <>
+        found {error ? '?' : results} of {total} {containingText}
+      </>
+      {presenters.length > 0 && <> with {presentersText} presenting</>}
     </>
   );
   const maybeResults = loading ? (

@@ -1,3 +1,12 @@
+export interface Presenter {
+  id: number;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  qiElf: string;
+  guest: string;
+}
+
 export interface Episode {
   image: string;
   description: string;
@@ -25,17 +34,30 @@ export interface Word {
 
 export type SearchField = 'episode' | 'title' | 'description' | 'words';
 
-export type FiltersState = {
-  [k in SearchField]: boolean;
+export type SearchFiltersState = Record<SearchField, boolean>;
+
+export type PresentersFilterState = number[];
+
+export type FilterLabels = Record<SearchField, string>;
+
+export type Option = {
+  label: string;
+  value: number;
 };
 
-export type FilterLabels = {
-  [k in SearchField]: string;
+export type SelectedOption = {
+  name: string;
+  checked: boolean;
 };
 
-export interface FilterBarProps {
-  filters: FiltersState;
-  onToggle: (args: { name: string; checked: boolean }) => void;
+export interface SearchFiltersProps {
+  selected: SearchFiltersState;
+  onToggle: (option: SelectedOption) => void;
+}
+
+export interface PresenterFiltersProps {
+  selected: PresentersFilterState;
+  onChange: (presenters: number[]) => void;
 }
 
 export type SelectEpisodeWords = (episode: number) => Promise<Word[]>;
@@ -46,7 +68,7 @@ export interface SearchEpisodeWordsResult {
 
 export type SearchEpisodeWords = (
   searchTerm: string,
-  filters: FiltersState
+  filters: SearchFiltersState
 ) => Promise<SearchEpisodeWordsResult[]>;
 
 export type SearchResults = Record<number, boolean>;

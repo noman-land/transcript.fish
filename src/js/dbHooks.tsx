@@ -1,38 +1,44 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Episode, FiltersState, SearchResults, Word } from './types';
 import {
+  Episode,
+  Presenter,
+  SearchFiltersState,
+  SearchResults,
+  Word,
+} from './types';
+import {
+  resetDbWorker,
+  selectEpisodes,
   searchEpisodeWords,
   selectEpisodeWords,
-  selectEpisodes,
-  resetDbWorker,
+  selectPresenters,
 } from './database';
 
-export const useDb = () => {
+const useEpisodes = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [episodes, setEpisodes] = useState<Episode[]>();
-  const [episodeWords, setEpisodeWords] = useState<Word[]>();
   const [searchResults, setSearchResults] = useState<SearchResults>();
 
-  useEffect(() => {
-    setError(undefined);
-    selectEpisodes()
-      .then(setEpisodes)
-      .catch(setError)
-      .finally(() => setLoading);
-  }, []);
-
-  const getEpisode = useCallback((episode: number) => {
+  const getEpisodes = useCallback(() => {
     setError(undefined);
     setLoading(true);
-    selectEpisodeWords(episode)
-      .then(setEpisodeWords)
+    selectEpisodes()
+      .then(setEpisodes)
       .catch(setError)
       .finally(() => setLoading(false));
   }, []);
 
+  const filteredEpisodes = useMemo(
+    () =>
+      searchResults
+        ? (episodes || []).filter(({ episode }) => searchResults[episode])
+        : episodes,
+    [episodes, searchResults]
+  );
+
   const search = useCallback(
-    (searchTerm: string, selectedFilters: FiltersState) => {
+    (searchTerm: string, selectedFilters: SearchFiltersState) => {
       setError(undefined);
       if (!searchTerm) {
         setSearchResults(undefined);
@@ -75,21 +81,90 @@ export const useDb = () => {
     []
   );
 
-  const filteredEpisodes = useMemo(
-    () =>
-      searchResults
-        ? (episodes || []).filter(({ episode }) => searchResults[episode])
-        : episodes,
-    [episodes, searchResults]
+  return useMemo(
+    () => ({
+      total: episodes?.length,
+      data: filteredEpisodes,
+      error,
+      loading,
+      get: getEpisodes,
+      search,
+    }),
+    [episodes, filteredEpisodes, error, loading, getEpisodes, search]
   );
+};
+
+type PresentersState = Record<number, Presenter>;
+
+const usePresenters = () => {
+  const [error, setError] = useState<Error>();
+  const [loading, setLoading] = useState(false);
+  const [presenters, setPresenters] = useState<PresentersState>();
+
+  const getPresenters = useCallback(() => {
+    setError(undefined);
+    setLoading(true);
+    selectPresenters()
+      .then(result => {
+        const reduced = result.reduce((accum, pres) => {
+          accum[pres.id] = pres;
+          return accum;
+        }, {} as PresentersState);
+        setPresenters(reduced);
+      })
+      .catch(setError)
+      .finally(() => setLoading(false));
+  }, [setPresenters, setLoading, setError]);
+
+  return useMemo(
+    () => ({
+      data: presenters,
+      error,
+      loading,
+      get: getPresenters,
+    }),
+    [presenters, error, loading, getPresenters]
+  );
+};
+
+const useTranscript = () => {
+  const [error, setError] = useState<Error>();
+  const [loading, setLoading] = useState(false);
+  const [transcript, setTranscript] = useState<Word[]>();
+
+  const getTranscript = useCallback((episode: number) => {
+    setError(undefined);
+    setLoading(true);
+    selectEpisodeWords(episode)
+      .then(setTranscript)
+      .catch(setError)
+      .finally(() => setLoading(false));
+  }, []);
+
+  return useMemo(
+    () => ({
+      data: transcript,
+      error,
+      loading,
+      get: getTranscript,
+    }),
+    [transcript, error, loading, getTranscript]
+  );
+};
+
+export const useDb = () => {
+  const { get: getEpisodes, ...episodes } = useEpisodes();
+  const { get: getPresenters, ...presenters } = usePresenters();
+  const transcript = useTranscript();
+
+  useEffect(() => {
+    getPresenters();
+    getEpisodes();
+  }, [getPresenters, getEpisodes]);
 
   return {
-    episodes: filteredEpisodes,
-    total: episodes?.length,
-    episodeWords,
-    error,
-    loading,
-    getEpisode,
-    search,
+    presenters,
+    episodes,
+    transcript,
   };
 };

@@ -1,4 +1,5 @@
 import { FormEventHandler, MouseEventHandler } from 'react';
+import { Presenter } from './types';
 
 export const mediaUrl = () => {
   const url = new URL(import.meta.url);
@@ -37,3 +38,6 @@ export const stopPropagation: MouseEventHandler = e => {
     e.stopPropagation();
   }
 };
+
+export const formatName = ({ firstName, middleName, lastName }: Presenter) =>
+  [firstName, middleName, lastName].filter(n => n).join(' ');
