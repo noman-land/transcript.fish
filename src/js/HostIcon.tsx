@@ -12,7 +12,7 @@ export const HostIcon = styled.img.attrs<{
 }))`
   width: 36px;
   height: 36px;
-  filter: grayscale(40%);
+  filter: grayscale(30%);
   border: 1px solid #6a6015;
   border-radius: 50%;
 

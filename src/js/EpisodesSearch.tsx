@@ -4,8 +4,8 @@ import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
 import { PaginationSpacer, Paginator } from './Paginator';
-import { FiltersState } from './types';
-import { FilterBar } from './FilterBar';
+import { SearchFiltersState } from './types';
+import { FilterBar, PresenterFilters, SearchFilters } from './FilterBar';
 import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
 import { Total } from './Total';
@@ -20,19 +20,30 @@ const Wrapper = styled.div`
 `;
 
 export const EpisodeSearch = () => {
-  const { episodes, search, error, loading, total } = useDb();
+  const {
+    episodes: {
+      data: episodes,
+      search,
+      error: episodesError,
+      loading: episodesLoading,
+      total,
+    },
+    presenters: { data: presenters },
+  } = useDb();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
-  const [selectedFilters, setFilters] = useState<FiltersState>({
+  const [presenterFilters, setPresenterFilters] = useState<number[]>([]);
+  const [searchFilters, setSearchFilters] = useState<SearchFiltersState>({
     episode: true,
     title: true,
     description: true,
     words: true,
   });
 
-  const handleFilterToggle = useCallback(
+  const handleSearchFilterToggle = useCallback(
     ({ name, checked }: { name: string; checked: boolean }) => {
-      setFilters(current => ({
+      setSearchFilters(current => ({
         ...current,
         [name]: checked,
       }));
@@ -41,9 +52,9 @@ export const EpisodeSearch = () => {
   );
 
   useEffect(() => {
-    search(searchTerm, selectedFilters);
+    search(searchTerm, searchFilters);
     setPage(0);
-  }, [search, searchTerm, selectedFilters]);
+  }, [search, searchTerm, searchFilters]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     preventDefault(e);
@@ -59,8 +70,24 @@ export const EpisodeSearch = () => {
     return null;
   }
 
-  const totalPages = Math.ceil(episodes.length / PAGE_SIZE);
-  const episodesLength = error ? 0 : episodes.length;
+  const filteredEpisodes =
+    presenterFilters.length === 0
+      ? episodes
+      : episodes.filter(epi => {
+          return (
+            presenterFilters.includes(epi.presenter1) ||
+            presenterFilters.includes(epi.presenter2) ||
+            presenterFilters.includes(epi.presenter3) ||
+            presenterFilters.includes(epi.presenter4) ||
+            presenterFilters.includes(epi.presenter5)
+          );
+        });
+
+  const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
+  const episodesLength = episodesError ? 0 : filteredEpisodes.length;
+  const presentersFull = presenters
+    ? presenterFilters.map(n => presenters[n])
+    : [];
 
   return (
     <Wrapper>
@@ -68,27 +95,42 @@ export const EpisodeSearch = () => {
         placeholder="no such thing as a search bar"
         onSubmit={handleSubmit}
       />
-      <FilterBar filters={selectedFilters} onToggle={handleFilterToggle} />
+      <FilterBar>
+        <SearchFilters
+          selected={searchFilters}
+          onToggle={handleSearchFilterToggle}
+        />
+        <PresenterFilters
+          selected={presenterFilters}
+          onChange={setPresenterFilters}
+        />
+      </FilterBar>
       {!!total && (
         <Total
+          presenters={presentersFull}
           searchTerm={searchTerm}
-          loading={loading}
+          error={!!episodesError}
+          loading={episodesLoading}
           results={episodesLength}
           total={total}
         />
       )}
-      {error ? (
+      {episodesError ? (
         <>
           <EmptyState
-            title={error.message}
+            title={episodesError.message}
             body="Sorry about that. A report has been filed. Please try a different search."
           />
           <PaginationSpacer />
         </>
       ) : (
         <>
-          <EpisodesTable episodes={episodes} page={page} loading={loading} />
-          {totalPages > 1 && !loading ? (
+          <EpisodesTable
+            episodes={filteredEpisodes}
+            page={page}
+            loading={episodesLoading}
+          />
+          {totalPages > 1 && !episodesLoading ? (
             <Paginator
               page={page}
               totalPages={totalPages}
