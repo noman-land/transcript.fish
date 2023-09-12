@@ -1,7 +1,8 @@
 import { styled } from 'styled-components';
+import { Colors } from './constants';
 
 const StyledDiv = styled.div`
-  background-color: #f8e44f;
+  background-color: ${Colors.citrineLight};
   text-align: left;
   display: flex;
   flex-direction: column;

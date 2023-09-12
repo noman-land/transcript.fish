@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import { EmptyState } from './EmptyState';
 import { EpisodeRow } from './EpisodeRow';
 import { Episode } from './types';
-import { PAGE_SIZE } from './constants';
+import { Colors, PAGE_SIZE } from './constants';
 import { Spinner } from './Spinner';
 
 const StyledEpisodesTbody = styled.tbody`
-  background-color: #f8e44f;
+  background-color: ${Colors.citrineLight};
   border-collapse: collapse;
 `;
 

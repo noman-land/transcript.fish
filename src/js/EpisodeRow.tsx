@@ -44,15 +44,17 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
 
 export const EpisodeRow = ({ episode }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { episodeWords, getEpisode } = useDb();
+  const {
+    transcript: { get: getTranscript, data },
+  } = useDb();
 
   const handleClick = useCallback(() => {
-    if (!episodeWords) {
-      getEpisode(episode.episode);
+    if (!data) {
+      getTranscript(episode.episode);
     }
 
     setIsOpen(open => !open);
-  }, [episode, episodeWords, getEpisode]);
+  }, [episode, data, getTranscript]);
 
   return (
     <TrWithBackground
@@ -65,7 +67,7 @@ export const EpisodeRow = ({ episode }: EpisodeRowProps) => {
         onClick={handleClick}
         episode={episode}
       />
-      {isOpen && episodeWords && <EpisodeTranscriptCell words={episodeWords} />}
+      {isOpen && data && <EpisodeTranscriptCell words={data} />}
     </TrWithBackground>
   );
 };

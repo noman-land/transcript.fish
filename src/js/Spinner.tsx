@@ -14,7 +14,7 @@ export const Spinner = styled.span.attrs<{ $size?: string }>({
     height: 0.4em;
     width: 0.7em;
     text-align: center;
-    font-size: ${({ $size = '1.2rem' }) => $size};
+    font-size: ${({ $size = '1rem' }) => $size};
 
     .dot {
       ${spin}

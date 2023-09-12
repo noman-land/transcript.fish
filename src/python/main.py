@@ -9,6 +9,6 @@ if __name__ == '__main__':
     try:
         convert()
     except KeyboardInterrupt:
-        print('\n[CTRL + C DETECTED] Script interrupted. Cleaning up.')
+        print('\n[ ⚡️ CTRL + C ⚡️ ] Script interrupted. Cleaning up.')
         database.close()
         sys.exit(0)
