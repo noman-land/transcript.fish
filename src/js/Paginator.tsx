@@ -59,7 +59,7 @@ const Button = styled.button`
   background: none;
   border: none;
   font-family: TTE, 'Courier New', Courier, monospace;
-  font-size: 1.2em;
+  font-size: 1.1em;
   min-width: 50px;
   max-width: 50px;
   padding: 1rem 0;

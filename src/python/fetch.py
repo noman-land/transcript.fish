@@ -8,9 +8,9 @@ def download_episode_audio(episode):
     audio_url = utils.get_audio_url(episode)
     audio_path = utils.make_audio_file_path(episode_num)
     if Path(audio_path).exists():
-        utils.log(episode_num, 'Already downloaded audio. Skipping.')
+        utils.log(episode_num, 'Already complete: audio download')
     else:
-        utils.log(episode_num, f'Downloading audio at {audio_url}.')
+        utils.log(episode_num, f'Downloading: audio - {audio_url}')
         urllib.request.urlretrieve(audio_url, audio_path)
 
 opener = urllib.request.build_opener()
@@ -24,9 +24,9 @@ def download_episode_image(episode):
     image_url = utils.get_image_url(episode)
     image_path = utils.make_image_file_path(episode_num, image_url)
     if Path(image_path).exists():
-        utils.log(episode_num, 'Already downloaded image. Skipping.')
+        utils.log(episode_num, 'Already complete: image download')
     else:
-        utils.log(episode_num, f'Downloading image at {image_url}.')
+        utils.log(episode_num, f'Downloading: image - {image_url}')
         urllib.request.install_opener(opener)
         urllib.request.urlretrieve(image_url, image_path)
 

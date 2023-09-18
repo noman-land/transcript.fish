@@ -3,7 +3,7 @@ import os
 from bs4 import BeautifulSoup
 
 def log(episode_num, *msg):
-    print(f'-- {now()} -- Episode {episode_num} --', *msg)
+    print(f'-- {now()} [ Episode {episode_num} ]', *msg)
 
 def now():
     return datetime.now().strftime('%H:%M:%S')

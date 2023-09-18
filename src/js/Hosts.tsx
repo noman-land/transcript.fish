@@ -1,13 +1,7 @@
 import { styled } from 'styled-components';
 import { HostIcon } from './HostIcon';
 import { Host } from './types';
-
-const hosts: { [k in Host]: number } = {
-  dan: 12,
-  james: 22,
-  anna: 7,
-  andy: 6,
-};
+import { hosts } from './constants';
 
 export const Hosts = styled.div.attrs<{ $presenters: number[] }>(
   ({ $presenters }) => ({
