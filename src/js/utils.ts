@@ -1,11 +1,11 @@
 import { FormEventHandler, MouseEventHandler } from 'react';
 import { Presenter } from './types';
 
-export const mediaUrl = () => {
+export const mediaUrl = (path = '') => {
   const url = new URL(import.meta.url);
-  return url.hostname === 'localhost'
-    ? url.origin
-    : 'https://media.transcript.fish';
+  const host =
+    url.hostname === 'localhost' ? url.origin : 'https://media.transcript.fish';
+  return `${host}/${path}`;
 };
 
 export const formatDate = (date: string) => {

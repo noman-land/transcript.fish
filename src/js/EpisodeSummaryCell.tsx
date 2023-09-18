@@ -4,7 +4,7 @@ import { Tags } from './Tags';
 import { EpisodeSummaryCellProps } from './types';
 import { Hosts } from './Hosts';
 import { Separator } from './Separator';
-import { formatDate, formatDuration, stopPropagation } from './utils';
+import { formatDate, formatDuration, mediaUrl, stopPropagation } from './utils';
 
 const TitleWrapper = styled.div`
   display: flex;
@@ -41,6 +41,10 @@ const Description = styled.span`
 
 const Duration = styled.span`
   font-style: italic;
+  margin-top: 1em;
+`;
+
+const Audio = styled.audio`
   margin-top: 1em;
 `;
 
@@ -117,6 +121,7 @@ export const EpisodeSummaryCell = ({
       />
       <Hosts $presenters={presenters} />
       <Duration>{formatDuration(duration)}</Duration>
+      <Audio controls={true} src={mediaUrl(`audio/${episodeNum}.mp3`)} />
       {isOpen && <Separator />}
     </StyledTd>
   );
