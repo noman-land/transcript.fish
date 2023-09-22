@@ -4,7 +4,8 @@ import { Tags } from './Tags';
 import { EpisodeSummaryCellProps } from './types';
 import { Hosts } from './Hosts';
 import { Separator } from './Separator';
-import { formatDate, formatDuration, mediaUrl, stopPropagation } from './utils';
+import { formatDate, formatDuration, stopPropagation } from './utils';
+import { AudioControls } from './audio/AudioControls';
 
 const TitleWrapper = styled.div`
   display: flex;
@@ -16,11 +17,11 @@ const TitleWrapper = styled.div`
 
 const PublishedDate = styled.div`
   font-style: italic;
-  margin-bottom: 1em;
 `;
 
 const Description = styled.span`
   text-align: justify;
+  margin-top: 1em;
 
   a {
     word-break: break-all;
@@ -44,12 +45,7 @@ const Duration = styled.span`
   margin-top: 1em;
 `;
 
-const Audio = styled.audio`
-  margin-top: 1em;
-`;
-
 const StyledTd = styled.td<{ $isOpen: boolean }>`
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -72,6 +68,7 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
 `;
 
 const Title = styled.h3`
+  cursor: pointer;
   margin-top: 0;
   margin-right: 1em;
   flex-grow: 1;
@@ -107,21 +104,21 @@ export const EpisodeSummaryCell = ({
     [presenter1, presenter2, presenter3, presenter4]
   );
   return (
-    <StyledTd $isOpen={isOpen} onClick={onClick}>
+    <StyledTd $isOpen={isOpen}>
       <TitleWrapper>
         <Title>
-          <span>{episodeNum}</span>: {title}
+          <a onClick={onClick}>{episodeNum}</a>: {title}
         </Title>
         <Tags live={live} compilation={compilation} />
       </TitleWrapper>
       <PublishedDate>{formatDate(pubDate)}</PublishedDate>
+      <Hosts $presenters={presenters} />
       <Description
         onClick={stopPropagation}
         dangerouslySetInnerHTML={{ __html: description }}
       />
-      <Hosts $presenters={presenters} />
+      <AudioControls episodeNum={episodeNum} />
       <Duration>{formatDuration(duration)}</Duration>
-      <Audio controls={true} src={mediaUrl(`audio/${episodeNum}.mp3`)} />
       {isOpen && <Separator />}
     </StyledTd>
   );

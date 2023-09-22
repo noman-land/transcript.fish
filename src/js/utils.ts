@@ -26,9 +26,7 @@ export const formatDuration = (duration: number) => {
 
 export const makeImageUrl = (episode: number, imageUrl: string) => {
   const extension = imageUrl.split('.').pop();
-  return extension
-    ? `${mediaUrl()}/images/episodes/${episode}.${extension}`
-    : '';
+  return extension ? mediaUrl(`images/episodes/${episode}.${extension}`) : '';
 };
 
 export const preventDefault: FormEventHandler = e => e.preventDefault();

@@ -9,6 +9,7 @@ export interface Presenter {
 
 export interface Episode {
   image: string;
+  audio: string;
   description: string;
   duration: number;
   episode: number;
@@ -75,6 +76,11 @@ export type SearchResults = Record<number, boolean>;
 
 // These match the image names for the icons (e.g. anna.png)
 export type Host = 'dan' | 'james' | 'anna' | 'andy';
+
+export interface EpisodeAudioCellProps {
+  isOpen: boolean;
+  episode: Episode;
+}
 
 export interface EpisodeSummaryCellProps {
   isOpen: boolean;

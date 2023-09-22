@@ -26,6 +26,7 @@
   "author": "Noman",
   "license": "MIT",
   "dependencies": {
+    "classnames": "^2.3.2",
     "react-error-boundary": "^4.0.10",
     "react-select": "^5.7.4",
     "sql.js-httpvfs": "^0.8.12",

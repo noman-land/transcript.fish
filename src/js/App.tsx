@@ -5,6 +5,7 @@ import { UnderConstructionBanner } from './UnderConstructionBanner';
 import { EpisodeSearchFallback } from './EpisodeSearchFallback';
 import { mediaUrl } from './utils';
 import { fadeIn } from './styleUtils';
+import { AudioContextWrapper } from './audio/AudioContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -50,19 +51,23 @@ const Wrapper = styled.div`
 export const App = () => {
   return (
     <Wrapper>
-      <header>
-        <a href="https://github.com/noman-land/transcript.fish">
-          <img width={32} src={`${mediaUrl()}/images/github-logo.png`} />
-        </a>
-      </header>
-      <div className="app-body">
-        <h1>transcript.fish</h1>
-        <UnderConstructionBanner />
-        <img className="nstaaf-logo" src={`${mediaUrl()}/images/logo.jpg`} />
-        <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
-          <EpisodeSearch />
-        </ErrorBoundary>
-      </div>
+      <AudioContextWrapper>
+        <>
+          <header>
+            <a href="https://github.com/noman-land/transcript.fish">
+              <img width={32} src={mediaUrl('images/github-logo.png')} />
+            </a>
+          </header>
+          <div className="app-body">
+            <h1>transcript.fish</h1>
+            <UnderConstructionBanner />
+            <img className="nstaaf-logo" src={mediaUrl('images/logo.jpg')} />
+            <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
+              <EpisodeSearch />
+            </ErrorBoundary>
+          </div>
+        </>
+      </AudioContextWrapper>
     </Wrapper>
   );
 };

@@ -10,7 +10,7 @@ import {
 } from './types';
 import { mediaUrl } from './utils';
 
-const response = await fetch(`${mediaUrl()}/db/latest.json?t=${Date.now()}`);
+const response = await fetch(mediaUrl(`db/latest.json?t=${Date.now()}`));
 const { latest } = await response.json();
 
 const workerUrl = new URL(
@@ -24,7 +24,7 @@ const createWorker = async () =>
     [
       {
         from: 'jsonconfig',
-        configUrl: `${mediaUrl()}/db/${latest}/config.json`,
+        configUrl: mediaUrl(`db/${latest}/config.json`),
       },
     ],
     workerUrl.toString(),
