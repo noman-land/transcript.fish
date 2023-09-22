@@ -4,7 +4,7 @@ import { EpisodeRowProps } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
 import { useDb } from './dbHooks';
-import { makeImageUrl } from './utils';
+import { makeEpisodeCoverUrl } from './utils';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
   background-color: ${({ $isOpen }) => $isOpen && '#fff189'};
@@ -59,7 +59,7 @@ export const EpisodeRow = ({ episode }: EpisodeRowProps) => {
   return (
     <TrWithBackground
       $isOpen={isOpen}
-      $image={makeImageUrl(episode.episode, episode.image)}
+      $image={makeEpisodeCoverUrl(episode.episode, episode.image)}
       key={episode.episode}
     >
       <EpisodeSummaryCell

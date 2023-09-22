@@ -55,13 +55,13 @@ export const App = () => {
         <>
           <header>
             <a href="https://github.com/noman-land/transcript.fish">
-              <img width={32} src={mediaUrl('images/github-logo.png')} />
+              <img width={32} src={mediaUrl.images('github-logo.png')} />
             </a>
           </header>
           <div className="app-body">
             <h1>transcript.fish</h1>
             <UnderConstructionBanner />
-            <img className="nstaaf-logo" src={mediaUrl('images/logo.jpg')} />
+            <img className="nstaaf-logo" src={mediaUrl.images('logo.jpg')} />
             <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
               <EpisodeSearch />
             </ErrorBoundary>

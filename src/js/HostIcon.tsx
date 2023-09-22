@@ -8,7 +8,7 @@ export const HostIcon = styled.img.attrs<{
 }>(({ $host }) => ({
   title: $host[0].toUpperCase() + $host.substring(1),
   alt: $host,
-  src: mediaUrl(`images/hosts/${$host}.png`),
+  src: mediaUrl.images(`hosts/${$host}.png`),
 }))`
   width: 36px;
   height: 36px;

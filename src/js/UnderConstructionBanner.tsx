@@ -16,7 +16,7 @@ const H2 = styled.h2`
 `;
 
 const ConstructionSign = styled.img.attrs({
-  src: mediaUrl('images/construction-sign.gif'),
+  src: mediaUrl.images('construction-sign.gif'),
 })`
   width: 50px;
 

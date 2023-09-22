@@ -45,15 +45,11 @@ const PauseIcon = styled.span.attrs({ children: icons.pause })`
 `;
 
 export const AudioControls = ({ episodeNum }: { episodeNum: number }) => {
-  const { isPlaying, playPause, playingEpisode } = useContext(AudioContext);
+  const { isPlaying, playPause } = useContext(AudioContext);
   return (
     <Wrapper>
       <Button onClick={() => playPause(episodeNum)}>
-        {isPlaying && episodeNum === playingEpisode ? (
-          <PauseIcon />
-        ) : (
-          <PlayIcon />
-        )}
+        {isPlaying(episodeNum) ? <PauseIcon /> : <PlayIcon />}
       </Button>
     </Wrapper>
   );

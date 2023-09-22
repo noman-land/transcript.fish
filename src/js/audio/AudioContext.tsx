@@ -9,13 +9,13 @@ import {
 import { AudioPlayer } from './AudioPlayer';
 
 export const AudioContext = createContext<{
-  isPlaying: boolean;
+  isPlaying: (episodeNum: number) => boolean;
   getCurrentTime: () => number;
   playPause: (episodeNum: number) => void;
   audioRef?: Ref<HTMLAudioElement>;
   playingEpisode?: number;
 }>({
-  isPlaying: false,
+  isPlaying: () => false,
   getCurrentTime: () => 0,
   playPause: () => {
     return;
@@ -31,10 +31,10 @@ export const AudioContextWrapper = ({
 }) => {
   const ref = useRef<HTMLAudioElement>(null);
   const [playingEpisode, setPlayingEpisode] = useState<number>();
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const getCurrentTime = () => 0;
   const playPause = (episodeNum: number) => {
-    setIsPlaying(p => {
+    setPlaying(p => {
       const newPlaying = !p;
       if (newPlaying) {
         setPlayingEpisode(episodeNum);
@@ -43,16 +43,22 @@ export const AudioContextWrapper = ({
     });
   };
 
+  const isPlaying = (episodeNum: number) => {
+    return playing && episodeNum === playingEpisode;
+  };
+
   useEffect(() => {
     const audio = ref.current;
-    if (playingEpisode && audio) {
-      if (isPlaying) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
+    if (!audio || !playingEpisode) {
+      return;
     }
-  }, [playingEpisode, isPlaying]);
+
+    if (playing) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }, [playingEpisode, playing]);
 
   return (
     <AudioContext.Provider
@@ -63,7 +69,9 @@ export const AudioContextWrapper = ({
         playingEpisode,
       }}
     >
-      <AudioPlayer episodeNum={playingEpisode} audioRef={ref} />
+      {playingEpisode && (
+        <AudioPlayer episodeNum={playingEpisode} audioRef={ref} />
+      )}
       {children}
     </AudioContext.Provider>
   );
