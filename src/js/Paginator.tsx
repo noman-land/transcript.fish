@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { styled } from 'styled-components';
+import { styled, css } from 'styled-components';
 import { PaginatorProps } from './types';
 import { preventDefault } from './utils';
 
@@ -79,16 +79,16 @@ const Button = styled.button`
 
   ${({ disabled }) =>
     disabled
-      ? `
-      opacity: 0.5;
-      `
-      : `
-      cursor: pointer;
+      ? css`
+          opacity: 0.5;
+        `
+      : css`
+          cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-      }
-    `}
+          &:hover {
+            text-decoration: underline;
+          }
+        `}
 `;
 
 export const PaginationSpacer = styled.div`
