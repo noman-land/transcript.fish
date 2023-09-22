@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { AudioContext } from './AudioContext';
 import styled from 'styled-components';
-import classNames from 'classnames';
 
 const icons = {
   play: '⏵',
@@ -31,31 +30,30 @@ const Button = styled.button`
   padding: 0;
   margin: 0;
   height: 100%;
+`;
 
-  .icon {
-    position: relative;
-    left: 0.1rem;
-    bottom: 0.5rem;
+const PlayIcon = styled.span.attrs({ children: icons.play })`
+  position: relative;
+  left: 0.1rem;
+  bottom: 0.5rem;
+`;
 
-    &.playing {
-      left: 0rem;
-    }
-  }
+const PauseIcon = styled.span.attrs({ children: icons.pause })`
+  position: relative;
+  left: 0rem;
+  bottom: 0.5rem;
 `;
 
 export const AudioControls = ({ episodeNum }: { episodeNum: number }) => {
   const { isPlaying, playPause, playingEpisode } = useContext(AudioContext);
-  const playing = isPlaying && episodeNum === playingEpisode;
   return (
     <Wrapper>
-      <Button
-        onClick={() => {
-          playPause(episodeNum);
-        }}
-      >
-        <span className={classNames('icon', { playing: isPlaying })}>
-          {playing ? icons.pause : icons.play}
-        </span>
+      <Button onClick={() => playPause(episodeNum)}>
+        {isPlaying && episodeNum === playingEpisode ? (
+          <PauseIcon />
+        ) : (
+          <PlayIcon />
+        )}
       </Button>
     </Wrapper>
   );
