@@ -62,32 +62,54 @@ const DurationWrapper = styled.span`
 
 const Duration = styled.span`
   padding: 0 0 0 0.4rem;
+  &::selection {
+    background: none;
+  }
 `;
 
-const Timeline = styled.span<{ $grow?: number; $unplayed?: boolean }>`
+const Timeline = styled.span<{
+  $grow?: number;
+  $unplayed?: boolean;
+  $ended?: boolean;
+}>`
   flex-grow: ${({ $grow = 1 }) => $grow};
   height: 24px;
+  cursor: pointer;
   border: none;
   margin: 0;
   color: white;
+  display: flex;
   background: ${Colors.night};
+  justify-content: flex-end;
   border-right: 4px solid #eee;
+  position: relative;
+
+  ${({ $ended }) =>
+    $ended &&
+    css`
+      border: none;
+    `}
 
   ${({ $unplayed = false }) =>
     $unplayed &&
     css`
-      justify-content: flex-end;
+      justify-content: flex-start;
       color: ${Colors.night};
       background: ${Colors.citrineDark};
-      border-right: none;
+      border: none;
     `};
 `;
 
-const CurrenTime = styled.span`
+const CurrentTime = styled.span`
   height: 24px;
   display: flex;
   align-items: center;
   padding: 0 0.6rem 0 0.2rem;
+  position: absolute;
+
+  &::selection {
+    background: none;
+  }
 `;
 
 interface AudioControlsProps {
@@ -96,7 +118,7 @@ interface AudioControlsProps {
 }
 
 export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
-  const { isPlaying, playPause, currentTime, playingEpisode } =
+  const { isPlaying, playPause, currentTime, playingEpisode, seek, ended } =
     useContext(AudioContext);
   const playing = isPlaying(episodeNum);
   const isCurrent = playingEpisode === episodeNum;
@@ -112,20 +134,28 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
       <DurationWrapper>
         {isCurrent ? (
           <>
-            <Timeline $grow={currentTime}>
-              {halfwayDone && (
-                <CurrenTime>{formatTimestamp(currentTime)}</CurrenTime>
+            <Timeline
+              onClick={() => seek(currentTime - 20)}
+              $grow={currentTime}
+              $ended={ended}
+            >
+              {halfwayDone && !ended && (
+                <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
               )}
             </Timeline>
-            <Timeline $unplayed={true} $grow={duration - currentTime}>
+            <Timeline
+              onClick={() => seek(currentTime + 20)}
+              $unplayed={true}
+              $grow={duration - currentTime}
+            >
               {!halfwayDone && (
-                <CurrenTime>{formatTimestamp(currentTime)}</CurrenTime>
+                <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
               )}
             </Timeline>
             <Duration>{formatTimestamp(duration)}</Duration>
           </>
         ) : (
-          formatDuration(duration)
+          <Duration>{formatDuration(duration)}</Duration>
         )}
       </DurationWrapper>
     </Wrapper>

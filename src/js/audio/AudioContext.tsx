@@ -14,12 +14,16 @@ export const AudioContext = createContext<{
   audioRef?: Ref<HTMLAudioElement>;
   playingEpisode?: number;
   currentTime: number;
+  seek: (time: number) => void;
+  ended: boolean;
 }>({
   isPlaying: () => false,
   playPause: () => undefined,
   audioRef: null,
   playingEpisode: undefined,
   currentTime: 0,
+  seek: () => undefined,
+  ended: false,
 });
 
 export const AudioContextWrapper = ({
@@ -29,6 +33,7 @@ export const AudioContextWrapper = ({
 }) => {
   const ref = useRef<HTMLAudioElement>(null);
   const [playingEpisode, setPlayingEpisode] = useState<number>();
+  const [ended, setEnded] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const playPause = (episodeNum: number) => {
@@ -36,6 +41,8 @@ export const AudioContextWrapper = ({
       const newPlaying = !p;
       if (newPlaying) {
         setPlayingEpisode(episodeNum);
+        setEnded(false);
+        setCurrentTime(0);
       }
       return newPlaying;
     });
@@ -43,6 +50,10 @@ export const AudioContextWrapper = ({
 
   const isPlaying = (episodeNum: number) => {
     return playing && episodeNum === playingEpisode;
+  };
+
+  const seek = (time: number) => {
+    ref.current?.fastSeek(time);
   };
 
   useEffect(() => {
@@ -55,22 +66,20 @@ export const AudioContextWrapper = ({
       const { currentTime } = event.target as HTMLAudioElement;
       setCurrentTime(currentTime);
     };
-
     const handlePlay = () => setPlaying(true);
     const handlePause = () => setPlaying(false);
-
-    const logEnd = ({ target }: Event) => console.log('ended', target);
+    const handleEnded = () => setEnded(true);
 
     audio?.addEventListener('timeupdate', handleTimeupdate);
     audio?.addEventListener('play', handlePlay);
     audio?.addEventListener('pause', handlePause);
-    audio?.addEventListener('ended', logEnd);
+    audio?.addEventListener('ended', handleEnded);
 
     return () => {
       audio?.removeEventListener('timeupdate', handleTimeupdate);
       audio?.removeEventListener('play', handlePlay);
       audio?.removeEventListener('pause', handlePause);
-      audio?.removeEventListener('ended', logEnd);
+      audio?.removeEventListener('ended', handleEnded);
     };
   }, [playingEpisode]);
 
@@ -94,6 +103,8 @@ export const AudioContextWrapper = ({
         playPause,
         playingEpisode,
         currentTime,
+        seek,
+        ended,
       }}
     >
       {playingEpisode && (
