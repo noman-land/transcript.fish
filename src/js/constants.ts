@@ -11,7 +11,7 @@ export const hosts: { [k in Host]: number } = {
 
 export const Colors = {
   dimGrey: '#706563',
-  citrineDark: '#d2bb3d',
+  citrineDark: '#baa739',
   citrine: '#e8d22f',
   citrineLight: '#f8e44f',
   citrineLighter: '#efe284',

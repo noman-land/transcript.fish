@@ -4,7 +4,7 @@ import { Tags } from './Tags';
 import { EpisodeSummaryCellProps } from './types';
 import { Hosts } from './Hosts';
 import { Separator } from './Separator';
-import { formatDate, formatDuration, stopPropagation } from './utils';
+import { formatDate, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
 
 const TitleWrapper = styled.div`
@@ -38,11 +38,6 @@ const Description = styled.span`
   & > p {
     margin: 0;
   }
-`;
-
-const Duration = styled.span`
-  font-style: italic;
-  margin-top: 1em;
 `;
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
@@ -117,8 +112,7 @@ export const EpisodeSummaryCell = ({
         onClick={stopPropagation}
         dangerouslySetInnerHTML={{ __html: description }}
       />
-      <AudioControls episodeNum={episodeNum} />
-      <Duration>{formatDuration(duration)}</Duration>
+      <AudioControls episodeNum={episodeNum} duration={duration} />
       {isOpen && <Separator />}
     </StyledTd>
   );

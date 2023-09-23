@@ -10,18 +10,16 @@ import { AudioPlayer } from './AudioPlayer';
 
 export const AudioContext = createContext<{
   isPlaying: (episodeNum: number) => boolean;
-  getCurrentTime: () => number;
   playPause: (episodeNum: number) => void;
   audioRef?: Ref<HTMLAudioElement>;
   playingEpisode?: number;
+  currentTime: number;
 }>({
   isPlaying: () => false,
-  getCurrentTime: () => 0,
-  playPause: () => {
-    return;
-  },
+  playPause: () => undefined,
   audioRef: null,
   playingEpisode: undefined,
+  currentTime: 0,
 });
 
 export const AudioContextWrapper = ({
@@ -32,7 +30,7 @@ export const AudioContextWrapper = ({
   const ref = useRef<HTMLAudioElement>(null);
   const [playingEpisode, setPlayingEpisode] = useState<number>();
   const [playing, setPlaying] = useState(false);
-  const getCurrentTime = () => 0;
+  const [currentTime, setCurrentTime] = useState(0);
   const playPause = (episodeNum: number) => {
     setPlaying(p => {
       const newPlaying = !p;
@@ -53,6 +51,35 @@ export const AudioContextWrapper = ({
       return;
     }
 
+    const handleTimeupdate = (event: Event) => {
+      const { currentTime } = event.target as HTMLAudioElement;
+      setCurrentTime(currentTime);
+    };
+
+    const handlePlay = () => setPlaying(true);
+    const handlePause = () => setPlaying(false);
+
+    const logEnd = ({ target }: Event) => console.log('ended', target);
+
+    audio?.addEventListener('timeupdate', handleTimeupdate);
+    audio?.addEventListener('play', handlePlay);
+    audio?.addEventListener('pause', handlePause);
+    audio?.addEventListener('ended', logEnd);
+
+    return () => {
+      audio?.removeEventListener('timeupdate', handleTimeupdate);
+      audio?.removeEventListener('play', handlePlay);
+      audio?.removeEventListener('pause', handlePause);
+      audio?.removeEventListener('ended', logEnd);
+    };
+  }, [playingEpisode]);
+
+  useEffect(() => {
+    const audio = ref.current;
+    if (!audio || !playingEpisode) {
+      return;
+    }
+
     if (playing) {
       audio.play();
     } else {
@@ -64,9 +91,9 @@ export const AudioContextWrapper = ({
     <AudioContext.Provider
       value={{
         isPlaying,
-        getCurrentTime,
         playPause,
         playingEpisode,
+        currentTime,
       }}
     >
       {playingEpisode && (
