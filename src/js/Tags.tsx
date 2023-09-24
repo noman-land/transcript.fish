@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { Colors } from './constants';
 
 export const TagWrapper = styled.div`
   display: flex;
@@ -7,7 +8,7 @@ export const TagWrapper = styled.div`
 `;
 
 export const Tag = styled.span`
-  background: black;
+  background: ${Colors.night};
   color: white;
   padding: 0.3rem 0.5rem;
   margin-bottom: 0.8em;

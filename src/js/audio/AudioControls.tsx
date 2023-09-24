@@ -22,12 +22,13 @@ const ButtonWrapper = styled.div`
   position: relative;
   width: 3rem;
   height: 3rem;
-  border: 1px solid black;
+  border: 1px solid ${Colors.night};
   border-radius: 50%;
 `;
 
 const Button = styled.button`
   cursor: pointer;
+  color: ${Colors.night};
   font-size: 3.2rem;
   display: block;
   position: relative;
@@ -55,13 +56,12 @@ const PauseIcon = styled.span.attrs({ children: icons.pause })`
 const DurationWrapper = styled.span`
   font-style: italic;
   display: flex;
-  margin-left: 1rem;
+  margin-left: 1.2rem;
   flex-grow: 1;
   align-items: center;
 `;
 
 const Duration = styled.span`
-  padding: 0 0 0 0.4rem;
   &::selection {
     background: none;
   }
@@ -73,7 +73,7 @@ const Timeline = styled.span<{
   $ended?: boolean;
 }>`
   flex-grow: ${({ $grow = 1 }) => $grow};
-  height: 24px;
+  height: 1.4rem;
   cursor: pointer;
   border: none;
   margin: 0;
@@ -81,8 +81,8 @@ const Timeline = styled.span<{
   display: flex;
   background: ${Colors.night};
   justify-content: flex-end;
-  border-right: 4px solid #eee;
   position: relative;
+  border-right: 4px solid #eee;
 
   ${({ $ended }) =>
     $ended &&
@@ -94,18 +94,26 @@ const Timeline = styled.span<{
     $unplayed &&
     css`
       justify-content: flex-start;
-      color: ${Colors.night};
-      background: ${Colors.citrineDark};
+      background-image: radial-gradient(
+        ${Colors.night} 1px,
+        ${Colors.citrineDark} 1.5px
+      );
+      background-size: 5px 5px;
       border: none;
+      margin-right: 1rem;
     `};
 `;
 
-const CurrentTime = styled.span`
-  height: 24px;
+const CurrentTime = styled.span.attrs({
+  className: 'bold',
+})`
+  height: 1.4rem;
   display: flex;
   align-items: center;
-  padding: 0 0.6rem 0 0.2rem;
+  padding: 0 0.6rem;
   position: absolute;
+  margin-bottom: -1px;
+  bottom: 0;
 
   &::selection {
     background: none;
@@ -123,6 +131,7 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
   const playing = isPlaying(episodeNum);
   const isCurrent = playingEpisode === episodeNum;
   const halfwayDone = Boolean(Math.round(currentTime / duration));
+  const timeLeft = duration - currentTime;
 
   return (
     <Wrapper>
@@ -135,7 +144,11 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
         {isCurrent ? (
           <>
             <Timeline
-              onClick={() => seek(currentTime - 20)}
+              onClick={({ clientX, currentTarget }) => {
+                const { left, width } = currentTarget.getBoundingClientRect();
+                const newTime = ((clientX - left) / width) * currentTime;
+                seek(newTime);
+              }}
               $grow={currentTime}
               $ended={ended}
             >
@@ -144,9 +157,13 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
               )}
             </Timeline>
             <Timeline
-              onClick={() => seek(currentTime + 20)}
+              onClick={({ clientX, currentTarget }) => {
+                const { left, width } = currentTarget.getBoundingClientRect();
+                const newTime = ((clientX - left) / width) * timeLeft;
+                seek(currentTime + newTime);
+              }}
               $unplayed={true}
-              $grow={duration - currentTime}
+              $grow={timeLeft}
             >
               {!halfwayDone && (
                 <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>

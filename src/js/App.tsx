@@ -6,6 +6,7 @@ import { EpisodeSearchFallback } from './EpisodeSearchFallback';
 import { mediaUrl } from './utils';
 import { fadeIn } from './styleUtils';
 import { AudioContextWrapper } from './audio/AudioContext';
+import { Colors } from './constants';
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ const Wrapper = styled.div`
   }
 
   & a {
-    color: black;
+    color: ${Colors.night};
   }
 
   .app-body {

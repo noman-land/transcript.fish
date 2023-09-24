@@ -38,13 +38,12 @@ export const AudioContextWrapper = ({
   const [currentTime, setCurrentTime] = useState(0);
   const playPause = (episodeNum: number) => {
     setPlaying(p => {
-      const newPlaying = !p;
-      if (newPlaying) {
-        setPlayingEpisode(episodeNum);
-        setEnded(false);
-        setCurrentTime(0);
+      if (episodeNum === playingEpisode) {
+        return !p;
       }
-      return newPlaying;
+
+      setPlayingEpisode(episodeNum);
+      return true;
     });
   };
 
@@ -65,6 +64,7 @@ export const AudioContextWrapper = ({
     const handleTimeupdate = (event: Event) => {
       const { currentTime } = event.target as HTMLAudioElement;
       setCurrentTime(currentTime);
+      setEnded(false);
     };
     const handlePlay = () => setPlaying(true);
     const handlePause = () => setPlaying(false);
@@ -74,12 +74,14 @@ export const AudioContextWrapper = ({
     audio?.addEventListener('play', handlePlay);
     audio?.addEventListener('pause', handlePause);
     audio?.addEventListener('ended', handleEnded);
+    audio?.addEventListener('seeked', handleTimeupdate);
 
     return () => {
       audio?.removeEventListener('timeupdate', handleTimeupdate);
       audio?.removeEventListener('play', handlePlay);
       audio?.removeEventListener('pause', handlePause);
       audio?.removeEventListener('ended', handleEnded);
+      audio?.removeEventListener('seeked', handleTimeupdate);
     };
   }, [playingEpisode]);
 
