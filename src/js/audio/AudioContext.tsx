@@ -52,7 +52,9 @@ export const AudioContextWrapper = ({
   };
 
   const seek = (time: number) => {
-    ref.current?.fastSeek(time);
+    if (ref.current) {
+      ref.current.currentTime = time;
+    }
   };
 
   useEffect(() => {
