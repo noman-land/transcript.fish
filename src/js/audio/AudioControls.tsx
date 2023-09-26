@@ -122,7 +122,6 @@ const CurrentTime = styled.span.attrs({
   align-items: center;
   padding: 0 0.6rem;
   position: absolute;
-  margin-bottom: -1px;
   bottom: 0;
 
   &::selection {
