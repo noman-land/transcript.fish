@@ -38,27 +38,6 @@ const Button = styled.button`
   height: 100%;
 `;
 
-const Icon = styled.img`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 66%;
-
-  &[src*='play.'] {
-    position: relative;
-    left: 4px;
-  }
-`;
-
-const PlayIcon = () => (
-  <Icon alt="play icon" src={mediaUrl.images('icons/play.svg')} />
-);
-
-const PauseIcon = () => (
-  <Icon alt="pause icon" src={mediaUrl.images('icons/pause.svg')} />
-);
-
 const DurationWrapper = styled.span`
   display: flex;
   margin-left: 1.2rem;
@@ -118,9 +97,33 @@ const CurrentTime = styled.span.attrs({
   }
 `;
 
-interface AudioControlsProps {
-  episodeNum: number;
+const Icon = styled.img`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 66%;
+
+  &[src*='play.'] {
+    position: relative;
+    left: 4px;
+  }
+`;
+
+const PlayIcon = () => (
+  <Icon alt="play icon" src={mediaUrl.images('icons/play.svg')} />
+);
+
+const PauseIcon = () => (
+  <Icon alt="pause icon" src={mediaUrl.images('icons/pause.svg')} />
+);
+
+interface AudioTimelineProps {
+  onSkipBack: MouseEventHandler<HTMLSpanElement>;
+  onSkipForward: MouseEventHandler<HTMLSpanElement>;
   duration: number;
+  currentTime: number;
+  ended: boolean;
 }
 
 const AudioTimeline = ({
@@ -129,13 +132,7 @@ const AudioTimeline = ({
   duration,
   currentTime,
   ended,
-}: {
-  onSkipBack: MouseEventHandler<HTMLSpanElement>;
-  onSkipForward: MouseEventHandler<HTMLSpanElement>;
-  duration: number;
-  currentTime: number;
-  ended: boolean;
-}) => {
+}: AudioTimelineProps) => {
   const timeLeft = duration - currentTime;
   const halfwayDone = Boolean(Math.round(currentTime / duration));
   return (
@@ -155,11 +152,14 @@ const AudioTimeline = ({
   );
 };
 
+interface AudioControlsProps {
+  episodeNum: number;
+  duration: number;
+}
+
 export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
   const { isPlaying, playPause, currentTime, playingEpisode, seek, ended } =
     useContext(AudioContext);
-  const isCurrent = playingEpisode === episodeNum;
-  const timeLeft = duration - currentTime;
 
   const handleSkipBack: MouseEventHandler<HTMLSpanElement> = ({
     clientX,
@@ -175,7 +175,7 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
     currentTarget,
   }) => {
     const { left, width } = currentTarget.getBoundingClientRect();
-    const newTime = ((clientX - left) / width) * timeLeft;
+    const newTime = ((clientX - left) / width) * (duration - currentTime);
     seek(currentTime + newTime);
   };
 
@@ -187,7 +187,7 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
         </Button>
       </ButtonWrapper>
       <DurationWrapper>
-        {isCurrent ? (
+        {playingEpisode === episodeNum ? (
           <AudioTimeline
             onSkipBack={handleSkipBack}
             onSkipForward={handleSkipForward}
