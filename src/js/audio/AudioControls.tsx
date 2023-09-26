@@ -66,12 +66,6 @@ const DurationWrapper = styled.span`
   align-items: center;
 `;
 
-const Duration = styled.span`
-  &::selection {
-    background: none;
-  }
-`;
-
 const Timeline = styled.span<{
   $grow?: number;
   $unplayed?: boolean;
@@ -129,12 +123,42 @@ interface AudioControlsProps {
   duration: number;
 }
 
+const AudioTimeline = ({
+  onSkipBack,
+  onSkipForward,
+  duration,
+  currentTime,
+  ended,
+}: {
+  onSkipBack: MouseEventHandler<HTMLSpanElement>;
+  onSkipForward: MouseEventHandler<HTMLSpanElement>;
+  duration: number;
+  currentTime: number;
+  ended: boolean;
+}) => {
+  const timeLeft = duration - currentTime;
+  const halfwayDone = Boolean(Math.round(currentTime / duration));
+  return (
+    <>
+      <Timeline onClick={onSkipBack} $grow={currentTime} $ended={ended}>
+        {halfwayDone && !ended && (
+          <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
+        )}
+      </Timeline>
+      <Timeline onClick={onSkipForward} $grow={timeLeft} $unplayed={true}>
+        {!halfwayDone && (
+          <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
+        )}
+      </Timeline>
+      {formatTimestamp(duration)}
+    </>
+  );
+};
+
 export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
   const { isPlaying, playPause, currentTime, playingEpisode, seek, ended } =
     useContext(AudioContext);
-  const playing = isPlaying(episodeNum);
   const isCurrent = playingEpisode === episodeNum;
-  const halfwayDone = Boolean(Math.round(currentTime / duration));
   const timeLeft = duration - currentTime;
 
   const handleSkipBack: MouseEventHandler<HTMLSpanElement> = ({
@@ -159,34 +183,20 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
     <Wrapper>
       <ButtonWrapper>
         <Button onClick={() => playPause(episodeNum)}>
-          {playing ? <PauseIcon /> : <PlayIcon />}
+          {isPlaying(episodeNum) ? <PauseIcon /> : <PlayIcon />}
         </Button>
       </ButtonWrapper>
       <DurationWrapper>
         {isCurrent ? (
-          <>
-            <Timeline
-              onClick={handleSkipBack}
-              $grow={currentTime}
-              $ended={ended}
-            >
-              {halfwayDone && !ended && (
-                <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
-              )}
-            </Timeline>
-            <Timeline
-              onClick={handleSkipForward}
-              $grow={timeLeft}
-              $unplayed={true}
-            >
-              {!halfwayDone && (
-                <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
-              )}
-            </Timeline>
-            <Duration>{formatTimestamp(duration)}</Duration>
-          </>
+          <AudioTimeline
+            onSkipBack={handleSkipBack}
+            onSkipForward={handleSkipForward}
+            duration={duration}
+            currentTime={currentTime}
+            ended={ended}
+          />
         ) : (
-          <Duration>{formatDuration(duration)}</Duration>
+          formatDuration(duration)
         )}
       </DurationWrapper>
     </Wrapper>
