@@ -1,13 +1,8 @@
 import { useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { AudioContext } from './AudioContext';
-import { formatDuration, formatTimestamp } from '../utils';
+import { formatDuration, formatTimestamp, mediaUrl } from '../utils';
 import { Colors } from '../constants';
-
-const icons = {
-  play: '⏵',
-  pause: '⏸',
-};
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,20 +36,35 @@ const Button = styled.button`
   height: 100%;
 `;
 
-const PlayIcon = styled.span.attrs({ children: icons.play })`
+const Icon = styled.span`
   position: relative;
-  left: 0.1rem;
-  bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 66%;
+
+    &[src*='play.'] {
+      position: relative;
+      left: 4px;
+    }
+  }
 `;
 
-const PauseIcon = styled.span.attrs({ children: icons.pause })`
-  position: relative;
-  left: 0rem;
-  bottom: 0.5rem;
-`;
+const PlayIcon = () => (
+  <Icon>
+    <img alt="play icon" src={mediaUrl.images('icons/play.svg')} />
+  </Icon>
+);
+
+const PauseIcon = () => (
+  <Icon>
+    <img alt="pause icon" src={mediaUrl.images('icons/pause.svg')} />
+  </Icon>
+);
 
 const DurationWrapper = styled.span`
-  font-style: italic;
   display: flex;
   margin-left: 1.2rem;
   flex-grow: 1;
@@ -77,12 +87,12 @@ const Timeline = styled.span<{
   cursor: pointer;
   border: none;
   margin: 0;
-  color: white;
+  color: ${Colors.white};
   display: flex;
   background: ${Colors.night};
   justify-content: flex-end;
   position: relative;
-  border-right: 4px solid #eee;
+  border-right: 4px solid ${Colors.dimWhite};
 
   ${({ $ended }) =>
     $ended &&

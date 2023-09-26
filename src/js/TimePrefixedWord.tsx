@@ -12,7 +12,6 @@ export const TimePrefixedWord = styled.span<{
         display: block;
         text-align: center;
         margin: 1rem 0;
-        font-style: italic;
         content: '[${formatTimestamp($timestamp)}]';
       }
     `};

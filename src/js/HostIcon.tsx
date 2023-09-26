@@ -1,6 +1,7 @@
 import { css, styled } from 'styled-components';
 import { mediaUrl } from './utils';
 import { Host } from './types';
+import { Colors } from './constants';
 
 export const HostIcon = styled.img.attrs<{
   $host: Host;
@@ -13,7 +14,7 @@ export const HostIcon = styled.img.attrs<{
   width: 36px;
   height: 36px;
   filter: grayscale(30%);
-  border: 1px solid #6a6015;
+  border: 1px solid ${Colors.vom};
   border-radius: 50%;
 
   & + & {

@@ -31,7 +31,7 @@ export const AudioContextWrapper = ({
 }: {
   children: ReactElement;
 }) => {
-  const ref = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [playingEpisode, setPlayingEpisode] = useState<number>();
   const [ended, setEnded] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -52,16 +52,19 @@ export const AudioContextWrapper = ({
   };
 
   const seek = (time: number) => {
-    if (ref.current) {
-      ref.current.currentTime = time;
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
     }
   };
 
   useEffect(() => {
-    const audio = ref.current;
+    const audio = audioRef.current;
     if (!audio || !playingEpisode) {
       return;
     }
+
+    audio.playbackRate = 1;
+    audio.preservesPitch = true;
 
     const handleTimeupdate = (event: Event) => {
       const { currentTime } = event.target as HTMLAudioElement;
@@ -88,7 +91,7 @@ export const AudioContextWrapper = ({
   }, [playingEpisode]);
 
   useEffect(() => {
-    const audio = ref.current;
+    const audio = audioRef.current;
     if (!audio || !playingEpisode) {
       return;
     }
@@ -112,7 +115,7 @@ export const AudioContextWrapper = ({
       }}
     >
       {playingEpisode && (
-        <AudioPlayer episodeNum={playingEpisode} audioRef={ref} />
+        <AudioPlayer episodeNum={playingEpisode} audioRef={audioRef} />
       )}
       {children}
     </AudioContext.Provider>

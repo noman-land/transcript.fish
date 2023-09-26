@@ -5,7 +5,6 @@ import { Colors } from './constants';
 const StyledForm = styled.form`
   display: flex;
   align-items: stretch;
-  /* color: #6b9293; */
 
   input {
     background: ${Colors.citrineLighter};

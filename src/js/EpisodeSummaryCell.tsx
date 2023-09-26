@@ -6,6 +6,29 @@ import { Hosts } from './Hosts';
 import { Separator } from './Separator';
 import { formatDate, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
+import { Colors } from './constants';
+
+const StyledTd = styled.td<{ $isOpen: boolean }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  padding: 4vw 3vw ${({ $isOpen }) => ($isOpen ? 0 : 4)}vw 3vw;
+
+  @media (max-width: 900px) {
+    padding: 6vw 4.5vw ${({ $isOpen }) => ($isOpen ? 0 : 6)}vw 4.5vw;
+  }
+  @media (max-width: 650px) {
+    padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
+  }
+
+  &:hover {
+    background-color: ${Colors.cirtineWhite};
+
+    & + td {
+      background-color: ${Colors.cirtineWhite};
+    }
+  }
+`;
 
 const TitleWrapper = styled.div`
   display: flex;
@@ -15,8 +38,19 @@ const TitleWrapper = styled.div`
   }
 `;
 
-const PublishedDate = styled.div`
-  font-style: italic;
+const Title = styled.h3`
+  cursor: pointer;
+  margin-top: 0;
+  margin-right: 1em;
+  flex-grow: 1;
+
+  ${StyledTd}:hover & {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 700px) {
+    margin-right: 0;
+  }
 `;
 
 const Description = styled.span`
@@ -37,43 +71,6 @@ const Description = styled.span`
   // which adds unwanted margin
   & > p {
     margin: 0;
-  }
-`;
-
-const StyledTd = styled.td<{ $isOpen: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  padding: 4vw 3vw ${({ $isOpen }) => ($isOpen ? 0 : 4)}vw 3vw;
-
-  @media (max-width: 900px) {
-    padding: 6vw 4.5vw ${({ $isOpen }) => ($isOpen ? 0 : 6)}vw 4.5vw;
-  }
-  @media (max-width: 650px) {
-    padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
-  }
-
-  &:hover {
-    background-color: #fff189;
-
-    & + td {
-      background-color: #fff189;
-    }
-  }
-`;
-
-const Title = styled.h3`
-  cursor: pointer;
-  margin-top: 0;
-  margin-right: 1em;
-  flex-grow: 1;
-
-  ${StyledTd}:hover & {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 700px) {
-    margin-right: 0;
   }
 `;
 
@@ -106,7 +103,7 @@ export const EpisodeSummaryCell = ({
         </Title>
         <Tags live={live} compilation={compilation} />
       </TitleWrapper>
-      <PublishedDate>{formatDate(pubDate)}</PublishedDate>
+      <div>{formatDate(pubDate)}</div>
       <Hosts $presenters={presenters} />
       <Description
         onClick={stopPropagation}
