@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { MouseEventHandler, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { AudioContext } from './AudioContext';
 import { formatDuration, formatTimestamp, mediaUrl } from '../utils';
@@ -25,7 +25,9 @@ const Button = styled.button`
   cursor: pointer;
   color: ${Colors.night};
   font-size: 3.2rem;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   box-shadow: none;
   border: none;
@@ -36,32 +38,25 @@ const Button = styled.button`
   height: 100%;
 `;
 
-const Icon = styled.span`
+const Icon = styled.img`
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 66%;
 
-  img {
-    width: 66%;
-
-    &[src*='play.'] {
-      position: relative;
-      left: 4px;
-    }
+  &[src*='play.'] {
+    position: relative;
+    left: 4px;
   }
 `;
 
 const PlayIcon = () => (
-  <Icon>
-    <img alt="play icon" src={mediaUrl.images('icons/play.svg')} />
-  </Icon>
+  <Icon alt="play icon" src={mediaUrl.images('icons/play.svg')} />
 );
 
 const PauseIcon = () => (
-  <Icon>
-    <img alt="pause icon" src={mediaUrl.images('icons/pause.svg')} />
-  </Icon>
+  <Icon alt="pause icon" src={mediaUrl.images('icons/pause.svg')} />
 );
 
 const DurationWrapper = styled.span`
@@ -142,6 +137,24 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
   const halfwayDone = Boolean(Math.round(currentTime / duration));
   const timeLeft = duration - currentTime;
 
+  const handleSkipBack: MouseEventHandler<HTMLSpanElement> = ({
+    clientX,
+    currentTarget,
+  }) => {
+    const { left, width } = currentTarget.getBoundingClientRect();
+    const newTime = ((clientX - left) / width) * currentTime;
+    seek(newTime);
+  };
+
+  const handleSkipForward: MouseEventHandler<HTMLSpanElement> = ({
+    clientX,
+    currentTarget,
+  }) => {
+    const { left, width } = currentTarget.getBoundingClientRect();
+    const newTime = ((clientX - left) / width) * timeLeft;
+    seek(currentTime + newTime);
+  };
+
   return (
     <Wrapper>
       <ButtonWrapper>
@@ -153,11 +166,7 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
         {isCurrent ? (
           <>
             <Timeline
-              onClick={({ clientX, currentTarget }) => {
-                const { left, width } = currentTarget.getBoundingClientRect();
-                const newTime = ((clientX - left) / width) * currentTime;
-                seek(newTime);
-              }}
+              onClick={handleSkipBack}
               $grow={currentTime}
               $ended={ended}
             >
@@ -166,13 +175,9 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
               )}
             </Timeline>
             <Timeline
-              onClick={({ clientX, currentTarget }) => {
-                const { left, width } = currentTarget.getBoundingClientRect();
-                const newTime = ((clientX - left) / width) * timeLeft;
-                seek(currentTime + newTime);
-              }}
-              $unplayed={true}
+              onClick={handleSkipForward}
               $grow={timeLeft}
+              $unplayed={true}
             >
               {!halfwayDone && (
                 <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
