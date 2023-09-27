@@ -90,11 +90,6 @@ const CurrentTime = styled.span.attrs({
   align-items: center;
   padding: 0 0.6rem;
   position: absolute;
-  bottom: 0;
-
-  &::selection {
-    background: none;
-  }
 `;
 
 const Icon = styled.img`

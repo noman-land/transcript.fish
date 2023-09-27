@@ -39,13 +39,16 @@ const TitleWrapper = styled.div`
 `;
 
 const Title = styled.h3`
-  cursor: pointer;
   margin-top: 0;
   margin-right: 1em;
   flex-grow: 1;
 
-  ${StyledTd}:hover & {
-    text-decoration: underline;
+  a {
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   @media (max-width: 700px) {
@@ -99,7 +102,9 @@ export const EpisodeSummaryCell = ({
     <StyledTd $isOpen={isOpen}>
       <TitleWrapper>
         <Title>
-          <a onClick={onClick}>{episodeNum}</a>: {title}
+          <a onClick={onClick}>
+            {episodeNum}: {title}
+          </a>
         </Title>
         <Tags live={live} compilation={compilation} />
       </TitleWrapper>
