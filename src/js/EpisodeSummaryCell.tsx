@@ -6,7 +6,6 @@ import { Hosts } from './Hosts';
 import { Separator } from './Separator';
 import { formatDate, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
-import { Colors } from './constants';
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
   display: flex;
@@ -19,14 +18,6 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
   }
   @media (max-width: 650px) {
     padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
-  }
-
-  &:hover {
-    background-color: ${Colors.cirtineWhite};
-
-    & + td {
-      background-color: ${Colors.cirtineWhite};
-    }
   }
 `;
 
