@@ -4,7 +4,22 @@ import { Tags } from './Tags';
 import { EpisodeSummaryCellProps } from './types';
 import { Hosts } from './Hosts';
 import { Separator } from './Separator';
-import { formatDate, formatDuration, stopPropagation } from './utils';
+import { formatDate, stopPropagation } from './utils';
+import { AudioControls } from './audio/AudioControls';
+
+const StyledTd = styled.td<{ $isOpen: boolean }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  padding: 4vw 3vw ${({ $isOpen }) => ($isOpen ? 0 : 4)}vw 3vw;
+
+  @media (max-width: 900px) {
+    padding: 6vw 4.5vw ${({ $isOpen }) => ($isOpen ? 0 : 6)}vw 4.5vw;
+  }
+  @media (max-width: 650px) {
+    padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
+  }
+`;
 
 const TitleWrapper = styled.div`
   display: flex;
@@ -14,13 +29,27 @@ const TitleWrapper = styled.div`
   }
 `;
 
-const PublishedDate = styled.div`
-  font-style: italic;
-  margin-bottom: 1em;
+const Title = styled.h3`
+  margin-top: 0;
+  margin-right: 1em;
+  flex-grow: 1;
+
+  a {
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @media (max-width: 700px) {
+    margin-right: 0;
+  }
 `;
 
 const Description = styled.span`
   text-align: justify;
+  margin-top: 1em;
 
   a {
     word-break: break-all;
@@ -36,48 +65,6 @@ const Description = styled.span`
   // which adds unwanted margin
   & > p {
     margin: 0;
-  }
-`;
-
-const Duration = styled.span`
-  font-style: italic;
-  margin-top: 1em;
-`;
-
-const StyledTd = styled.td<{ $isOpen: boolean }>`
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  padding: 4vw 3vw ${({ $isOpen }) => ($isOpen ? 0 : 4)}vw 3vw;
-
-  @media (max-width: 900px) {
-    padding: 6vw 4.5vw ${({ $isOpen }) => ($isOpen ? 0 : 6)}vw 4.5vw;
-  }
-  @media (max-width: 650px) {
-    padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
-  }
-
-  &:hover {
-    background-color: #fff189;
-
-    & + td {
-      background-color: #fff189;
-    }
-  }
-`;
-
-const Title = styled.h3`
-  margin-top: 0;
-  margin-right: 1em;
-  flex-grow: 1;
-
-  ${StyledTd}:hover & {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 700px) {
-    margin-right: 0;
   }
 `;
 
@@ -103,20 +90,22 @@ export const EpisodeSummaryCell = ({
     [presenter1, presenter2, presenter3, presenter4]
   );
   return (
-    <StyledTd $isOpen={isOpen} onClick={onClick}>
+    <StyledTd $isOpen={isOpen}>
       <TitleWrapper>
         <Title>
-          <span>{episodeNum}</span>: {title}
+          <a onClick={onClick}>
+            {episodeNum}: {title}
+          </a>
         </Title>
         <Tags live={live} compilation={compilation} />
       </TitleWrapper>
-      <PublishedDate>{formatDate(pubDate)}</PublishedDate>
+      <div>{formatDate(pubDate)}</div>
+      <Hosts $presenters={presenters} />
       <Description
         onClick={stopPropagation}
         dangerouslySetInnerHTML={{ __html: description }}
       />
-      <Hosts $presenters={presenters} />
-      <Duration>{formatDuration(duration)}</Duration>
+      <AudioControls episodeNum={episodeNum} duration={duration} />
       {isOpen && <Separator />}
     </StyledTd>
   );

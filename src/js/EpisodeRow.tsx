@@ -4,16 +4,17 @@ import { EpisodeRowProps } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
 import { useDb } from './dbHooks';
-import { makeImageUrl } from './utils';
+import { makeEpisodeCoverUrl } from './utils';
+import { Colors } from './constants';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
-  background-color: ${({ $isOpen }) => $isOpen && '#fff189'};
+  background-color: ${({ $isOpen }) => $isOpen && Colors.cirtineWhite};
   display: block;
   position: relative;
   z-index: 0;
 
   &:not(:last-child) {
-    border-bottom: 2px solid #d2bb3d;
+    border-bottom: 2px solid ${Colors.citrineDim};
   }
 
   &::after {
@@ -59,7 +60,7 @@ export const EpisodeRow = ({ episode }: EpisodeRowProps) => {
   return (
     <TrWithBackground
       $isOpen={isOpen}
-      $image={makeImageUrl(episode.episode, episode.image)}
+      $image={makeEpisodeCoverUrl(episode.episode, episode.image)}
       key={episode.episode}
     >
       <EpisodeSummaryCell

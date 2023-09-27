@@ -4,19 +4,9 @@
   font-weight: bold;
 }
 @font-face {
-  font-family: TTB;
-  src: url(https://media.transcript.fish/fonts/TT2020StyleB-Italic.woff2);
-  font-style: italic;
-}
-@font-face {
   font-family: TTE;
   src: url(https://media.transcript.fish/fonts/TT2020StyleE-Regular.woff2);
   font-style: normal;
-}
-@font-face {
-  font-family: TTE;
-  src: url(https://media.transcript.fish/fonts/TT2020StyleE-Italic.woff2);
-  font-style: italic;
 }
 
 * {

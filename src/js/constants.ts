@@ -10,13 +10,18 @@ export const hosts: { [k in Host]: number } = {
 };
 
 export const Colors = {
-  dimGrey: '#706563',
-  citrineDark: '#d2bb3d',
+  vom: '#6a6015',
+  citrineDark: '#baa739',
+  citrineDim: '#d2bb3d',
   citrine: '#e8d22f',
   citrineLight: '#f8e44f',
   citrineLighter: '#efe284',
+  cirtineWhite: '#fff189',
+  dimGrey: '#706563',
   slateGrey: '#748386',
   lightBlue: '#B1D2D3',
   lighterBlue: '#DBE6E6',
   night: '#090a0b',
+  white: '#ffffff',
+  dimWhite: '#eeeeee',
 };
