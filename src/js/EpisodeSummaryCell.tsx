@@ -35,6 +35,7 @@ const Title = styled.h3`
   flex-grow: 1;
 
   a {
+    display: inline-block;
     cursor: pointer;
 
     &:hover {

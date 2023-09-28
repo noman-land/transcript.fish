@@ -5,6 +5,8 @@ export const TimePrefixedWord = styled.span<{
   $timestamp: number;
   $showPrefix: boolean;
 }>`
+  padding: 4px 0;
+
   ${({ $showPrefix, $timestamp }) =>
     $showPrefix &&
     css`
