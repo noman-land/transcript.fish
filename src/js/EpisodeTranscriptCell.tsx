@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import type { Word } from './types';
 import { TimePrefixedWord } from './TimePrefixedWord';
+import { useHighlightWords } from './transcriptHooks';
 
 const makeKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
@@ -22,7 +23,20 @@ const StyledTd = styled.td`
   }
 `;
 
-export const EpisodeTranscriptCell = ({ words }: { words: Word[] }) => {
+interface EpisodeTranscriptCellProps {
+  words: Word[];
+  episode: number;
+}
+
+export const EpisodeTranscriptCell = ({
+  words,
+  episode,
+}: EpisodeTranscriptCellProps) => {
+  const shouldHighlight = useHighlightWords({
+    words,
+    episode,
+  });
+
   return (
     <StyledTd>
       <div className="episode-words">
@@ -31,6 +45,7 @@ export const EpisodeTranscriptCell = ({ words }: { words: Word[] }) => {
             key={makeKey(word)}
             $timestamp={word.startTime}
             $showPrefix={i > 0 && i % 200 === 0}
+            style={shouldHighlight(i)}
           >
             {word.word}
           </TimePrefixedWord>
