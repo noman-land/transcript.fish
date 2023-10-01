@@ -1,25 +1,26 @@
 import styled from 'styled-components';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
 import { PaginationSpacer, Paginator } from './Paginator';
-import { SearchFiltersState } from './types';
-import { FilterBar, PresenterFilters, SearchFilters } from './FilterBar';
+import { FilterBar } from './filters/FilterBar';
 import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
 import { Total } from './Total';
 import { preventDefault } from './utils';
-import { fadeIn } from './styleUtils';
+import { FiltersContext } from './filters/FiltersContext';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  ${fadeIn}
 `;
 
 export const EpisodeSearch = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
+
   const {
     episodes: {
       data: episodes,
@@ -31,30 +32,20 @@ export const EpisodeSearch = () => {
     presenters: { data: presenters },
   } = useDb();
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [page, setPage] = useState(0);
-  const [presenterFilters, setPresenterFilters] = useState<number[]>([]);
-  const [searchFilters, setSearchFilters] = useState<SearchFiltersState>({
-    episode: true,
-    title: true,
-    description: true,
-    words: true,
-  });
-
-  const handleSearchFilterToggle = useCallback(
-    ({ name, checked }: { name: string; checked: boolean }) => {
-      setSearchFilters(current => ({
-        ...current,
-        [name]: checked,
-      }));
-    },
-    []
-  );
+  const {
+    getFilteredEpisodes,
+    episodeTypeFilters,
+    presenterFilters,
+    searchFilters,
+  } = useContext(FiltersContext);
 
   useEffect(() => {
     search(searchTerm, searchFilters);
-    setPage(0);
   }, [search, searchTerm, searchFilters]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [episodeTypeFilters, presenterFilters, searchTerm, searchFilters]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     preventDefault(e);
@@ -66,22 +57,11 @@ export const EpisodeSearch = () => {
     }
   }, []);
 
-  if (!episodes) {
+  const filteredEpisodes = getFilteredEpisodes(episodes);
+
+  if (!filteredEpisodes) {
     return null;
   }
-
-  const filteredEpisodes =
-    presenterFilters.length === 0
-      ? episodes
-      : episodes.filter(epi => {
-          return (
-            presenterFilters.includes(epi.presenter1) ||
-            presenterFilters.includes(epi.presenter2) ||
-            presenterFilters.includes(epi.presenter3) ||
-            presenterFilters.includes(epi.presenter4) ||
-            presenterFilters.includes(epi.presenter5)
-          );
-        });
 
   const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
   const episodesLength = episodesError ? 0 : filteredEpisodes.length;
@@ -95,16 +75,7 @@ export const EpisodeSearch = () => {
         placeholder="no such thing as a search bar"
         onSubmit={handleSubmit}
       />
-      <FilterBar>
-        <SearchFilters
-          selected={searchFilters}
-          onToggle={handleSearchFilterToggle}
-        />
-        <PresenterFilters
-          selected={presenterFilters}
-          onChange={setPresenterFilters}
-        />
-      </FilterBar>
+      <FilterBar />
       {!!total && (
         <Total
           presenters={presentersFull}

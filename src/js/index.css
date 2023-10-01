@@ -37,6 +37,11 @@ body {
   min-height: 100vh;
 }
 
+.text {
+  font-family: TTE, 'Courier New', Courier, monospace;
+  font-size: 1em;
+}
+
 h1,
 h2,
 h3,

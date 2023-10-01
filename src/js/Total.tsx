@@ -38,14 +38,15 @@ export const Total = ({
     const separator = i < list.length - 1 ? ', ' : ' or ';
     return `${i > 0 ? separator : ''}${formatName(p)}`;
   });
-  const containingText = searchTerm && <>episodes containing "{searchTerm}"</>;
+  const totalText = <>{total} episodes</>;
+  const containingText = searchTerm && <>containing "{searchTerm}"</>;
   const isShowingAll = results === total && !searchTerm;
   const foundResults = isShowingAll ? (
-    <>showing all {total} episodes</>
+    <>showing all {totalText}</>
   ) : (
     <>
       <>
-        found {error ? '?' : results} of {total} {containingText}
+        found {error ? '?' : results} of {totalText} {containingText}
       </>
       {presenters.length > 0 && <> with {presentersText} presenting</>}
     </>

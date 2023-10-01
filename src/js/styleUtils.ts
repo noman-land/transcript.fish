@@ -12,21 +12,3 @@ const spinKeyframes = keyframes`
 export const spin = css`
   animation: ${spinKeyframes} 500ms linear infinite;
 `;
-
-const fadeInKeyframes = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
-export const fadeIn = css`
-  opacity: 0;
-  animation: ${fadeInKeyframes} 151ms ease-in-out forwards;
-`;
-
-export const bold = css`
-  font-family: TTB, 'Courier New', Courier, monospace;
-`;
