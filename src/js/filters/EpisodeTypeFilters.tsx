@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
-import styled from 'styled-components';
+import { FilterSection } from './FilterSection';
 import {
-  SearchFilterLabels,
-  SearchField,
-  SearchFiltersProps,
+  EpisodeType,
+  EpisodeTypeFilterLabels,
+  EpisodeTypeFiltersProps,
   SelectedOption,
 } from '../types';
-import { FilterSection } from './FilterSection';
+import styled from 'styled-components';
 
-export const FilterWrapper = styled.div`
+export const Wrapper = styled.div`
   display: flex;
   flex-grow: 1;
   flex-wrap: wrap;
@@ -30,14 +30,17 @@ export const FilterWrapper = styled.div`
   }
 `;
 
-const filterLabels: SearchFilterLabels = {
-  description: 'description',
-  episode: 'episode number',
-  title: 'title',
-  words: 'transcript',
+const filterLabels: EpisodeTypeFilterLabels = {
+  live: 'live',
+  compilation: 'compilation',
+  wfh: 'wfh',
+  office: 'qi offices',
 };
 
-export const SearchFilters = ({ selected, onToggle }: SearchFiltersProps) => {
+export const EpisodeTypeFilters = ({
+  selected,
+  onToggle,
+}: EpisodeTypeFiltersProps) => {
   const handleToggle = useCallback(
     ({ target }: { target: SelectedOption }) => {
       onToggle(target);
@@ -45,20 +48,20 @@ export const SearchFilters = ({ selected, onToggle }: SearchFiltersProps) => {
     [onToggle]
   );
   return (
-    <FilterSection label="Search filters:">
-      <FilterWrapper>
-        {Object.entries(selected).map(([name, checked]) => (
+    <FilterSection label="Episode type filters:">
+      <Wrapper>
+        {Object.entries(filterLabels).map(([name, label]) => (
           <label key={name}>
             <input
               onChange={handleToggle}
               type="checkbox"
               name={name}
-              checked={checked}
+              checked={selected[name as EpisodeType]}
             />
-            {filterLabels[name as SearchField]}
+            {label}
           </label>
         ))}
-      </FilterWrapper>
+      </Wrapper>
     </FilterSection>
   );
 };

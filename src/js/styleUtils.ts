@@ -26,7 +26,3 @@ export const fadeIn = css`
   opacity: 0;
   animation: ${fadeInKeyframes} 151ms ease-in-out forwards;
 `;
-
-export const bold = css`
-  font-family: TTB, 'Courier New', Courier, monospace;
-`;

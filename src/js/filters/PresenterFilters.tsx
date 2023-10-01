@@ -94,7 +94,7 @@ export const PresenterFilters = ({ onChange }: PresenterFiltersProps) => {
   }, [presenters]);
 
   return (
-    <FilterSection label="Presenter filterss:">
+    <FilterSection label="Presenter filters:">
       <Select
         theme={customTheme}
         styles={styles}

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { bold } from '../styleUtils';
 import { ReactNode } from 'react';
 
 const FilterSectionWrapper = styled.div`
@@ -24,7 +23,6 @@ const FilterSectionWrapper = styled.div`
 
 const FilterSectionLabel = styled.span`
   margin: 0 1rem 0.6rem 0;
-  ${bold}
 `;
 
 export const FilterSection = ({

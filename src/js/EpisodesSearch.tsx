@@ -4,7 +4,7 @@ import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
 import { PaginationSpacer, Paginator } from './Paginator';
-import { SearchFiltersState } from './types';
+import { EpisodeTypeFiltersState, SearchFiltersState } from './types';
 import { FilterBar } from './filters/FilterBar';
 import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
@@ -13,6 +13,7 @@ import { preventDefault } from './utils';
 import { fadeIn } from './styleUtils';
 import { SearchFilters } from './filters/SearchFilters';
 import { PresenterFilters } from './filters/PresenterFilters';
+import { EpisodeTypeFilters } from './filters/EpisodeTypeFilters';
 
 const Wrapper = styled.div`
   display: flex;
@@ -36,12 +37,30 @@ export const EpisodeSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
   const [presenterFilters, setPresenterFilters] = useState<number[]>([]);
+  const [episodeTypeFilters, setEpisodeTypeFilters] =
+    useState<EpisodeTypeFiltersState>({
+      live: true,
+      compilation: true,
+      wfh: true,
+      office: true,
+    });
+
   const [searchFilters, setSearchFilters] = useState<SearchFiltersState>({
     episode: true,
     title: true,
     description: true,
     words: true,
   });
+
+  const handleEpisodeTypeFilterToggle = useCallback(
+    ({ name, checked }: { name: string; checked: boolean }) => {
+      setEpisodeTypeFilters(current => ({
+        ...current,
+        [name]: checked,
+      }));
+    },
+    []
+  );
 
   const handleSearchFilterToggle = useCallback(
     ({ name, checked }: { name: string; checked: boolean }) => {
@@ -101,6 +120,10 @@ export const EpisodeSearch = () => {
         <SearchFilters
           selected={searchFilters}
           onToggle={handleSearchFilterToggle}
+        />
+        <EpisodeTypeFilters
+          selected={episodeTypeFilters}
+          onToggle={handleEpisodeTypeFilterToggle}
         />
         <PresenterFilters
           selected={presenterFilters}

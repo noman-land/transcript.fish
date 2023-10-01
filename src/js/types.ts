@@ -37,9 +37,14 @@ export type SearchField = 'episode' | 'title' | 'description' | 'words';
 
 export type SearchFiltersState = Record<SearchField, boolean>;
 
+export type EpisodeType = 'live' | 'compilation' | 'wfh' | 'office';
+
+export type EpisodeTypeFiltersState = Record<EpisodeType, boolean>;
+
 export type PresentersFilterState = number[];
 
-export type FilterLabels = Record<SearchField, string>;
+export type SearchFilterLabels = Record<SearchField, string>;
+export type EpisodeTypeFilterLabels = Record<EpisodeType, string>;
 
 export type Option = {
   label: string;
@@ -50,6 +55,11 @@ export type SelectedOption = {
   name: string;
   checked: boolean;
 };
+
+export interface EpisodeTypeFiltersProps {
+  selected: EpisodeTypeFiltersState;
+  onToggle: (option: SelectedOption) => void;
+}
 
 export interface SearchFiltersProps {
   selected: SearchFiltersState;
