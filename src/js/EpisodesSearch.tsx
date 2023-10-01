@@ -22,6 +22,13 @@ const Wrapper = styled.div`
   ${fadeIn}
 `;
 
+const WFH_VANUE_ID = 2;
+const QI_OFFICE_VENUE_IDS = [
+  1, // Covent Garden
+  4, // Hoburn
+  9, // 2020 Audio
+];
+
 export const EpisodeSearch = () => {
   const {
     episodes: {
@@ -91,19 +98,28 @@ export const EpisodeSearch = () => {
     return null;
   }
 
-  const filteredEpisodes =
-    presenterFilters.length === 0
-      ? episodes
-      : episodes.filter(epi => {
-          return (
-            presenterFilters.includes(epi.presenter1) ||
-            presenterFilters.includes(epi.presenter2) ||
-            presenterFilters.includes(epi.presenter3) ||
-            presenterFilters.includes(epi.presenter4) ||
-            presenterFilters.includes(epi.presenter5)
-          );
-        });
+  const filteredEpisodes = episodes
+    .filter(epi => {
+      if (presenterFilters.length === 0) {
+        return true;
+      }
 
+      return (
+        presenterFilters.includes(epi.presenter1) ||
+        presenterFilters.includes(epi.presenter2) ||
+        presenterFilters.includes(epi.presenter3) ||
+        presenterFilters.includes(epi.presenter4) ||
+        presenterFilters.includes(epi.presenter5)
+      );
+    })
+    .filter(epi => {
+      return (
+        (epi.live && episodeTypeFilters.live) ||
+        (epi.compilation && episodeTypeFilters.compilation) ||
+        (epi.venue === WFH_VANUE_ID && episodeTypeFilters.wfh) ||
+        (QI_OFFICE_VENUE_IDS.includes(epi.venue) && episodeTypeFilters.office)
+      );
+    });
   const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
   const episodesLength = episodesError ? 0 : filteredEpisodes.length;
   const presentersFull = presenters
