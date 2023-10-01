@@ -1,6 +1,9 @@
 import styled from 'styled-components';
+import { SearchFilters } from './SearchFilters';
+import { EpisodeTypeFilters } from './EpisodeTypeFilters';
+import { PresenterFilters } from './PresenterFilters';
 
-export const FilterBar = styled.div`
+const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -20,3 +23,11 @@ export const FilterBar = styled.div`
     align-items: stretch;
   }
 `;
+
+export const FilterBar = () => (
+  <StyledWrapper>
+    <SearchFilters />
+    <EpisodeTypeFilters />
+    <PresenterFilters />
+  </StyledWrapper>
+);

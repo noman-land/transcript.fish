@@ -4,7 +4,6 @@ import { EpisodeSearch } from './EpisodesSearch';
 import { UnderConstructionBanner } from './UnderConstructionBanner';
 import { EpisodeSearchFallback } from './EpisodeSearchFallback';
 import { mediaUrl } from './utils';
-import { fadeIn } from './styleUtils';
 import { AudioContextWrapper } from './audio/AudioContext';
 import { Colors } from './constants';
 import { FiltersContextProvider } from './filters/FiltersContext';
@@ -13,7 +12,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   line-height: 1.1;
-  ${fadeIn}
 
   & header {
     display: flex;

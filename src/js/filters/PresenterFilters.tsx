@@ -1,10 +1,11 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import Select, { MultiValue, Theme, StylesConfig } from 'react-select';
-import { Option, Presenter, PresenterFiltersProps } from '../types';
+import { Option, Presenter } from '../types';
 import { useDb } from '../dbHooks';
 import { formatName } from '../utils';
 import { Colors, hosts } from '../constants';
 import { FilterSection } from './FilterSection';
+import { FiltersContext } from './FiltersContext';
 
 const noOneFound = () => 'No one found';
 
@@ -51,16 +52,18 @@ const groupLabels: Record<PresenterType, string> = {
   guest: 'Guests',
 };
 
-export const PresenterFilters = ({ onChange }: PresenterFiltersProps) => {
+export const PresenterFilters = () => {
   const {
     presenters: { data: presenters },
   } = useDb();
 
+  const { setPresenterFilters } = useContext(FiltersContext);
+
   const handleChange = useCallback(
     (options: MultiValue<Option>) => {
-      onChange(options.map(({ value }) => value));
+      setPresenterFilters(options.map(({ value }) => value));
     },
-    [onChange]
+    [setPresenterFilters]
   );
 
   const options = useMemo(() => {

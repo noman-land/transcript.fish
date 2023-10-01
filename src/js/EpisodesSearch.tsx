@@ -9,20 +9,18 @@ import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
 import { Total } from './Total';
 import { preventDefault } from './utils';
-import { fadeIn } from './styleUtils';
-import { SearchFilters } from './filters/SearchFilters';
-import { PresenterFilters } from './filters/PresenterFilters';
-import { EpisodeTypeFilters } from './filters/EpisodeTypeFilters';
 import { FiltersContext } from './filters/FiltersContext';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  ${fadeIn}
 `;
 
 export const EpisodeSearch = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
+
   const {
     episodes: {
       data: episodes,
@@ -39,18 +37,15 @@ export const EpisodeSearch = () => {
     episodeTypeFilters,
     presenterFilters,
     searchFilters,
-    handleSearchFilterToggle,
-    handleEpisodeTypeFilterToggle,
-    handlePresenterFilterChange,
   } = useContext(FiltersContext);
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [page, setPage] = useState(0);
 
   useEffect(() => {
     search(searchTerm, searchFilters);
-    setPage(0);
   }, [search, searchTerm, searchFilters]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [episodeTypeFilters, presenterFilters, searchTerm, searchFilters]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     preventDefault(e);
@@ -80,20 +75,7 @@ export const EpisodeSearch = () => {
         placeholder="no such thing as a search bar"
         onSubmit={handleSubmit}
       />
-      <FilterBar>
-        <SearchFilters
-          selected={searchFilters}
-          onToggle={handleSearchFilterToggle}
-        />
-        <EpisodeTypeFilters
-          selected={episodeTypeFilters}
-          onToggle={handleEpisodeTypeFilterToggle}
-        />
-        <PresenterFilters
-          selected={presenterFilters}
-          onChange={handlePresenterFilterChange}
-        />
-      </FilterBar>
+      <FilterBar />
       {!!total && (
         <Total
           presenters={presentersFull}

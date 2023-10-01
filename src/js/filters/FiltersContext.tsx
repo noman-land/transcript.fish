@@ -1,9 +1,20 @@
-import { ReactElement, createContext, useCallback, useState } from 'react';
-import { Episode, EpisodeTypeFiltersState, SearchFiltersState } from '../types';
+import {
+  Dispatch,
+  ReactElement,
+  SetStateAction,
+  createContext,
+  useState,
+} from 'react';
+import {
+  Episode,
+  EpisodeType,
+  EpisodeTypeFiltersState,
+  SearchField,
+  SearchFiltersState,
+} from '../types';
 
 type PresenterFiltersState = number[];
-type FilterToggleHandler = (args: { name: string; checked: boolean }) => void;
-type PresenterFilterChangeHandlers = (selected: number[]) => void;
+type FilterToggleHandler<T> = (args: { name: T; checked: boolean }) => void;
 
 const WFH_VANUE_ID = 2;
 const QI_OFFICE_VENUE_IDS = [
@@ -37,9 +48,10 @@ export const FiltersContext = createContext<{
   episodeTypeFilters: EpisodeTypeFiltersState;
   searchFilters: SearchFiltersState;
   presenterFilters: PresenterFiltersState;
-  handleEpisodeTypeFilterToggle: FilterToggleHandler;
-  handleSearchFilterToggle: FilterToggleHandler;
-  handlePresenterFilterChange: PresenterFilterChangeHandlers;
+  handleEpisodeTypeFilterToggle: FilterToggleHandler<EpisodeType>;
+  handleSearchFilterToggle: FilterToggleHandler<SearchField>;
+  setPresenterFilters: Dispatch<SetStateAction<PresenterFiltersState>>;
+  setEpisodeTypeFilters: Dispatch<SetStateAction<EpisodeTypeFiltersState>>;
 }>({
   getFilteredEpisodes: () => undefined,
   episodeTypeFilters: defaultEpisodeTypeFiltersState,
@@ -47,7 +59,8 @@ export const FiltersContext = createContext<{
   presenterFilters: defaultPresenterFiltersState,
   handleEpisodeTypeFilterToggle: noop,
   handleSearchFilterToggle: noop,
-  handlePresenterFilterChange: noop,
+  setPresenterFilters: noop,
+  setEpisodeTypeFilters: n => n,
 });
 
 export const FiltersContextProvider = ({
@@ -65,47 +78,47 @@ export const FiltersContextProvider = ({
     defaultSearchFiltersState
   );
 
-  const handleEpisodeTypeFilterToggle: FilterToggleHandler = useCallback(
-    ({ name, checked }) => {
-      setEpisodeTypeFilters(current => ({
-        ...current,
-        [name]: checked,
-      }));
-    },
-    []
-  );
+  const handleEpisodeTypeFilterToggle: FilterToggleHandler<EpisodeType> = ({
+    name,
+    checked,
+  }) => {
+    setEpisodeTypeFilters(current => ({
+      ...current,
+      [name]: checked,
+    }));
+  };
 
-  const handleSearchFilterToggle: FilterToggleHandler = useCallback(
-    ({ name, checked }) => {
-      setSearchFilters(current => ({
-        ...current,
-        [name]: checked,
-      }));
-    },
-    []
-  );
+  const handleSearchFilterToggle: FilterToggleHandler<SearchField> = ({
+    name,
+    checked,
+  }) => {
+    setSearchFilters(current => ({
+      ...current,
+      [name]: checked,
+    }));
+  };
 
   const getFilteredEpisodes = (episodes: Episode[] = []) =>
     episodes
-      .filter(epi => {
+      .filter(ep => {
         if (presenterFilters.length === 0) {
           return true;
         }
 
         return (
-          presenterFilters.includes(epi.presenter1) ||
-          presenterFilters.includes(epi.presenter2) ||
-          presenterFilters.includes(epi.presenter3) ||
-          presenterFilters.includes(epi.presenter4) ||
-          presenterFilters.includes(epi.presenter5)
+          presenterFilters.includes(ep.presenter1) ||
+          presenterFilters.includes(ep.presenter2) ||
+          presenterFilters.includes(ep.presenter3) ||
+          presenterFilters.includes(ep.presenter4) ||
+          presenterFilters.includes(ep.presenter5)
         );
       })
-      .filter(epi => {
+      .filter(ep => {
         return (
-          (epi.live && episodeTypeFilters.live) ||
-          (epi.compilation && episodeTypeFilters.compilation) ||
-          (epi.venue === WFH_VANUE_ID && episodeTypeFilters.wfh) ||
-          (QI_OFFICE_VENUE_IDS.includes(epi.venue) && episodeTypeFilters.office)
+          (ep.live && episodeTypeFilters.live) ||
+          (ep.compilation && episodeTypeFilters.compilation) ||
+          (ep.venue === WFH_VANUE_ID && episodeTypeFilters.wfh) ||
+          (QI_OFFICE_VENUE_IDS.includes(ep.venue) && episodeTypeFilters.office)
         );
       });
 
@@ -118,7 +131,8 @@ export const FiltersContextProvider = ({
         presenterFilters,
         handleEpisodeTypeFilterToggle,
         handleSearchFilterToggle,
-        handlePresenterFilterChange: setPresenterFilters,
+        setPresenterFilters,
+        setEpisodeTypeFilters,
       }}
     >
       {children}

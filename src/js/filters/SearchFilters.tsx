@@ -1,12 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import styled from 'styled-components';
-import {
-  SearchFilterLabels,
-  SearchField,
-  SearchFiltersProps,
-  SelectedOption,
-} from '../types';
+import { SearchFilterLabels, SearchField, SelectedOption } from '../types';
 import { FilterSection } from './FilterSection';
+import { FiltersContext } from './FiltersContext';
 
 export const FilterWrapper = styled.div`
   display: flex;
@@ -31,18 +27,21 @@ export const FilterWrapper = styled.div`
 `;
 
 const filterLabels: SearchFilterLabels = {
-  episode: 'episode number',
   title: 'title',
   description: 'description',
   words: 'transcript',
+  episode: 'episode number',
 };
 
-export const SearchFilters = ({ selected, onToggle }: SearchFiltersProps) => {
+export const SearchFilters = () => {
+  const { searchFilters, handleSearchFilterToggle } =
+    useContext(FiltersContext);
+
   const handleToggle = useCallback(
-    ({ target }: { target: SelectedOption }) => {
-      onToggle(target);
+    ({ target }: { target: SelectedOption<string> }) => {
+      handleSearchFilterToggle(target as SelectedOption<SearchField>);
     },
-    [onToggle]
+    [handleSearchFilterToggle]
   );
   return (
     <FilterSection label="Search filters:">
@@ -53,7 +52,7 @@ export const SearchFilters = ({ selected, onToggle }: SearchFiltersProps) => {
               onChange={handleToggle}
               type="checkbox"
               name={name}
-              checked={selected[name as SearchField]}
+              checked={searchFilters[name as SearchField]}
             />
             {label}
           </label>

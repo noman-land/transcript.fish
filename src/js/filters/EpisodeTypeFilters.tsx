@@ -1,12 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { FilterSection } from './FilterSection';
-import {
-  EpisodeType,
-  EpisodeTypeFilterLabels,
-  EpisodeTypeFiltersProps,
-  SelectedOption,
-} from '../types';
+import { EpisodeType, EpisodeTypeFilterLabels, SelectedOption } from '../types';
 import styled from 'styled-components';
+import { FiltersContext } from './FiltersContext';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -32,20 +28,20 @@ export const Wrapper = styled.div`
 
 const filterLabels: EpisodeTypeFilterLabels = {
   live: 'live',
-  compilation: 'compilation',
-  wfh: 'wfh',
   office: 'qi offices',
+  wfh: 'wfh',
+  compilation: 'compilation',
 };
 
-export const EpisodeTypeFilters = ({
-  selected,
-  onToggle,
-}: EpisodeTypeFiltersProps) => {
+export const EpisodeTypeFilters = () => {
+  const { episodeTypeFilters, handleEpisodeTypeFilterToggle } =
+    useContext(FiltersContext);
+
   const handleToggle = useCallback(
-    ({ target }: { target: SelectedOption }) => {
-      onToggle(target);
+    ({ target }: { target: SelectedOption<string> }) => {
+      handleEpisodeTypeFilterToggle(target as SelectedOption<EpisodeType>);
     },
-    [onToggle]
+    [handleEpisodeTypeFilterToggle]
   );
   return (
     <FilterSection label="Episode type filters:">
@@ -56,7 +52,7 @@ export const EpisodeTypeFilters = ({
               onChange={handleToggle}
               type="checkbox"
               name={name}
-              checked={selected[name as EpisodeType]}
+              checked={episodeTypeFilters[name as EpisodeType]}
             />
             {label}
           </label>

@@ -51,25 +51,10 @@ export type Option = {
   value: number;
 };
 
-export type SelectedOption = {
-  name: string;
+export type SelectedOption<T> = {
+  name: T;
   checked: boolean;
 };
-
-export interface EpisodeTypeFiltersProps {
-  selected: EpisodeTypeFiltersState;
-  onToggle: (option: SelectedOption) => void;
-}
-
-export interface SearchFiltersProps {
-  selected: SearchFiltersState;
-  onToggle: (option: SelectedOption) => void;
-}
-
-export interface PresenterFiltersProps {
-  selected: PresentersFilterState;
-  onChange: (presenters: number[]) => void;
-}
 
 export type SelectEpisodeWords = (episode: number) => Promise<Word[]>;
 
