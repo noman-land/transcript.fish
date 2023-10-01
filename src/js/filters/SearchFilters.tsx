@@ -31,9 +31,9 @@ export const FilterWrapper = styled.div`
 `;
 
 const filterLabels: SearchFilterLabels = {
-  description: 'description',
   episode: 'episode number',
   title: 'title',
+  description: 'description',
   words: 'transcript',
 };
 
@@ -47,15 +47,15 @@ export const SearchFilters = ({ selected, onToggle }: SearchFiltersProps) => {
   return (
     <FilterSection label="Search filters:">
       <FilterWrapper>
-        {Object.entries(selected).map(([name, checked]) => (
+        {Object.entries(filterLabels).map(([name, label]) => (
           <label key={name}>
             <input
               onChange={handleToggle}
               type="checkbox"
               name={name}
-              checked={checked}
+              checked={selected[name as SearchField]}
             />
-            {filterLabels[name as SearchField]}
+            {label}
           </label>
         ))}
       </FilterWrapper>
