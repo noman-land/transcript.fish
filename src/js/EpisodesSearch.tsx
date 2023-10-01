@@ -5,12 +5,14 @@ import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
 import { PaginationSpacer, Paginator } from './Paginator';
 import { SearchFiltersState } from './types';
-import { FilterBar, PresenterFilters, SearchFilters } from './FilterBar';
+import { FilterBar } from './filters/FilterBar';
 import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
 import { Total } from './Total';
 import { preventDefault } from './utils';
 import { fadeIn } from './styleUtils';
+import { SearchFilters } from './filters/SearchFilters';
+import { PresenterFilters } from './filters/PresenterFilters';
 
 const Wrapper = styled.div`
   display: flex;

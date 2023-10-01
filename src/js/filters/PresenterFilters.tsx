@@ -1,127 +1,16 @@
-import styled from 'styled-components';
 import { useCallback, useMemo } from 'react';
 import Select, { MultiValue, Theme, StylesConfig } from 'react-select';
-import {
-  FilterLabels,
-  Option,
-  Presenter,
-  PresenterFiltersProps,
-  SearchField,
-  SearchFiltersProps,
-  SelectedOption,
-} from './types';
-import { useDb } from './dbHooks';
-import { bold } from './styleUtils';
-import { formatName } from './utils';
-import { Colors, hosts } from './constants';
-
-export const FilterBar = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  flex-wrap: wrap;
-  margin: 1.8rem 3vw 0 0;
-
-  @media (max-width: 900px) {
-    margin: 1.8rem 4.5vw 0 0;
-  }
-
-  @media (max-width: 650px) {
-    margin: 1.8rem 6vw 0 0;
-  }
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-`;
-
-const FilterSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  margin: 0 0 1.8rem 3vw;
-
-  @media (max-width: 900px) {
-    margin: 0 0 1.8rem 4.5vw;
-  }
-
-  @media (max-width: 650px) {
-    margin: 0 0 1.8rem 6vw;
-  }
-
-  @media (max-width: 420px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-`;
-
-const FilterSectionLabel = styled.span`
-  margin: 0 1rem 0.6rem 0;
-  ${bold}
-`;
-
-const SearchFilterWrapper = styled.div`
-  display: flex;
-  flex-grow: 1;
-  flex-wrap: wrap;
-
-  label {
-    margin-right: 1.6rem;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-
-  input {
-    margin-left: 0;
-    margin-right: 0.3rem;
-    height: 1.2rem;
-    width: 1.2rem;
-    cursor: pointer;
-  }
-`;
-
-const filterLabels: FilterLabels = {
-  description: 'description',
-  episode: 'episode number',
-  title: 'title',
-  words: 'transcript',
-};
+import { Option, Presenter, PresenterFiltersProps } from '../types';
+import { useDb } from '../dbHooks';
+import { formatName } from '../utils';
+import { Colors, hosts } from '../constants';
+import { FilterSection } from './FilterSection';
 
 const noOneFound = () => 'No one found';
 
 type PresenterType = 'host' | 'qiElf' | 'guest';
 
 type GroupedPresenterOptions = Record<PresenterType, Presenter[]>;
-
-export const SearchFilters = ({ selected, onToggle }: SearchFiltersProps) => {
-  const handleToggle = useCallback(
-    ({ target }: { target: SelectedOption }) => {
-      onToggle(target);
-    },
-    [onToggle]
-  );
-  return (
-    <FilterSection>
-      <FilterSectionLabel>Search filters:</FilterSectionLabel>
-      <SearchFilterWrapper>
-        {Object.entries(selected).map(([name, checked]) => (
-          <label key={name}>
-            <input
-              onChange={handleToggle}
-              type="checkbox"
-              name={name}
-              checked={checked}
-            />
-            {filterLabels[name as SearchField]}
-          </label>
-        ))}
-      </SearchFilterWrapper>
-    </FilterSection>
-  );
-};
 
 const sortByLabel = (a: Option, b: Option) =>
   a.label.toLocaleLowerCase().localeCompare(b.label.toLowerCase());
@@ -205,8 +94,7 @@ export const PresenterFilters = ({ onChange }: PresenterFiltersProps) => {
   }, [presenters]);
 
   return (
-    <FilterSection>
-      <FilterSectionLabel>Presenter filters:</FilterSectionLabel>
+    <FilterSection label="Presenter filterss:">
       <Select
         theme={customTheme}
         styles={styles}

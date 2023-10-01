@@ -42,4 +42,5 @@ h2,
 h3,
 .bold {
   font-family: TTB, 'Courier New', Courier, monospace;
+  font-weight: 600;
 }
