@@ -7,6 +7,7 @@ import { mediaUrl } from './utils';
 import { fadeIn } from './styleUtils';
 import { AudioContextWrapper } from './audio/AudioContext';
 import { Colors } from './constants';
+import { FiltersContextProvider } from './filters/FiltersContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,7 +65,9 @@ export const App = () => {
             <UnderConstructionBanner />
             <img className="nstaaf-logo" src={mediaUrl.images('logo.jpg')} />
             <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
-              <EpisodeSearch />
+              <FiltersContextProvider>
+                <EpisodeSearch />
+              </FiltersContextProvider>
             </ErrorBoundary>
           </div>
         </>

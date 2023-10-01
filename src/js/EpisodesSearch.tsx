@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
 import { PaginationSpacer, Paginator } from './Paginator';
-import { EpisodeTypeFiltersState, SearchFiltersState } from './types';
 import { FilterBar } from './filters/FilterBar';
 import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
@@ -14,6 +13,7 @@ import { fadeIn } from './styleUtils';
 import { SearchFilters } from './filters/SearchFilters';
 import { PresenterFilters } from './filters/PresenterFilters';
 import { EpisodeTypeFilters } from './filters/EpisodeTypeFilters';
+import { FiltersContext } from './filters/FiltersContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,13 +21,6 @@ const Wrapper = styled.div`
   width: 100%;
   ${fadeIn}
 `;
-
-const WFH_VANUE_ID = 2;
-const QI_OFFICE_VENUE_IDS = [
-  1, // Covent Garden
-  4, // Hoburn
-  9, // 2020 Audio
-];
 
 export const EpisodeSearch = () => {
   const {
@@ -41,43 +34,18 @@ export const EpisodeSearch = () => {
     presenters: { data: presenters },
   } = useDb();
 
+  const {
+    getFilteredEpisodes,
+    episodeTypeFilters,
+    presenterFilters,
+    searchFilters,
+    handleSearchFilterToggle,
+    handleEpisodeTypeFilterToggle,
+    handlePresenterFilterChange,
+  } = useContext(FiltersContext);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
-  const [presenterFilters, setPresenterFilters] = useState<number[]>([]);
-  const [episodeTypeFilters, setEpisodeTypeFilters] =
-    useState<EpisodeTypeFiltersState>({
-      live: true,
-      compilation: true,
-      wfh: true,
-      office: true,
-    });
-
-  const [searchFilters, setSearchFilters] = useState<SearchFiltersState>({
-    episode: true,
-    title: true,
-    description: true,
-    words: true,
-  });
-
-  const handleEpisodeTypeFilterToggle = useCallback(
-    ({ name, checked }: { name: string; checked: boolean }) => {
-      setEpisodeTypeFilters(current => ({
-        ...current,
-        [name]: checked,
-      }));
-    },
-    []
-  );
-
-  const handleSearchFilterToggle = useCallback(
-    ({ name, checked }: { name: string; checked: boolean }) => {
-      setSearchFilters(current => ({
-        ...current,
-        [name]: checked,
-      }));
-    },
-    []
-  );
 
   useEffect(() => {
     search(searchTerm, searchFilters);
@@ -94,32 +62,12 @@ export const EpisodeSearch = () => {
     }
   }, []);
 
-  if (!episodes) {
+  const filteredEpisodes = getFilteredEpisodes(episodes);
+
+  if (!filteredEpisodes) {
     return null;
   }
 
-  const filteredEpisodes = episodes
-    .filter(epi => {
-      if (presenterFilters.length === 0) {
-        return true;
-      }
-
-      return (
-        presenterFilters.includes(epi.presenter1) ||
-        presenterFilters.includes(epi.presenter2) ||
-        presenterFilters.includes(epi.presenter3) ||
-        presenterFilters.includes(epi.presenter4) ||
-        presenterFilters.includes(epi.presenter5)
-      );
-    })
-    .filter(epi => {
-      return (
-        (epi.live && episodeTypeFilters.live) ||
-        (epi.compilation && episodeTypeFilters.compilation) ||
-        (epi.venue === WFH_VANUE_ID && episodeTypeFilters.wfh) ||
-        (QI_OFFICE_VENUE_IDS.includes(epi.venue) && episodeTypeFilters.office)
-      );
-    });
   const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
   const episodesLength = episodesError ? 0 : filteredEpisodes.length;
   const presentersFull = presenters
@@ -143,7 +91,7 @@ export const EpisodeSearch = () => {
         />
         <PresenterFilters
           selected={presenterFilters}
-          onChange={setPresenterFilters}
+          onChange={handlePresenterFilterChange}
         />
       </FilterBar>
       {!!total && (
