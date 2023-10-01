@@ -44,7 +44,7 @@ Unofficial No Such Thing As A Fish episode transcripts.
 
      The other good news is you can kill the script (`Ctrl + C`) and restart it at any time and it will pick back up after the last fully transcribed episode.
 
-     **NOTE:** This script also [downloads](/src/python/convert.py#L7-L8) all the audio files for the episodes as well as each episode's album art. As of 25 July 2023 this amounts to 487 episodes, ~20GB audio, ~130MB images.
+     **NOTE:** This script also [downloads](/src/python/convert.py#L8-L9) all the audio files for the episodes as well as each episode's album art. As of 25 July 2023 this amounts to 487 episodes, ~20GB audio, ~130MB images.
 
 3. Split database into chunks
 
