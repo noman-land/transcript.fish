@@ -6,7 +6,7 @@ const MEDIA_URL = 'https://media.transcript.fish' as const;
 const isLocal = () => {
   const { hostname, search } = window.location;
   const deployed = new URLSearchParams(search).get('deployed');
-  return hostname === 'localhost' && !deployed;
+  return (hostname === 'localhost' || hostname === '127.0.0.1') && !deployed;
 };
 
 export const mediaUrl = (path = '') => {
