@@ -11,7 +11,7 @@ def log(episode_num, *msg):
 def now():
     return datetime.now().strftime('%H:%M:%S')
 
-def create_file_path(folder_path):
+def create_folder(folder_path):
     # Check if the folder exists, and if not, create it
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
