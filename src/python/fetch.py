@@ -10,6 +10,7 @@ def download_episode_audio(episode):
     if Path(audio_path).exists():
         utils.log(episode_num, 'Already complete: audio download')
     else:
+        utils.create_folder(utils.AUDIO_PATH)
         utils.log(episode_num, f'Downloading: audio - {audio_url}')
         urllib.request.urlretrieve(audio_url, audio_path)
 
@@ -26,6 +27,7 @@ def download_episode_image(episode):
     if Path(image_path).exists():
         utils.log(episode_num, 'Already complete: image download')
     else:
+        utils.create_folder(utils.IMAGE_PATH)
         utils.log(episode_num, f'Downloading: image - {image_url}')
         urllib.request.install_opener(opener)
         urllib.request.urlretrieve(image_url, image_path)

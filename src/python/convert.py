@@ -1,6 +1,7 @@
 import database
 import fetch
 import whisper
+import utils
 
 def convert():
     transcribed = 0
