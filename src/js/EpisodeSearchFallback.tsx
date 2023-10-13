@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
 const StyledDiv = styled.div`
   text-align: center;

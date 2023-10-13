@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { spin } from './styleUtils';
 
 export const Spinner = styled.span.attrs<{ $size?: string }>({

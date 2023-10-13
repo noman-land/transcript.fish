@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { HostIcon } from './HostIcon';
 import { Host } from './types';
 import { hosts } from './constants';

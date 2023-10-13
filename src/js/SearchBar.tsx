@@ -1,5 +1,5 @@
 import { FormEventHandler } from 'react';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { Colors } from './constants';
 
 const StyledForm = styled.form`
