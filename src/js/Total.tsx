@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { Presenter } from './types';
 import { formatName } from './utils';
 

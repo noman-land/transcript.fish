@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { Colors } from './constants';
 
 const StyledDiv = styled.div`
