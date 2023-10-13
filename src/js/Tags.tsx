@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { Colors } from './constants';
 import { useContext } from 'react';
 import { FiltersContext } from './filters/FiltersContext';

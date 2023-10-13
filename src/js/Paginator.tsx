@@ -4,7 +4,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { styled, css } from 'styled-components';
+import styled, { css } from 'styled-components';
 import { PaginatorProps } from './types';
 import { preventDefault } from './utils';
 

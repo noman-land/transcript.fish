@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
 export const Separator = styled.div.attrs({ children: '* * *' })`
   text-align: center;
