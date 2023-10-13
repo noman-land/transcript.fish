@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import { spin } from './styleUtils';
 
-export const Spinner = styled.span.attrs<{ $size?: string }>({
+export const Spinner = styled.span.attrs({
   children: (
     <span className="wrapper">
       <span className="dot">*</span>
     </span>
   ),
-})`
+})<{ $size?: string }>`
   .wrapper {
     display: inline-block;
     position: relative;
