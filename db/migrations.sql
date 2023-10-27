@@ -19,16 +19,28 @@ CREATE TABLE "episodes" (
   "venue" INTEGER,
   "live" INTEGER,
   "compilation" INTEGER,
+  "event" INTEGER,
   FOREIGN KEY("presenter1") REFERENCES "presenters"("id"),
   FOREIGN KEY("presenter2") REFERENCES "presenters"("id"),
   FOREIGN KEY("presenter3") REFERENCES "presenters"("id"),
   FOREIGN KEY("presenter4") REFERENCES "presenters"("id"),
   FOREIGN KEY("presenter5") REFERENCES "presenters"("id"),
   FOREIGN KEY("venue") REFERENCES "venues"("id"),
+  FOREIGN KEY("event") REFERENCES "events"("id"),
   PRIMARY KEY("episode")
 );
 
 CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
+
+CREATE TABLE "events" (
+  "id" INTEGER NOT NULL UNIQUE,
+  "name" TEXT NOT NULL,
+  "city" TEXT NOT NULL,
+  "country" TEXT NOT NULL,
+  PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+CREATE UNIQUE INDEX "events_index" ON "events" ("id");
 
 CREATE TABLE "presenters" (
   "id" INTEGER NOT NULL UNIQUE,
@@ -57,7 +69,6 @@ CREATE TABLE "venues" (
   "city" TEXT,
   "state" TEXT,
   "country" TEXT,
-  "event" TEXT,
   PRIMARY KEY("id" AUTOINCREMENT)
 );
 
