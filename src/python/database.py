@@ -48,7 +48,8 @@ def make_episode_row(episode, word_count):
         None, # presenter5
         None, # venue
         None, # live
-        None # compilation
+        None, # compilation
+        None # event
     )
 
 def vacuum():
@@ -71,7 +72,7 @@ def upsert_episode(episode, word_count):
         INSERT INTO
             episodes
         VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT
             (episode)
         DO UPDATE SET
