@@ -15,7 +15,7 @@ model = WhisperModel(
 
 def get_transcription_segments(episode):
     episode_num = utils.get_episode_num(episode)
-    summary = utils.strip_html(episode['summary'])
+    summary = utils.strip_html(getattr(episode, 'summary', ''))
     segments, _ = model.transcribe(
         utils.make_audio_file_path(episode_num),
         word_timestamps=True,
