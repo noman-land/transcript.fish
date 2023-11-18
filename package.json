@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "convert": "python src/python/main.py",
-    "convert:js": "npx ts-node --esm src/js/convert.ts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
