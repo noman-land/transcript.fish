@@ -16,6 +16,7 @@ Unofficial No Such Thing As A Fish episode transcripts.
    - Run `pip install -r requirements.txt`
 
 2. Download most recent episodes and transcribe them
+
    - Change line 11 of whisper.py to `local_files_only=False`
 
    - (Optional): Change line 5 of whisper.py `model_size = 'large-v2'` to your preferred model, see note below for details, [see available models.](https://huggingface.co/guillaumekln)
