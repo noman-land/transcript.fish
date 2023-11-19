@@ -3,7 +3,7 @@ import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { EpisodesTable } from './EpisodesTable';
 import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
-import { PaginationSpacer, Paginator } from './Paginator';
+import { Paginator } from './Paginator';
 import { FilterBar } from './filters/FilterBar';
 import { EmptyState } from './EmptyState';
 import { SearchBar } from './SearchBar';
@@ -15,6 +15,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+`;
+
+const PaginationSpacer = styled.div`
+  height: 116.2px;
 `;
 
 export const EpisodeSearch = () => {

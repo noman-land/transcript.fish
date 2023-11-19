@@ -93,10 +93,6 @@ const Button = styled.button`
         `}
 `;
 
-export const PaginationSpacer = styled.div`
-  height: 116.2px;
-`;
-
 export const Paginator = ({
   page,
   totalPages,

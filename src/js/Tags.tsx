@@ -4,13 +4,13 @@ import { useContext } from 'react';
 import { FiltersContext } from './filters/FiltersContext';
 import { EpisodeType, EpisodeTypeFiltersState } from './types';
 
-export const TagWrapper = styled.div`
+const TagWrapper = styled.div`
   display: flex;
   align-items: start;
   justify-content: start;
 `;
 
-export const Tag = styled.button.attrs({ className: 'text' })`
+const Tag = styled.button.attrs({ className: 'text' })`
   border: none;
   background: ${Colors.night};
   color: white;

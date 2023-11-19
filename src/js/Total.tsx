@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Presenter } from './types';
 import { formatName } from './utils';
 
-export const StyledDiv = styled.div`
+const StyledDiv = styled.div`
   position: relative;
   text-align: left;
   font-size: 90%;

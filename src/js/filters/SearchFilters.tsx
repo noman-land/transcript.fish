@@ -4,7 +4,7 @@ import { SearchFilterLabels, SearchField, SelectedOption } from '../types';
 import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
 
-export const FilterWrapper = styled.div`
+const FilterWrapper = styled.div`
   display: flex;
   flex-grow: 1;
   flex-wrap: wrap;

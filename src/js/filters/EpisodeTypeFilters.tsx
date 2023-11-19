@@ -4,7 +4,7 @@ import { EpisodeType, EpisodeTypeFilterLabels, SelectedOption } from '../types';
 import styled from 'styled-components';
 import { FiltersContext } from './FiltersContext';
 
-export const Wrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-grow: 1;
   flex-wrap: wrap;
