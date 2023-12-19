@@ -17,6 +17,27 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
+const TotalWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0.6rem 3vw;
+  flex-grow: 1;
+
+  @media (max-width: 900px) {
+    margin: 0.6rem 4.5vw;
+  }
+
+  @media (max-width: 650px) {
+    margin: 0.6rem 6vw;
+  }
+
+  .expand-all {
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+`;
+
 const PaginationSpacer = styled.div`
   height: 116.2px;
 `;
@@ -24,6 +45,7 @@ const PaginationSpacer = styled.div`
 export const EpisodeSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
+  const [expanded, setExpanded] = useState(false);
 
   const {
     episodes: {
@@ -61,6 +83,10 @@ export const EpisodeSearch = () => {
     }
   }, []);
 
+  const handleExpandAll = useCallback(() => {
+    setExpanded(e => !e);
+  }, []);
+
   const filteredEpisodes = getFilteredEpisodes(episodes);
 
   if (!filteredEpisodes) {
@@ -80,16 +106,23 @@ export const EpisodeSearch = () => {
         onSubmit={handleSubmit}
       />
       <FilterBar />
-      {!!total && (
-        <Total
-          presenters={presentersFull}
-          searchTerm={searchTerm}
-          error={!!episodesError}
-          loading={episodesLoading}
-          results={episodesLength}
-          total={total}
-        />
-      )}
+      <TotalWrapper>
+        {!!total && (
+          <>
+            <Total
+              presenters={presentersFull}
+              searchTerm={searchTerm}
+              error={!!episodesError}
+              loading={episodesLoading}
+              results={episodesLength}
+              total={total}
+            />
+            <button onClick={handleExpandAll} className="expand-all text">
+              {expanded ? '> collapse all <' : '< expand all >'}
+            </button>
+          </>
+        )}
+      </TotalWrapper>
       {episodesError ? (
         <>
           <EmptyState
@@ -104,6 +137,7 @@ export const EpisodeSearch = () => {
             episodes={filteredEpisodes}
             page={page}
             loading={episodesLoading}
+            expanded={expanded}
           />
           {totalPages > 1 && !episodesLoading ? (
             <Paginator

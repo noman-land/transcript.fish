@@ -85,6 +85,7 @@ export interface EpisodeSummaryCellProps {
 
 export interface EpisodeRowProps {
   episode: Episode;
+  expanded: boolean;
 }
 
 export interface PaginatorProps {
