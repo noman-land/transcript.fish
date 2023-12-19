@@ -106,23 +106,21 @@ export const EpisodeSearch = () => {
         onSubmit={handleSubmit}
       />
       <FilterBar />
-      <TotalWrapper>
-        {!!total && (
-          <>
-            <Total
-              presenters={presentersFull}
-              searchTerm={searchTerm}
-              error={!!episodesError}
-              loading={episodesLoading}
-              results={episodesLength}
-              total={total}
-            />
-            <button onClick={handleExpandAll} className="expand-all text">
-              {expanded ? '> collapse all <' : '< expand all >'}
-            </button>
-          </>
-        )}
-      </TotalWrapper>
+      {!!total && (
+        <TotalWrapper>
+          <Total
+            presenters={presentersFull}
+            searchTerm={searchTerm}
+            error={!!episodesError}
+            loading={episodesLoading}
+            results={episodesLength}
+            total={total}
+          />
+          <button onClick={handleExpandAll} className="expand-all text">
+            {expanded ? '> collapse all <' : '< expand all >'}
+          </button>
+        </TotalWrapper>
+      )}
       {episodesError ? (
         <>
           <EmptyState
