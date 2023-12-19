@@ -35,6 +35,11 @@ const TotalWrapper = styled.div`
     background: none;
     border: 0;
     cursor: pointer;
+    white-space: nowrap;
+
+    @media (max-width: 650px) {
+      font-size: 90%;
+    }
   }
 `;
 
