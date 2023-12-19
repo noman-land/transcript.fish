@@ -14,6 +14,7 @@ interface EpisodesTableProps {
   episodes: Episode[];
   page: number;
   loading: boolean;
+  expanded: boolean;
 }
 
 const StyledTbody = styled.tbody`
@@ -44,6 +45,7 @@ export const EpisodesTable = ({
   episodes,
   page,
   loading,
+  expanded,
 }: EpisodesTableProps) => {
   return (
     <table>
@@ -55,7 +57,11 @@ export const EpisodesTable = ({
             episodes
               .slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
               .map(episode => (
-                <EpisodeRow episode={episode} key={episode.episode} />
+                <EpisodeRow
+                  episode={episode}
+                  key={episode.episode}
+                  expanded={expanded}
+                />
               ))
           ) : (
             <tr>
