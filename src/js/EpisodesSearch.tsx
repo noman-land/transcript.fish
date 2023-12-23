@@ -20,15 +20,21 @@ const Wrapper = styled.div`
 const TotalWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 0.6rem 3vw;
+  margin: 0 3vw;
   flex-grow: 1;
 
   @media (max-width: 900px) {
-    margin: 0.6rem 4.5vw;
+    margin: 0 4.5vw;
   }
 
   @media (max-width: 650px) {
-    margin: 0.6rem 6vw;
+    margin: 0 6vw;
+    flex-direction: column;
+  }
+
+  & > * {
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
   }
 
   .expand-all {
@@ -36,9 +42,12 @@ const TotalWrapper = styled.div`
     border: 0;
     cursor: pointer;
     white-space: nowrap;
+    align-self: flex-end;
+    margin-left: 1rem;
 
     @media (max-width: 650px) {
       font-size: 90%;
+      margin-left: 0;
     }
   }
 `;
