@@ -22,6 +22,7 @@ const FilterSectionWrapper = styled.div`
 `;
 
 const FilterSectionLabel = styled.span`
+  text-align: left;
   margin: 0 1rem 0.6rem 0;
 `;
 
