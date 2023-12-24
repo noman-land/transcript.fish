@@ -13,7 +13,7 @@ const StyledWrapper = styled.div`
   margin: 0 3vw;
 
   .filters {
-    margin-left: 2.5rem;
+    margin-left: 2.4rem;
     margin-bottom: 1rem;
   }
 
