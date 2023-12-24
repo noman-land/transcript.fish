@@ -52,6 +52,7 @@ export const FiltersContext = createContext<{
   handleSearchFilterToggle: FilterToggleHandler<SearchField>;
   setPresenterFilters: Dispatch<SetStateAction<PresenterFiltersState>>;
   setEpisodeTypeFilters: Dispatch<SetStateAction<EpisodeTypeFiltersState>>;
+  numFiltersAltered: number;
 }>({
   getFilteredEpisodes: () => undefined,
   episodeTypeFilters: defaultEpisodeTypeFiltersState,
@@ -61,6 +62,7 @@ export const FiltersContext = createContext<{
   handleSearchFilterToggle: noop,
   setPresenterFilters: noop,
   setEpisodeTypeFilters: n => n,
+  numFiltersAltered: 0,
 });
 
 export const FiltersContextProvider = ({
@@ -122,6 +124,17 @@ export const FiltersContextProvider = ({
         );
       });
 
+  const areEpisodeTypesAltered = Object.values(episodeTypeFilters).some(
+    v => !v
+  );
+  const areSearchFiltersAltered = Object.values(searchFilters).some(v => !v);
+  const arePresenterFiltersAltered = !!presenterFilters.length;
+
+  const numFiltersAltered =
+    Number(areEpisodeTypesAltered) +
+    Number(areSearchFiltersAltered) +
+    Number(arePresenterFiltersAltered);
+
   return (
     <FiltersContext.Provider
       value={{
@@ -133,6 +146,7 @@ export const FiltersContextProvider = ({
         handleSearchFilterToggle,
         setPresenterFilters,
         setEpisodeTypeFilters,
+        numFiltersAltered,
       }}
     >
       {children}
