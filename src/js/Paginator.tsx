@@ -37,7 +37,6 @@ const PageNumber = styled.form`
   display: inline;
 
   input {
-    font-family: TTE, 'Courier New', Courier, monospace;
     font-size: 1em;
     cursor: pointer;
     padding: 1rem 0.6rem;
@@ -60,7 +59,6 @@ const PageNumber = styled.form`
 const Button = styled.button`
   background: none;
   border: none;
-  font-family: TTE, 'Courier New', Courier, monospace;
   font-size: 1.1em;
   min-width: 50px;
   max-width: 50px;

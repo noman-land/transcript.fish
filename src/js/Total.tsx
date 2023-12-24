@@ -9,14 +9,15 @@ const StyledDiv = styled.div`
 `;
 
 interface TotalProps {
-  searchTerm: string;
-  results: number;
+  isShowingAll: boolean;
+  resultsCount: number;
   total: number;
 }
 
-export const Total = ({ searchTerm, results, total }: TotalProps) => {
-  const isShowingAll = results === total && !searchTerm;
-  const foundResults = isShowingAll ? 'showing all' : `found ${results} of`;
+export const Total = ({ isShowingAll, resultsCount, total }: TotalProps) => {
+  const foundResults = isShowingAll
+    ? 'showing all'
+    : `found ${resultsCount} of`;
 
   return (
     <StyledDiv>

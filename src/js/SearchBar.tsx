@@ -10,7 +10,6 @@ const StyledForm = styled.form`
     background: ${Colors.citrineLighter};
     border: 0;
     flex-grow: 1;
-    font-family: TTE, 'Courier New', Courier, monospace;
     padding: 1em 3vw;
     font-size: 1em;
     min-width: 100px;

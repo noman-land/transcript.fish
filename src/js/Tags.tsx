@@ -10,11 +10,12 @@ const TagWrapper = styled.div`
   justify-content: start;
 `;
 
-const Tag = styled.button.attrs({ className: 'text' })`
+const Tag = styled.button`
   border: none;
   background: ${Colors.night};
   color: white;
   cursor: pointer;
+  font-size: 1em;
   padding: 0.3rem 0.5rem;
   margin-bottom: 0.8em;
   border-radius: 2px;

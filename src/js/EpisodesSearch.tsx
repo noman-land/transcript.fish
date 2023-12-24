@@ -17,6 +17,22 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
+const ExpandAllWrapper = styled.div`
+  display: flex;
+  flex-grow: 1;
+
+  button {
+    display: inline-block;
+    background: none;
+    border: 0;
+    font-size: 1em;
+    padding: 0.6rem 2rem 1rem 0;
+    margin-right: 3rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+`;
+
 const TotalWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -30,21 +46,6 @@ const TotalWrapper = styled.div`
 
   @media (max-width: 650px) {
     margin: 0 6vw;
-  }
-
-  .expand-all-wrapper {
-    display: flex;
-    flex-grow: 1;
-
-    .expand-all {
-      display: inline-block;
-      background: none;
-      border: 0;
-      padding: 0.6rem 2rem 1rem 0;
-      margin-right: 3rem;
-      cursor: pointer;
-      white-space: nowrap;
-    }
   }
 `;
 
@@ -63,7 +64,7 @@ export const EpisodeSearch = () => {
       search,
       error: episodesError,
       loading: episodesLoading,
-      total,
+      total: totalEpisodes,
     },
   } = useDb();
 
@@ -103,7 +104,8 @@ export const EpisodeSearch = () => {
   }
 
   const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
-  const episodesLength = episodesError ? 0 : filteredEpisodes.length;
+  const resultsCount = episodesError ? 0 : filteredEpisodes.length;
+  const isShowingAll = resultsCount === totalEpisodes && !searchTerm;
 
   return (
     <Wrapper>
@@ -112,18 +114,18 @@ export const EpisodeSearch = () => {
         onSubmit={handleSubmit}
       />
       <FilterBar />
-      {!!total && (
+      {!!totalEpisodes && (
         <TotalWrapper>
-          <div className="expand-all-wrapper">
-            <button onClick={handleExpandAll} className="expand-all text">
+          <ExpandAllWrapper>
+            <button onClick={handleExpandAll}>
               {expanded ? '[-] collapse' : '[+] expand'} all
             </button>
-          </div>
+          </ExpandAllWrapper>
           {!episodesLoading && !episodesError && (
             <Total
-              searchTerm={searchTerm}
-              results={episodesLength}
-              total={total}
+              isShowingAll={isShowingAll}
+              resultsCount={resultsCount}
+              total={totalEpisodes}
             />
           )}
         </TotalWrapper>
