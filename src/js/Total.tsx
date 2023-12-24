@@ -5,7 +5,7 @@ const StyledDiv = styled.div`
   margin-top: 0.2rem;
   margin-bottom: 1rem;
   flex-grow: 1;
-  text-right: right;
+  text-align: right;
 `;
 
 export const Total = ({
