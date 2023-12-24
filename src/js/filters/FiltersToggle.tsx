@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { useContext } from 'react';
+import { FiltersContext } from './FiltersContext';
 
 const StyledButton = styled.div`
   display: inline-block;
@@ -16,10 +18,12 @@ export const FiltersToggle = ({
   isOpen: boolean;
   onToggle: () => void;
 }) => {
+  const { numFiltersAltered } = useContext(FiltersContext);
+  const numAltered = !!numFiltersAltered && `(${numFiltersAltered})`;
   return (
     <div>
       <StyledButton className="text" onClick={onToggle}>
-        {isOpen ? '[-] hide' : '[+] show'} filters
+        {isOpen ? '[-] hide' : '[+] show'} filters {numAltered}
       </StyledButton>
     </div>
   );
