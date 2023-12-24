@@ -57,7 +57,7 @@ export const PresenterFilters = () => {
     presenters: { data: presenters },
   } = useDb();
 
-  const { setPresenterFilters } = useContext(FiltersContext);
+  const { presenterFilters, setPresenterFilters } = useContext(FiltersContext);
 
   const handleChange = useCallback(
     (options: MultiValue<Option>) => {
@@ -96,19 +96,29 @@ export const PresenterFilters = () => {
     }));
   }, [presenters]);
 
+  const defaultValue =
+    presenters &&
+    presenterFilters.map(id => ({
+      value: id,
+      label: formatName(presenters[id]),
+    }));
+
   return (
-    <FilterSection label="Presenter filters:">
-      <Select
-        theme={customTheme}
-        styles={styles}
-        noOptionsMessage={noOneFound}
-        placeholder="Search presenters"
-        isSearchable={true}
-        isClearable={true}
-        isMulti={true}
-        options={options}
-        onChange={handleChange}
-      />
-    </FilterSection>
+    presenters && (
+      <FilterSection label="Presenter filters:">
+        <Select
+          defaultValue={defaultValue}
+          theme={customTheme}
+          styles={styles}
+          noOptionsMessage={noOneFound}
+          placeholder="Search presenters"
+          isSearchable={true}
+          isClearable={true}
+          isMulti={true}
+          options={options}
+          onChange={handleChange}
+        />
+      </FilterSection>
+    )
   );
 };
