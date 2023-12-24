@@ -21,7 +21,7 @@ const StyledWrapper = styled.div`
     margin-top: 1rem;
   }
 
-  .filters > *:not(:first-child) {
+  .filters > :not(:first-child) {
     margin-top: 1.8rem;
   }
 
