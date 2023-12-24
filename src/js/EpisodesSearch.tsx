@@ -119,13 +119,13 @@ export const EpisodeSearch = () => {
               {expanded ? '[-] collapse' : '[+] expand'} all
             </button>
           </div>
-          <Total
-            searchTerm={searchTerm}
-            error={!!episodesError}
-            loading={episodesLoading}
-            results={episodesLength}
-            total={total}
-          />
+          {!episodesLoading && !episodesError && (
+            <Total
+              searchTerm={searchTerm}
+              results={episodesLength}
+              total={total}
+            />
+          )}
         </TotalWrapper>
       )}
       {episodesError ? (

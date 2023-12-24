@@ -8,29 +8,19 @@ const StyledDiv = styled.div`
   text-align: right;
 `;
 
-export const Total = ({
-  searchTerm,
-  error,
-  loading,
-  results,
-  total,
-}: {
+interface TotalProps {
   searchTerm: string;
-  error?: boolean;
-  loading: boolean;
   results: number;
   total: number;
-}) => {
-  const totalText = <>{total} episodes</>;
-  const isShowingAll = results === total && !searchTerm;
-  const foundResults = isShowingAll ? (
-    <>showing all {totalText}</>
-  ) : (
-    <>
-      found {error ? '?' : results} of {totalText}
-    </>
-  );
-  const maybeResults = loading ? <>searching...</> : foundResults;
+}
 
-  return <StyledDiv>{maybeResults}</StyledDiv>;
+export const Total = ({ searchTerm, results, total }: TotalProps) => {
+  const isShowingAll = results === total && !searchTerm;
+  const foundResults = isShowingAll ? 'showing all' : `found ${results} of`;
+
+  return (
+    <StyledDiv>
+      {foundResults} {total} episodes
+    </StyledDiv>
+  );
 };
