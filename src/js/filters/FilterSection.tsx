@@ -5,15 +5,6 @@ const FilterSectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  margin: 0 0 1.8rem 3vw;
-
-  @media (max-width: 900px) {
-    margin: 0 0 1.8rem 4.5vw;
-  }
-
-  @media (max-width: 650px) {
-    margin: 0 0 1.8rem 6vw;
-  }
 
   @media (max-width: 420px) {
     flex-direction: column;
