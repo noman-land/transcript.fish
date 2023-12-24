@@ -22,6 +22,7 @@ const TotalWrapper = styled.div`
   justify-content: space-between;
   margin: 0 3vw;
   flex-grow: 1;
+  flex-wrap: wrap;
 
   @media (max-width: 900px) {
     margin: 0 4.5vw;
@@ -29,25 +30,20 @@ const TotalWrapper = styled.div`
 
   @media (max-width: 650px) {
     margin: 0 6vw;
-    flex-direction: column;
   }
 
-  & > * {
-    margin-top: 0.6rem;
-    margin-bottom: 0.6rem;
-  }
+  .expand-all-wrapper {
+    display: flex;
+    flex-grow: 1;
 
-  .expand-all {
-    background: none;
-    border: 0;
-    cursor: pointer;
-    white-space: nowrap;
-    align-self: flex-end;
-    margin-left: 1rem;
-
-    @media (max-width: 650px) {
-      font-size: 90%;
-      margin-left: 0;
+    .expand-all {
+      display: inline-block;
+      background: none;
+      border: 0;
+      padding: 0.6rem 2rem 1rem 0;
+      margin-right: 3rem;
+      cursor: pointer;
+      white-space: nowrap;
     }
   }
 `;
@@ -69,7 +65,6 @@ export const EpisodeSearch = () => {
       loading: episodesLoading,
       total,
     },
-    presenters: { data: presenters },
   } = useDb();
 
   const {
@@ -109,9 +104,6 @@ export const EpisodeSearch = () => {
 
   const totalPages = Math.ceil(filteredEpisodes.length / PAGE_SIZE);
   const episodesLength = episodesError ? 0 : filteredEpisodes.length;
-  const presentersFull = presenters
-    ? presenterFilters.map(n => presenters[n])
-    : [];
 
   return (
     <Wrapper>
@@ -122,17 +114,18 @@ export const EpisodeSearch = () => {
       <FilterBar />
       {!!total && (
         <TotalWrapper>
+          <div className="expand-all-wrapper">
+            <button onClick={handleExpandAll} className="expand-all text">
+              {expanded ? '[-] collapse' : '[+] expand'} all
+            </button>
+          </div>
           <Total
-            presenters={presentersFull}
             searchTerm={searchTerm}
             error={!!episodesError}
             loading={episodesLoading}
             results={episodesLength}
             total={total}
           />
-          <button onClick={handleExpandAll} className="expand-all text">
-            {expanded ? '> collapse all <' : '< expand all >'}
-          </button>
         </TotalWrapper>
       )}
       {episodesError ? (
