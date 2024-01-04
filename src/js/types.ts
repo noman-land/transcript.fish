@@ -33,6 +33,16 @@ export interface Word {
   probability: number;
 }
 
+export interface Venue {
+  id: number;
+  name: string;
+  city: string;
+  country: string;
+  region: string;
+  state: string;
+  streetAddress: string;
+}
+
 export type SearchField = 'episode' | 'title' | 'description' | 'words';
 
 export type SearchFiltersState = Record<SearchField, boolean>;

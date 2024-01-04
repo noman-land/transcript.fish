@@ -73,6 +73,7 @@ export const EpisodeSearch = () => {
     episodeTypeFilters,
     presenterFilters,
     searchFilters,
+    venueFilters,
   } = useContext(FiltersContext);
 
   useEffect(() => {
@@ -81,7 +82,13 @@ export const EpisodeSearch = () => {
 
   useEffect(() => {
     setPage(0);
-  }, [episodeTypeFilters, presenterFilters, searchTerm, searchFilters]);
+  }, [
+    episodeTypeFilters,
+    presenterFilters,
+    searchTerm,
+    searchFilters,
+    venueFilters,
+  ]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     preventDefault(e);
