@@ -29,7 +29,7 @@
     "react-select": "^5.7.7",
     "sql.js-httpvfs": "^0.8.12",
     "sqlite3": "^5.1.6",
-    "styled-components": "^6.0.4",
+    "styled-components": "^6.1.6",
     "throttle-debounce": "^5.0.0"
   },
   "devDependencies": {
