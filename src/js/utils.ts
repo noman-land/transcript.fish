@@ -1,5 +1,5 @@
 import { FormEventHandler, MouseEventHandler } from 'react';
-import { Presenter } from './types';
+import { Option, Venue, Presenter } from './types';
 
 const MEDIA_URL = 'https://media.transcript.fish' as const;
 
@@ -55,3 +55,13 @@ export const stopPropagation: MouseEventHandler = e => {
 
 export const formatName = ({ firstName, middleName, lastName }: Presenter) =>
   [firstName, middleName, lastName].filter(n => n).join(' ');
+
+export const formatVenueName = (venue: Venue) => {
+  return `${venue.name} (${[venue.region, venue.city, venue.state]
+    .filter(n => n)
+    .join(', ')})`;
+};
+
+export const sortByLabel = (a: Option, b: Option) => {
+  return a.label.toLocaleLowerCase().localeCompare(b.label.toLowerCase());
+};

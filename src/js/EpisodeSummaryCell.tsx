@@ -7,7 +7,7 @@ import { Separator } from './Separator';
 import { formatDate, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
 import { useDb } from './dbHooks';
-import { formatVenueName } from './filters/filterUtils';
+import { formatVenueName } from './utils';
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
   display: flex;

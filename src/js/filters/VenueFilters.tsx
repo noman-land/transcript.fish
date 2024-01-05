@@ -1,48 +1,15 @@
 import { useCallback, useContext, useMemo } from 'react';
-import Select, { MultiValue, Theme, StylesConfig } from 'react-select';
+import { MultiValue } from 'react-select';
 import { Option, Venue } from '../types';
 import { useDb } from '../dbHooks';
-import { Colors } from '../constants';
 import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
-import { formatVenueName } from './filterUtils';
+import { formatVenueName, sortByLabel } from '../utils';
+import { DropdownMultiselect } from './DropdownMultiselect';
 
 const nothingFound = () => 'Nothing found';
 
 type GroupedVenueOptions = Record<string, Venue[]>;
-
-const sortByLabel = (a: Option, b: Option) =>
-  a.label.toLocaleLowerCase().localeCompare(b.label.toLowerCase());
-
-const customTheme = (theme: Theme) => ({
-  ...theme,
-  colors: {
-    ...theme.colors,
-    primary: Colors.dimGrey,
-    primary25: Colors.lightBlue,
-    neutral0: Colors.citrineLighter,
-    neutral10: Colors.lightBlue,
-    neutral20: Colors.night,
-    neutral30: Colors.night,
-    neutral40: Colors.dimGrey,
-    neutral50: Colors.dimGrey,
-    neutral60: Colors.night,
-    danger: Colors.slateGrey,
-    dangerLight: Colors.lighterBlue,
-  },
-});
-
-const styles: StylesConfig<Option, true> = {
-  container: base => ({
-    ...base,
-    flexGrow: 1,
-  }),
-  menu: base => ({
-    ...base,
-    textAlign: 'left',
-    whiteSpace: 'nowrap',
-  }),
-};
 
 export const VenueFilters = () => {
   const {
@@ -94,15 +61,10 @@ export const VenueFilters = () => {
   return (
     venues && (
       <FilterSection label="Venue filters:">
-        <Select
+        <DropdownMultiselect
           defaultValue={defaultValue}
-          theme={customTheme}
-          styles={styles}
           noOptionsMessage={nothingFound}
           placeholder="Search venues"
-          isSearchable={true}
-          isClearable={true}
-          isMulti={true}
           options={options}
           onChange={handleChange}
         />
