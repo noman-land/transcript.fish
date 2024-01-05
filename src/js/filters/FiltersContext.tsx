@@ -14,9 +14,11 @@ import {
 } from '../types';
 
 type PresenterFiltersState = number[];
+type VenueFiltersState = number[];
 type FilterToggleHandler<T> = (args: { name: T; checked: boolean }) => void;
 
-const WFH_VANUE_ID = 2;
+// Four Undisclosed Locations
+const WFH_VENUE_ID = 2;
 const QI_OFFICE_VENUE_IDS = [
   1, // Covent Garden
   4, // Hoburn
@@ -38,6 +40,7 @@ const defaultSearchFiltersState = {
 };
 
 const defaultPresenterFiltersState: PresenterFiltersState = [];
+const defaultVenueFiltersState: VenueFiltersState = [];
 
 const noop = () => {
   return undefined;
@@ -48,9 +51,11 @@ export const FiltersContext = createContext<{
   episodeTypeFilters: EpisodeTypeFiltersState;
   searchFilters: SearchFiltersState;
   presenterFilters: PresenterFiltersState;
+  venueFilters: VenueFiltersState;
   handleEpisodeTypeFilterToggle: FilterToggleHandler<EpisodeType>;
   handleSearchFilterToggle: FilterToggleHandler<SearchField>;
   setPresenterFilters: Dispatch<SetStateAction<PresenterFiltersState>>;
+  setVenueFilters: Dispatch<SetStateAction<VenueFiltersState>>;
   setEpisodeTypeFilters: Dispatch<SetStateAction<EpisodeTypeFiltersState>>;
   numFiltersAltered: number;
 }>({
@@ -58,9 +63,11 @@ export const FiltersContext = createContext<{
   episodeTypeFilters: defaultEpisodeTypeFiltersState,
   searchFilters: defaultSearchFiltersState,
   presenterFilters: defaultPresenterFiltersState,
+  venueFilters: defaultVenueFiltersState,
   handleEpisodeTypeFilterToggle: noop,
   handleSearchFilterToggle: noop,
   setPresenterFilters: noop,
+  setVenueFilters: noop,
   setEpisodeTypeFilters: n => n,
   numFiltersAltered: 0,
 });
@@ -72,6 +79,8 @@ export const FiltersContextProvider = ({
 }) => {
   const [presenterFilters, setPresenterFilters] =
     useState<PresenterFiltersState>([]);
+
+  const [venueFilters, setVenueFilters] = useState<VenueFiltersState>([]);
 
   const [episodeTypeFilters, setEpisodeTypeFilters] =
     useState<EpisodeTypeFiltersState>(defaultEpisodeTypeFiltersState);
@@ -116,11 +125,18 @@ export const FiltersContextProvider = ({
         );
       })
       .filter(ep => {
+        if (venueFilters.length === 0) {
+          return true;
+        }
+
+        return venueFilters.includes(ep.venue);
+      })
+      .filter(ep => {
         return (
-          (ep.live && episodeTypeFilters.live) ||
-          (ep.compilation && episodeTypeFilters.compilation) ||
-          (ep.venue === WFH_VANUE_ID && episodeTypeFilters.wfh) ||
-          (QI_OFFICE_VENUE_IDS.includes(ep.venue) && episodeTypeFilters.office)
+          (episodeTypeFilters.live && ep.live) ||
+          (episodeTypeFilters.compilation && ep.compilation) ||
+          (episodeTypeFilters.wfh && ep.venue === WFH_VENUE_ID) ||
+          (episodeTypeFilters.office && QI_OFFICE_VENUE_IDS.includes(ep.venue))
         );
       });
 
@@ -129,11 +145,13 @@ export const FiltersContextProvider = ({
   );
   const areSearchFiltersAltered = Object.values(searchFilters).some(v => !v);
   const arePresenterFiltersAltered = !!presenterFilters.length;
+  const areVenueFiltersAltered = !!venueFilters.length;
 
   const numFiltersAltered =
     Number(areEpisodeTypesAltered) +
     Number(areSearchFiltersAltered) +
-    Number(arePresenterFiltersAltered);
+    Number(arePresenterFiltersAltered) +
+    Number(areVenueFiltersAltered);
 
   return (
     <FiltersContext.Provider
@@ -142,9 +160,11 @@ export const FiltersContextProvider = ({
         episodeTypeFilters,
         searchFilters,
         presenterFilters,
+        venueFilters,
         handleEpisodeTypeFilterToggle,
         handleSearchFilterToggle,
         setPresenterFilters,
+        setVenueFilters,
         setEpisodeTypeFilters,
         numFiltersAltered,
       }}

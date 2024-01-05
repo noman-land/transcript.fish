@@ -6,6 +6,8 @@ import { Hosts } from './Hosts';
 import { Separator } from './Separator';
 import { formatDate, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
+import { useDb } from './dbHooks';
+import { formatVenueName } from './utils';
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
   display: flex;
@@ -80,6 +82,7 @@ export const EpisodeSummaryCell = ({
     compilation,
     pubDate,
     description,
+    venue,
     presenter1,
     presenter2,
     presenter3,
@@ -90,6 +93,12 @@ export const EpisodeSummaryCell = ({
     () => [presenter1, presenter2, presenter3, presenter4],
     [presenter1, presenter2, presenter3, presenter4]
   );
+  const {
+    venues: { data: venues },
+  } = useDb();
+
+  const venueText = venues && !!venue && formatVenueName(venues[venue]);
+
   return (
     <StyledTd $isOpen={isOpen}>
       <TitleWrapper>
@@ -101,6 +110,7 @@ export const EpisodeSummaryCell = ({
         <Tags live={live} compilation={compilation} />
       </TitleWrapper>
       <div>{formatDate(pubDate)}</div>
+      <div>{venueText}</div>
       <Hosts $presenters={presenters} />
       <Description
         onClick={stopPropagation}

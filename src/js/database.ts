@@ -7,6 +7,7 @@ import {
   SelectEpisodeWords,
   SearchFiltersState,
   Word,
+  Venue,
 } from './types';
 import { mediaUrl } from './utils';
 
@@ -52,6 +53,31 @@ export const selectPresenters: SelectPresenters = () => {
       .catch((err: Error) =>
         console.error(
           'Something unexpected happened while getting presenters from database.',
+          err
+        )
+      );
+  });
+};
+
+const selectVenuesQuery = `
+  SELECT
+    *
+  FROM
+    venues
+  ORDER BY
+    name
+`;
+
+type SelectVenues = () => Promise<Venue[]>;
+
+export const selectVenues: SelectVenues = () => {
+  return new Promise((resolve, reject) => {
+    worker.db
+      .query(selectVenuesQuery)
+      .then(venues => resolve(venues as Venue[]), reject)
+      .catch((err: Error) =>
+        console.error(
+          'Something unexpected happened while getting venues from database.',
           err
         )
       );

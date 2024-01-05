@@ -4,6 +4,7 @@ import {
   Presenter,
   SearchFiltersState,
   SearchResults,
+  Venue,
   Word,
 } from './types';
 import {
@@ -12,6 +13,7 @@ import {
   searchEpisodeWords,
   selectEpisodeWords,
   selectPresenters,
+  selectVenues,
 } from './database';
 
 const useEpisodes = () => {
@@ -127,6 +129,39 @@ const usePresenters = () => {
   );
 };
 
+type VenuesState = Record<number, Venue>;
+
+const useVenues = () => {
+  const [error, setError] = useState<Error>();
+  const [loading, setLoading] = useState(false);
+  const [venues, setVenues] = useState<VenuesState>();
+
+  const getVenues = useCallback(() => {
+    setError(undefined);
+    setLoading(true);
+    selectVenues()
+      .then(result => {
+        const reduced = result.reduce((accum, pres) => {
+          accum[pres.id] = pres;
+          return accum;
+        }, {} as VenuesState);
+        setVenues(reduced);
+      })
+      .catch(setError)
+      .finally(() => setLoading(false));
+  }, [setVenues, setLoading, setError]);
+
+  return useMemo(
+    () => ({
+      data: venues,
+      error,
+      loading,
+      get: getVenues,
+    }),
+    [venues, error, loading, getVenues]
+  );
+};
+
 const useTranscript = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
@@ -155,16 +190,19 @@ const useTranscript = () => {
 export const useDb = () => {
   const { get: getEpisodes, ...episodes } = useEpisodes();
   const { get: getPresenters, ...presenters } = usePresenters();
+  const { get: getVenues, ...venues } = useVenues();
   const transcript = useTranscript();
 
   useEffect(() => {
     getPresenters();
     getEpisodes();
-  }, [getPresenters, getEpisodes]);
+    getVenues();
+  }, [getPresenters, getEpisodes, getVenues]);
 
   return {
     presenters,
     episodes,
     transcript,
+    venues,
   };
 };
