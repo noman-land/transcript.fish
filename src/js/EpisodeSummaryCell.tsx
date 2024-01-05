@@ -97,8 +97,7 @@ export const EpisodeSummaryCell = ({
     venues: { data: venues },
   } = useDb();
 
-  const venueText =
-    venues && !!venue && ` at ${formatVenueName(venues[venue])}`;
+  const venueText = venues && !!venue && formatVenueName(venues[venue]);
 
   return (
     <StyledTd $isOpen={isOpen}>
@@ -110,10 +109,8 @@ export const EpisodeSummaryCell = ({
         </Title>
         <Tags live={live} compilation={compilation} />
       </TitleWrapper>
-      <div>
-        {formatDate(pubDate)}
-        {venueText}
-      </div>
+      <div>{formatDate(pubDate)}</div>
+      <div>{venueText}</div>
       <Hosts $presenters={presenters} />
       <Description
         onClick={stopPropagation}
