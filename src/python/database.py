@@ -7,7 +7,7 @@ con = sqlite3.connect('db/transcript.db')
 def recreate_fts_table():
     cur = con.cursor()
     cur.execute('DROP TABLE IF EXISTS words_fts;')
-    cur.execute('CREATE VIRTUAL TABLE words_fts USING FTS5 (episode, title, description, words);')
+    cur.execute('CREATE VIRTUAL TABLE words_fts USING fts5 (episode, title, description, words);')
     cur.execute('''
         INSERT INTO
             words_fts (episode, title, description, words)
@@ -60,7 +60,7 @@ def vacuum():
 def select_word_count(episode_num):
     cur = con.cursor()
     result = cur.execute('SELECT COUNT(*) FROM words WHERE episode = ? GROUP BY episode', [episode_num]).fetchone()
-    word_count = result[0] if result and result[0] > 0 else 0 
+    word_count = result[0] if result and result[0] > 0 else 0
     return word_count
 
 def insert_words(episode_num, words):
