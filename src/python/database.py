@@ -2,7 +2,9 @@ import re
 import sqlite3
 import utils
 
-con = sqlite3.connect('db/transcript.db')
+db_path = 'db/transcript.db'
+
+con = sqlite3.connect(db_path)
 
 def recreate_fts_table():
     cur = con.cursor()
