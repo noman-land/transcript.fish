@@ -58,7 +58,7 @@ export type EpisodeTypeFilterLabels = Record<EpisodeType, string>;
 
 export type Option = {
   label: string;
-  value: number;
+  value: string | number;
 };
 
 export type SelectedOption<T> = {
