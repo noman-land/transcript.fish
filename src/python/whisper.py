@@ -1,5 +1,5 @@
 from faster_whisper import WhisperModel
-import database 
+import database
 import utils
 
 model_size = 'large-v2'
@@ -42,5 +42,5 @@ def transcribe(episode):
         utils.log(episode_num, f'Completed {segments_transcribed} segments and {word_count} words')
     database.upsert_episode(episode, word_count)
     database.commit()
-    utils.log(episode_num, f'Completed: transcription: {word_count} words.')
+    utils.log(episode_num, f'Completed: transcription: {word_count} words')
     return 1
