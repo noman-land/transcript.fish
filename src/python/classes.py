@@ -16,12 +16,3 @@ class Episode:
         self.description = BeautifulSoup(getattr(episode, 'summary', ''), 'html.parser').get_text()
         self.pub_date: str = episode['published']
         self.guid: str = episode['id']
-        self.presenter1 = None
-        self.presenter2 = None
-        self.presenter3 = None
-        self.presenter4 = None
-        self.presenter5 = None
-        self.venue = None
-        self.live = None
-        self.compilation = None
-        self.event = None

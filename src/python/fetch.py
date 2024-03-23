@@ -31,7 +31,7 @@ def download_episode_image(episode: Episode):
 
 rss_feed_url = 'https://audioboom.com/channels/2399216.rss'
 
-def get_rss_episodes(episode_num: int | None):
+def get_rss_episodes(episode_num_to_redo: int | None):
     episodes_only = filter(
         utils.is_episode,
         reversed(feedparser.parse(rss_feed_url)['entries'])
@@ -39,9 +39,7 @@ def get_rss_episodes(episode_num: int | None):
 
     episodes = map(Episode, episodes_only)
 
-    if episode_num:
-        def episode_filter(episode: Episode):
-            return episode.episode_num == int(episode_num)
-        return filter(episode_filter, episodes)
+    if not episode_num_to_redo:
+        return episodes
 
-    return episodes
+    return filter(lambda e: e.episode_num == int(episode_num_to_redo), episodes)
