@@ -3,7 +3,7 @@ import fetch
 import whisper
 import utils
 
-def convert(episode_num):
+def convert(episode_num_to_redo: int | None):
     transcribed = 0
     for episode in fetch.get_rss_episodes(episode_num):
         (episode_number, duration) = database.select_episode(utils.get_episode_num(episode))

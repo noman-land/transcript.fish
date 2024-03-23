@@ -33,7 +33,7 @@ def recreate_fts_table():
     ''')
     con.commit()
 
-def make_episode_row(episode, word_count):
+def make_episode_row(episode, word_count: int) -> tuple[int, str, str, str, str, int, str, str, str, int, None, None, None, None, None, None, None, None, None]:
     # "   7: Episode Title" -> "Episode Title"
     # "2361: Episode Title" -> "Episode Title"
     episode_title = re.sub(r'^\d{1,4}:\s', '', episode['title'])
@@ -64,7 +64,7 @@ def vacuum():
     cur.execute('VACUUM;')
     cur = con.commit()
 
-def select_episode(episode_num):
+def select_episode(episode_num: int) -> tuple[int, int]:
     select_word_count_sql = '''
         SELECT
             episode, duration
@@ -76,7 +76,7 @@ def select_episode(episode_num):
     cur = con.cursor()
     return cur.execute(select_word_count_sql, [episode_num]).fetchone()
 
-def select_word_count(episode_num):
+def select_word_count(episode_num: int) -> int:
     select_word_count_sql = '''
         SELECT
             COUNT(*)
@@ -92,7 +92,7 @@ def select_word_count(episode_num):
     word_count = result[0] if result and result[0] > 0 else 0
     return word_count
 
-def delete_transcription(episode_num):
+def delete_transcription(episode_num: int):
     delete_words_sql = '''
         DELETE FROM
             words
@@ -111,11 +111,11 @@ def delete_transcription(episode_num):
     cur.execute(delete_words_sql, [episode_num])
     cur.execute(reset_word_count_sql, [episode_num])
 
-def insert_words(episode_num, words):
+def insert_words(episode_num: int, words):
     cur = con.cursor()
     cur.executemany(f'INSERT INTO words VALUES (?, ?, ?, ?, {episode_num})', words)
 
-def upsert_episode(episode, word_count):
+def upsert_episode(episode, word_count: int):
     upsert_episode_sql = '''
         INSERT INTO
             episodes

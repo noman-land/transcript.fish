@@ -43,7 +43,7 @@ def filter_episodes(episode_num):
 
 rss_feed_url = 'https://audioboom.com/channels/2399216.rss'
 
-def get_rss_episodes(episode_num):
+def get_rss_episodes(episode_num: int | None):
     return filter(
         filter_episodes(episode_num),
         reversed(feedparser.parse(rss_feed_url)['entries'])
