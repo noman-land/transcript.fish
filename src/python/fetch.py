@@ -36,6 +36,7 @@ def get_rss_episodes(episode_num: int | None):
         utils.is_episode,
         reversed(feedparser.parse(rss_feed_url)['entries'])
     )
+
     episodes = map(Episode, episodes_only)
 
     if episode_num:
