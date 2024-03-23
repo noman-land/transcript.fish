@@ -1,5 +1,6 @@
-from datetime import datetime
 import os
+import re
+from datetime import datetime
 from bs4 import BeautifulSoup
 
 AUDIO_PATH = "audio"
@@ -44,6 +45,9 @@ def is_audio(media) -> bool:
 def get_audio_url(episode) -> str:
     audio, *_ = filter(is_audio, episode['media_content'])
     return audio['url']
+
+def get_title(episode) -> str:
+    return re.sub(r'^\d{1,4}:\s', '', episode['title'])
 
 def get_image_url(episode) -> str:
     return episode['image']['href']

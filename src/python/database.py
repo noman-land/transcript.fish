@@ -1,4 +1,3 @@
-import re
 import sqlite3
 import utils
 
@@ -36,10 +35,9 @@ def recreate_fts_table():
 def make_episode_row(episode, word_count: int) -> tuple[int, str, str, str, str, int, str, str, str, int, None, None, None, None, None, None, None, None, None]:
     # "   7: Episode Title" -> "Episode Title"
     # "2361: Episode Title" -> "Episode Title"
-    episode_title = re.sub(r'^\d{1,4}:\s', '', episode['title'])
     return (
         utils.get_episode_num(episode), # episode
-        episode_title, # title
+        utils.get_title(episode), # title
         utils.get_audio_url(episode), # audio
         episode['link'], # link
         utils.get_image_url(episode), # image
