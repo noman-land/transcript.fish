@@ -42,7 +42,7 @@ def make_episode_row(episode, word_count: int) -> tuple[int, str, str, str, str,
         episode['link'], # link
         utils.get_image_url(episode), # image
         utils.get_duration(episode), # duration
-        getattr(episode, 'summary', ''), # description
+        utils.get_description(episode), # description
         episode['published'], # pubDate
         episode['id'], # guid
         word_count, # wordCount

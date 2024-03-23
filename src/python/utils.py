@@ -55,5 +55,8 @@ def get_image_url(episode) -> str:
 def get_duration(episode):
     return int(episode['itunes_duration'])
 
+def get_description(episode):
+    return getattr(episode, 'summary', '')
+
 def strip_html(htmlString: str):
     return BeautifulSoup(htmlString, 'html.parser').get_text()
