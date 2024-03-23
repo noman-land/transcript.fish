@@ -33,13 +33,12 @@ def transcribe(episode):
     utils.log(episode_num, 'Starting: transcription')
     word_count = 0
     segments_transcribed = 0
-    segments = get_transcription_segments(episode)
-    for segment in segments:
+    for segment in get_transcription_segments(episode):
         words = getattr(segment, 'words', [])
         word_count += len(words)
         database.insert_words(episode_num, words)
         segments_transcribed += 1
-        utils.log(episode_num, f'Completed {segments_transcribed} segments and {word_count} words')
+        utils.log(episode_num, f'Completed: {segments_transcribed} segments and {word_count} words')
     database.upsert_episode(episode, word_count)
     database.commit()
     utils.log(episode_num, f'Completed: transcription: {word_count} words')

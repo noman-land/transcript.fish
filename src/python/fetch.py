@@ -8,10 +8,10 @@ def download_episode_audio(episode):
     audio_url = utils.get_audio_url(episode)
     audio_path = utils.make_audio_file_path(episode_num)
     if Path(audio_path).exists():
-        utils.log(episode_num, 'Already complete: audio download')
+        utils.log(episode_num, 'Already downloaded: audio')
     else:
         utils.create_folder(utils.AUDIO_PATH)
-        utils.log(episode_num, f'Downloading: audio - {audio_url}')
+        utils.log(episode_num, f'Downloading: audio')
         urllib.request.urlretrieve(audio_url, audio_path)
 
 opener = urllib.request.build_opener()
@@ -25,13 +25,26 @@ def download_episode_image(episode):
     image_url = utils.get_image_url(episode)
     image_path = utils.make_image_file_path(episode_num, image_url)
     if Path(image_path).exists():
-        utils.log(episode_num, 'Already complete: image download')
+        utils.log(episode_num, 'Already downloaded: image')
     else:
         utils.create_folder(utils.IMAGE_PATH)
-        utils.log(episode_num, f'Downloading: image - {image_url}')
+        utils.log(episode_num, f'Downloading: image')
         urllib.request.install_opener(opener)
         urllib.request.urlretrieve(image_url, image_path)
 
+
+def filter_episodes(episode_num):
+    def filter_fn(e):
+        if episode_num:
+            return utils.is_episode(e) and (utils.get_episode_num(e) == int(episode_num))
+        else:
+            return utils.is_episode(e)
+    return filter_fn
+
 rss_feed_url = 'https://audioboom.com/channels/2399216.rss'
-def get_rss_episodes():
-    return filter(lambda e: utils.is_episode(e), reversed(feedparser.parse(rss_feed_url)['entries']))
+
+def get_rss_episodes(episode_num):
+    return filter(
+        filter_episodes(episode_num),
+        reversed(feedparser.parse(rss_feed_url)['entries'])
+    )

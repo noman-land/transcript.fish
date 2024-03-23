@@ -25,6 +25,14 @@ def make_image_file_path(episode_num, image_url):
     # file extension includes dot at the beginning
     return f'{IMAGE_PATH}/{episode_num}{file_extension}'
 
+def delete_audio(episode_num):
+    make_audio_file_path(episode_num)
+    try:
+        os.remove(make_audio_file_path(episode_num))
+        log(episode_num, "Deleted: audio")
+    except OSError as e:
+        log(episode_num, "Error deleting %s: %s" % (e.filename, e.strerror))
+
 def get_episode_num(episode):
     return int(episode['itunes_episode'])
 
@@ -40,6 +48,9 @@ def get_audio_url(episode):
 
 def get_image_url(episode):
     return episode['image']['href']
+
+def get_duration(episode):
+    return int(episode['itunes_duration'])
 
 def strip_html(htmlString):
     return BeautifulSoup(htmlString, 'html.parser').get_text()
