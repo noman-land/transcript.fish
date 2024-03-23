@@ -124,11 +124,11 @@ def upsert_episode(episode, word_count: int):
         ON CONFLICT
             (episode)
         DO UPDATE SET
-            audio = excluded.audio
-            duration = excluded.duration
-            link = excluded.link
-            pubDate = excluded.pubDate
-            guid = excluded.guid
+            audio = excluded.audio,
+            duration = excluded.duration,
+            link = excluded.link,
+            pubDate = excluded.pubDate,
+            guid = excluded.guid,
             wordCount = excluded.wordCount
     '''
     episode_row = make_episode_row(episode, word_count)
