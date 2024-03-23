@@ -1,5 +1,4 @@
 import os
-import re
 from datetime import datetime
 from bs4 import BeautifulSoup
 
@@ -38,25 +37,6 @@ def get_episode_num(episode):
 
 def is_episode(episode):
     return True if getattr(episode,'itunes_episode', None) else False
-
-def is_audio(media) -> bool:
-    return media['medium'] == 'audio'
-
-def get_audio_url(episode) -> str:
-    audio, *_ = filter(is_audio, episode['media_content'])
-    return audio['url']
-
-def get_title(episode) -> str:
-    return re.sub(r'^\d{1,4}:\s', '', episode['title'])
-
-def get_image_url(episode) -> str:
-    return episode['image']['href']
-
-def get_duration(episode):
-    return int(episode['itunes_duration'])
-
-def get_description(episode) -> str:
-    return getattr(episode, 'summary', '')
 
 def strip_html(htmlString: str):
     return BeautifulSoup(htmlString, 'html.parser').get_text()

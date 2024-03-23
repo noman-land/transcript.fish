@@ -1,5 +1,5 @@
 import sqlite3
-import utils
+from classes import Episode
 
 db_path = 'db/transcript.db'
 
@@ -32,19 +32,19 @@ def recreate_fts_table():
     ''')
     con.commit()
 
-def make_episode_row(episode, word_count: int) -> tuple[int, str, str, str, str, int, str, str, str, int, None, None, None, None, None, None, None, None, None]:
+def make_episode_row(episode: Episode, word_count: int):
     # "   7: Episode Title" -> "Episode Title"
     # "2361: Episode Title" -> "Episode Title"
     return (
-        utils.get_episode_num(episode), # episode
-        utils.get_title(episode), # title
-        utils.get_audio_url(episode), # audio
-        episode['link'], # link
-        utils.get_image_url(episode), # image
-        utils.get_duration(episode), # duration
-        utils.get_description(episode), # description
-        episode['published'], # pubDate
-        episode['id'], # guid
+        episode.episode_num, # episode
+        episode.title, # title
+        episode.audio, # audio
+        episode.link, # link
+        episode.image, # image
+        episode.duration, # duration
+        episode.description, # description
+        episode.pub_date, # pubDate
+        episode.guid, # guid
         word_count, # wordCount
         None, # presenter1
         None, # presenter2
@@ -113,7 +113,7 @@ def insert_words(episode_num: int, words):
     cur = con.cursor()
     cur.executemany(f'INSERT INTO words VALUES (?, ?, ?, ?, {episode_num})', words)
 
-def upsert_episode(episode, word_count: int):
+def upsert_episode(episode: Episode, word_count: int):
     upsert_episode_sql = '''
         INSERT INTO
             episodes
@@ -124,9 +124,6 @@ def upsert_episode(episode, word_count: int):
         DO UPDATE SET
             audio = excluded.audio,
             duration = excluded.duration,
-            link = excluded.link,
-            pubDate = excluded.pubDate,
-            guid = excluded.guid,
             wordCount = excluded.wordCount
     '''
     episode_row = make_episode_row(episode, word_count)
