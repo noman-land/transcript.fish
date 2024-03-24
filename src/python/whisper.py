@@ -19,7 +19,7 @@ def get_transcription_segments(episode: RssEpisode):
         utils.make_audio_file_path(episode.episode_num),
         language='en',
         word_timestamps=True,
-        initial_prompt=f'This is episode number {episode.episode_num} of No Such Thing As A Fish, a weekly podcast in which QI researchers Dan Schreiber, James Harkin, Anna Ptaszynski, and Andrew Hunter Murray share the most bizarre, extraordinary and hilarious facts they have discovered over the last seven days. Here is the description of this week\'s episode.\n\n"{episode.description}"\n\n'
+        initial_prompt=f'This is episode number {episode.episode_num} of No Such Thing As A Fish, a weekly podcast in which QI researchers Dan Schreiber, James Harkin, Anna Ptaszynski, and Andrew Hunter Murray share the most bizarre, extraordinary, and hilarious facts they have discovered over the last seven days. Here is the description of this week\'s episode.\n\n"{episode.description}"\n\n'
     )
     return segments
 
