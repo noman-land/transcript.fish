@@ -25,7 +25,7 @@ def get_transcription_segments(episode: RssEpisode):
 def transcribe(episode: RssEpisode):
     saved_word_count = database.select_word_count(episode.episode_num)
     if saved_word_count > 0:
-        utils.log(episode.episode_num, f'Already complete: transcription: {saved_word_count} words')
+        utils.log(episode.episode_num, f'Already transcribed: {saved_word_count} words')
         return 0
 
     utils.log(episode.episode_num, 'Starting: transcription')
@@ -39,5 +39,5 @@ def transcribe(episode: RssEpisode):
         utils.log(episode.episode_num, f'Transcribed: {segments_transcribed} segments and {word_count} words')
     database.upsert_episode(episode, word_count)
     database.commit()
-    utils.log(episode.episode_num, f'Completed: transcription: {word_count} words')
+    utils.log(episode.episode_num, f'Transcribed: {word_count} total words')
     return 1
