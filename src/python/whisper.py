@@ -31,12 +31,10 @@ def transcribe(episode: RssEpisode):
 
     utils.log(episode.episode_num, 'Starting: transcription')
     word_count = 0
-    segments_transcribed = 0
     for segment in get_transcription_segments(episode):
         words = getattr(segment, 'words', [])
         word_count += len(words)
         database.insert_words(episode.episode_num, words)
-        segments_transcribed += 1
         percent_complete = int(getattr(segment, 'end', 0) / episode.duration * 1000) / 10
         utils.log(episode.episode_num, f'Transcribing: {percent_complete}% complete')
     database.upsert_episode(episode, word_count)
