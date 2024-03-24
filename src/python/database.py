@@ -44,7 +44,17 @@ def make_episode_row(episode: RssEpisode, word_count: int):
         episode.duration, # duration
         episode.description, # description
         episode.pub_date, # pubDate
-        episode.guid # guid
+        episode.guid, # guid
+        word_count, # wordCount
+        None, # presenter1
+        None, # presenter2
+        None, # presenter3
+        None, # presenter4
+        None, # presenter5
+        None, # venue
+        None, # live
+        None, # compilation
+        None # event
     )
 
 def vacuum():
