@@ -14,8 +14,8 @@ def convert(episode_num_to_redo: int | None):
             utils.delete_audio(db_episode.episode_num)
             database.delete_transcription(db_episode.episode_num)
             utils.log(db_episode.episode_num, 'Redownloading and retranscribing')
-        fetch.download_episode_image(rss_episode)
-        fetch.download_episode_audio(rss_episode)
+        fetch.download_audio(rss_episode)
+        fetch.download_image(rss_episode)
         transcribed += whisper.transcribe(rss_episode)
     if (transcribed > 0):
         database.recreate_fts_table()
