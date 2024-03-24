@@ -5,17 +5,14 @@ from bs4 import BeautifulSoup
 AUDIO_PATH = 'audio'
 IMAGE_PATH = 'images/episodes'
 
-def now():
-    return datetime.now().strftime('%H:%M:%S')
-
 def log(episode_num: int, *msg: str) -> None:
-    print(f'-- {now()} [ Episode {episode_num} ]', *msg)
+    print(f'[ Episode {episode_num} ]', *msg)
 
 def create_folder(folder_path: str):
     # Check if the folder exists, and if not, create it
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-        print(f'-- {now()} Created folder {folder_path}')
+        print(f'-- Created folder {folder_path}')
 
 def make_audio_file_path(episode_num: int):
     return f'{AUDIO_PATH}/{episode_num}.mp3'

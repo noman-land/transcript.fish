@@ -1,6 +1,7 @@
 import database
 import utils
 from classes import RssEpisode
+from datetime import datetime, timedelta
 from faster_whisper import WhisperModel
 
 model_size = 'large-v2'
@@ -23,7 +24,14 @@ def get_transcription_segments(episode: RssEpisode):
     )
     return segments
 
-def transcribe(episode: RssEpisode):
+def print_time(episode: RssEpisode, segment, start_time: datetime):
+    percent_complete = int(segment.end / episode.duration * 1000) / 10
+    elapsed_seconds = (datetime.now() - start_time).seconds
+    elapsed = str(timedelta(seconds=(elapsed_seconds)))
+    remaining = str(timedelta(seconds=int((segment.end / percent_complete * 100) - elapsed_seconds)))
+    utils.log(episode.episode_num, f'Transcribing ({percent_complete}%): {elapsed} elapsed. ETA: {remaining}')
+
+def transcribe(episode: RssEpisode, start_time: datetime):
     saved_word_count = database.select_word_count(episode.episode_num)
     if saved_word_count > 0:
         utils.log(episode.episode_num, f'Already transcribed: {saved_word_count} words')
@@ -35,8 +43,7 @@ def transcribe(episode: RssEpisode):
         words = getattr(segment, 'words', [])
         word_count += len(words)
         database.insert_words(episode.episode_num, words)
-        percent_complete = int(getattr(segment, 'end', 0) / episode.duration * 1000) / 10
-        utils.log(episode.episode_num, f'Transcribing: {percent_complete}% complete')
+        print_time(episode, segment, start_time)
     database.upsert_episode(episode, word_count)
     database.commit()
     utils.log(episode.episode_num, f'Transcribed: {word_count} total words')
