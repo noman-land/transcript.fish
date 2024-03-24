@@ -9,7 +9,7 @@ model_size = 'large-v2'
 model = WhisperModel(
     model_size_or_path=model_size,
     compute_type='int8',
-    # Change this to False if you want to use/download a different model
+    # Change this to False when running for the first time with a new model
     local_files_only=True,
     num_workers=4,
     cpu_threads=8
