@@ -15,7 +15,8 @@ import {
 
 type PresenterFiltersState = number[];
 type VenueFiltersState = number[];
-type FilterToggleHandler<T> = (args: { name: T; checked: boolean }) => void;
+type CityFiltersState = string[];
+type FilterToggleHandler<T> = (args: { name: T; checked: boolean; }) => void;
 
 // Four Undisclosed Locations
 const WFH_VENUE_ID = 2;
@@ -41,6 +42,7 @@ const defaultSearchFiltersState = {
 
 const defaultPresenterFiltersState: PresenterFiltersState = [];
 const defaultVenueFiltersState: VenueFiltersState = [];
+const defaultCityFiltersState: CityFiltersState = [];
 
 const noop = () => {
   return undefined;
@@ -52,10 +54,12 @@ export const FiltersContext = createContext<{
   searchFilters: SearchFiltersState;
   presenterFilters: PresenterFiltersState;
   venueFilters: VenueFiltersState;
+  cityFilters: CityFiltersState;
   handleEpisodeTypeFilterToggle: FilterToggleHandler<EpisodeType>;
   handleSearchFilterToggle: FilterToggleHandler<SearchField>;
   setPresenterFilters: Dispatch<SetStateAction<PresenterFiltersState>>;
   setVenueFilters: Dispatch<SetStateAction<VenueFiltersState>>;
+  setCityFilters: Dispatch<SetStateAction<CityFiltersState>>;
   setEpisodeTypeFilters: Dispatch<SetStateAction<EpisodeTypeFiltersState>>;
   numFiltersAltered: number;
 }>({
@@ -64,10 +68,12 @@ export const FiltersContext = createContext<{
   searchFilters: defaultSearchFiltersState,
   presenterFilters: defaultPresenterFiltersState,
   venueFilters: defaultVenueFiltersState,
+  cityFilters: defaultCityFiltersState,
   handleEpisodeTypeFilterToggle: noop,
   handleSearchFilterToggle: noop,
   setPresenterFilters: noop,
   setVenueFilters: noop,
+  setCityFilters: noop,
   setEpisodeTypeFilters: n => n,
   numFiltersAltered: 0,
 });
@@ -81,6 +87,8 @@ export const FiltersContextProvider = ({
     useState<PresenterFiltersState>([]);
 
   const [venueFilters, setVenueFilters] = useState<VenueFiltersState>([]);
+
+  const [cityFilters, setCityFilters] = useState<CityFiltersState>([]);
 
   const [episodeTypeFilters, setEpisodeTypeFilters] =
     useState<EpisodeTypeFiltersState>(defaultEpisodeTypeFiltersState);
@@ -132,6 +140,15 @@ export const FiltersContextProvider = ({
         return venueFilters.includes(ep.venue);
       })
       .filter(ep => {
+        if (cityFilters.length === 0) {
+          return true;
+        }
+
+
+
+        return cityFilters.includes(ep.venue);
+      })
+      .filter(ep => {
         return (
           (episodeTypeFilters.live && ep.live) ||
           (episodeTypeFilters.compilation && ep.compilation) ||
@@ -161,10 +178,12 @@ export const FiltersContextProvider = ({
         searchFilters,
         presenterFilters,
         venueFilters,
+        cityFilters,
         handleEpisodeTypeFilterToggle,
         handleSearchFilterToggle,
         setPresenterFilters,
         setVenueFilters,
+        setCityFilters,
         setEpisodeTypeFilters,
         numFiltersAltered,
       }}
