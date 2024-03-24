@@ -135,3 +135,9 @@ def commit():
 
 def close():
     con.close()
+
+def clean_up(transcribed: int):
+    if (transcribed > 0):
+        recreate_fts_table()
+        vacuum()
+    close()
