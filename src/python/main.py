@@ -7,7 +7,8 @@ from convert import convert
 # It will fill in any gaps
 if __name__ == '__main__':
     try:
-        convert()
+        episode_num = int(sys.argv[1]) if len(sys.argv) > 1 else None
+        convert(episode_num)
     except KeyboardInterrupt:
         print('\n[ ⚡️ CTRL + C ⚡️ ] Script interrupted. Cleaning up.')
         database.close()
