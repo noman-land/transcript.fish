@@ -11,9 +11,9 @@ def convert(episode_num_to_redo: int | None):
         if episode_num_to_redo or new_episode_is_shorter:
             if new_episode_is_shorter:
                 utils.log(db_episode.episode_num, 'Shorter episode found')
-            utils.log(db_episode.episode_num, 'Redownloading and retranscribing')
             utils.delete_audio(db_episode.episode_num)
             database.delete_transcription(db_episode.episode_num)
+            utils.log(db_episode.episode_num, 'Redownloading and retranscribing')
         fetch.download_episode_image(rss_episode)
         fetch.download_episode_audio(rss_episode)
         transcribed += whisper.transcribe(rss_episode)
