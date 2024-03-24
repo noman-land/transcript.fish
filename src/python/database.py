@@ -15,12 +15,6 @@ def recreate_fts_table():
             fts5 (episode, title, description, words);
     ''')
     cur.execute('''
-        CREATE VIRTUAL TABLE
-            words_fts
-        USING
-            fts5 (episode, title, description, words);
-    ''')
-    cur.execute('''
         INSERT INTO
             words_fts (episode, title, description, words)
         SELECT
@@ -50,26 +44,7 @@ def make_episode_row(episode: RssEpisode, word_count: int):
         episode.duration, # duration
         episode.description, # description
         episode.pub_date, # pubDate
-        episode.guid, # guid
-        episode.episode_num, # episode
-        episode.title, # title
-        episode.audio, # audio
-        episode.link, # link
-        episode.image, # image
-        episode.duration, # duration
-        episode.description, # description
-        episode.pub_date, # pubDate
-        episode.guid, # guid
-        word_count, # wordCount
-        None, # presenter1
-        None, # presenter2
-        None, # presenter3
-        None, # presenter4
-        None, # presenter5
-        None, # venue
-        None, # live
-        None, # compilation
-        None # event
+        episode.guid # guid
     )
 
 def vacuum():
@@ -102,30 +77,9 @@ def select_word_count(episode_num: int) -> int:
     '''
     cur = con.cursor()
     result = cur.execute(select_word_count_sql, [episode_num]).fetchone()
-    result = cur.execute(select_word_count_sql, [episode_num]).fetchone()
     word_count = result[0] if result and result[0] > 0 else 0
     return word_count
 
-def delete_transcription(episode_num: int):
-    delete_words_sql = '''
-        DELETE FROM
-            words
-        WHERE
-            episode = ?
-    '''
-    reset_word_count_sql = '''
-        UPDATE
-            episodes
-        SET
-            wordCount = 0
-        WHERE
-            episode = ?
-    '''
-    cur = con.cursor()
-    cur.execute(delete_words_sql, [episode_num])
-    cur.execute(reset_word_count_sql, [episode_num])
-
-def insert_words(episode_num: int, words):
 def delete_transcription(episode_num: int):
     delete_words_sql = '''
         DELETE FROM
@@ -158,8 +112,6 @@ def upsert_episode(episode: RssEpisode, word_count: int):
         ON CONFLICT
             (episode)
         DO UPDATE SET
-            audio = excluded.audio,
-            duration = excluded.duration,
             audio = excluded.audio,
             duration = excluded.duration,
             wordCount = excluded.wordCount
