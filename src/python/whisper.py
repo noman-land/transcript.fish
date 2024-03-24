@@ -1,7 +1,7 @@
-from faster_whisper import WhisperModel
 import database
 import utils
 from classes import RssEpisode
+from faster_whisper import WhisperModel
 
 model_size = 'large-v2'
 

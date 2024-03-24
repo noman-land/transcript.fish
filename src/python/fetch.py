@@ -1,8 +1,8 @@
-from pathlib import Path
 import feedparser
 import urllib.request
 import utils
 from classes import RssEpisode
+from pathlib import Path
 from typing import Optional
 
 def download_audio(episode: RssEpisode):

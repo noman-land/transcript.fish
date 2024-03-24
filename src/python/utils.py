@@ -1,8 +1,6 @@
 import os
-import database
 from datetime import datetime
 from bs4 import BeautifulSoup
-from classes import DbEpisode
 
 AUDIO_PATH = 'audio'
 IMAGE_PATH = 'images/episodes'

@@ -1,7 +1,7 @@
 import database
 import fetch
-import whisper
 import utils
+import whisper
 from typing import Optional
 
 def convert(episode_num: Optional[int]):
