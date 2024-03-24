@@ -8,8 +8,11 @@ def download_episode_audio(episode: RssEpisode):
     audio_path = utils.make_audio_file_path(episode.episode_num)
     if Path(audio_path).exists():
         utils.log(episode.episode_num, 'Already downloaded: audio')
+        utils.log(episode.episode_num, 'Already downloaded: audio')
     else:
         utils.create_folder(utils.AUDIO_PATH)
+        utils.log(episode.episode_num, 'Downloading: audio')
+        urllib.request.urlretrieve(episode.audio, audio_path)
         utils.log(episode.episode_num, 'Downloading: audio')
         urllib.request.urlretrieve(episode.audio, audio_path)
 
@@ -23,10 +26,13 @@ def download_episode_image(episode: RssEpisode):
     image_path = utils.make_image_file_path(episode.episode_num, episode.image)
     if Path(image_path).exists():
         utils.log(episode.episode_num, 'Already downloaded: image')
+        utils.log(episode.episode_num, 'Already downloaded: image')
     else:
         utils.create_folder(utils.IMAGE_PATH)
         utils.log(episode.episode_num, 'Downloading: image')
+        utils.log(episode.episode_num, 'Downloading: image')
         urllib.request.install_opener(opener)
+        urllib.request.urlretrieve(episode.image, image_path)
         urllib.request.urlretrieve(episode.image, image_path)
 
 rss_feed_url = 'https://audioboom.com/channels/2399216.rss'
