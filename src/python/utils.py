@@ -45,5 +45,5 @@ def get_episode_num(episode):
 def is_episode(episode):
     return True if getattr(episode,'itunes_episode', None) else False
 
-def strip_html(htmlString: str):
-    return BeautifulSoup(htmlString, 'html.parser').get_text()
+def strip_html(html_string: str):
+    return BeautifulSoup(html_string, 'html.parser').get_text()
