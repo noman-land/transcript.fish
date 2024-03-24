@@ -7,8 +7,8 @@ from typing import Optional
 
 def convert(episode_num: Optional[int]):
     transcribed = 0
-    start_time = datetime.now()
     for rss_episode in fetch.get_rss_episodes(episode_num):
+        start_time = datetime.now()
         db_episode = database.select_episode(rss_episode.episode_num)
         new_episode_is_shorter = rss_episode.duration < db_episode.duration
         if episode_num or new_episode_is_shorter:
