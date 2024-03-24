@@ -1,5 +1,5 @@
 import sqlite3
-from classes import Episode
+from classes import RssEpisode, DbEpisode
 
 db_path = 'db/transcript.db'
 
@@ -32,7 +32,7 @@ def recreate_fts_table():
     ''')
     con.commit()
 
-def make_episode_row(episode: Episode, word_count: int):
+def make_episode_row(episode: RssEpisode, word_count: int):
     # "   7: Episode Title" -> "Episode Title"
     # "2361: Episode Title" -> "Episode Title"
     return (
@@ -62,7 +62,7 @@ def vacuum():
     cur.execute('VACUUM;')
     cur = con.commit()
 
-def select_episode(episode_num: int) -> tuple[int, int]:
+def select_episode(episode_num: int):
     select_word_count_sql = '''
         SELECT
             episode, duration
@@ -72,7 +72,7 @@ def select_episode(episode_num: int) -> tuple[int, int]:
             episode = ?
     '''
     cur = con.cursor()
-    return cur.execute(select_word_count_sql, [episode_num]).fetchone()
+    return DbEpisode(cur.execute(select_word_count_sql, [episode_num]).fetchone())
 
 def select_word_count(episode_num: int) -> int:
     select_word_count_sql = '''
@@ -113,7 +113,7 @@ def insert_words(episode_num: int, words):
     cur = con.cursor()
     cur.executemany(f'INSERT INTO words VALUES (?, ?, ?, ?, {episode_num})', words)
 
-def upsert_episode(episode: Episode, word_count: int):
+def upsert_episode(episode: RssEpisode, word_count: int):
     upsert_episode_sql = '''
         INSERT INTO
             episodes

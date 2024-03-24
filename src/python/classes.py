@@ -1,7 +1,7 @@
 import re
 from bs4 import BeautifulSoup
 
-class Episode:
+class RssEpisode:
     def __init__(self, episode):
         audio, *_ = filter(
             lambda media: media['medium'] == 'audio',
@@ -16,3 +16,8 @@ class Episode:
         self.description = BeautifulSoup(getattr(episode, 'summary', ''), 'html.parser').get_text()
         self.pub_date: str = episode['published']
         self.guid: str = episode['id']
+
+class DbEpisode:
+    def __init__(self, episode: tuple[int, int]):
+        self.episode_num = episode[0]
+        self.duration = episode[1]
