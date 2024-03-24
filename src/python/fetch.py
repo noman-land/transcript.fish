@@ -2,9 +2,9 @@ from pathlib import Path
 import feedparser
 import urllib.request
 import utils
-from classes import Episode
+from classes import RssEpisode
 
-def download_episode_audio(episode: Episode):
+def download_episode_audio(episode: RssEpisode):
     audio_path = utils.make_audio_file_path(episode.episode_num)
     if Path(audio_path).exists():
         utils.log(episode.episode_num, 'Already downloaded: audio')
@@ -19,7 +19,7 @@ opener.addheaders = [(
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36'
 )]
 
-def download_episode_image(episode: Episode):
+def download_episode_image(episode: RssEpisode):
     image_path = utils.make_image_file_path(episode.episode_num, episode.image)
     if Path(image_path).exists():
         utils.log(episode.episode_num, 'Already downloaded: image')
@@ -37,7 +37,7 @@ def get_rss_episodes(episode_num_to_redo: int | None):
         reversed(feedparser.parse(rss_feed_url)['entries'])
     )
 
-    episodes = map(Episode, episodes_only)
+    episodes = map(RssEpisode, episodes_only)
 
     if not episode_num_to_redo:
         return episodes

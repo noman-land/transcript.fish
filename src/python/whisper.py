@@ -1,7 +1,7 @@
 from faster_whisper import WhisperModel
 import database
 import utils
-from classes import Episode
+from classes import RssEpisode
 
 model_size = 'large-v2'
 
@@ -14,7 +14,7 @@ model = WhisperModel(
     cpu_threads=8
 )
 
-def get_transcription_segments(episode: Episode):
+def get_transcription_segments(episode: RssEpisode):
     segments, _ = model.transcribe(
         utils.make_audio_file_path(episode.episode_num),
         word_timestamps=True,
@@ -22,7 +22,7 @@ def get_transcription_segments(episode: Episode):
     )
     return segments
 
-def transcribe(episode: Episode):
+def transcribe(episode: RssEpisode):
     saved_word_count = database.select_word_count(episode.episode_num)
     if saved_word_count > 0:
         utils.log(episode.episode_num, f'Already complete: transcription: {saved_word_count} words')
