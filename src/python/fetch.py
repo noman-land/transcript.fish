@@ -36,10 +36,7 @@ def get_rss_episodes(episode_num: int | None):
         utils.is_episode,
         reversed(feedparser.parse(rss_feed_url)['entries'])
     )
-
     episodes = map(RssEpisode, episodes_only)
-
     if not episode_num:
         return episodes
-
     return filter(lambda e: e.episode_num == int(episode_num), episodes)
