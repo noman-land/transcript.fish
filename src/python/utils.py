@@ -13,7 +13,7 @@ def show_progress(episode: RssEpisode, progress: float, start_time: datetime):
     percent_complete = int(progress / episode.duration * 1000) / 10
     elapsed_seconds = (datetime.now() - start_time).seconds
     elapsed = str(timedelta(seconds=(elapsed_seconds)))
-    remaining = str(timedelta(seconds=int((progress / percent_complete * 100) - elapsed_seconds)))
+    remaining = str(timedelta(seconds=int((progress / percent_complete * 100) - progress)))
     log(episode.episode_num, f'Transcribing ({percent_complete}%): {elapsed} elapsed. ETA: {remaining}')
 
 def create_folder(folder_path: str):
