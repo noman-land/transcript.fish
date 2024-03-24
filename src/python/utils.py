@@ -34,11 +34,6 @@ def delete_audio(episode_num: int):
     except OSError as e:
         log(episode_num, f'Error deleting {e.filename}: {e.strerror}')
 
-def delete_old_episode(episode: DbEpisode):
-    delete_audio(episode.episode_num)
-    database.delete_transcription(episode.episode_num)
-    log(episode.episode_num, 'Redownloading and retranscribing')
-
 def get_episode_num(episode):
     return int(episode['itunes_episode'])
 

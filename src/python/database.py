@@ -1,5 +1,6 @@
 import sqlite3
 from classes import RssEpisode, DbEpisode
+from typing import Optional
 
 db_path = 'db/transcript.db'
 
@@ -133,11 +134,8 @@ def upsert_episode(episode: RssEpisode, word_count: int):
 def commit():
     con.commit()
 
-def close():
-    con.close()
-
-def clean_up(transcribed: int):
-    if (transcribed > 0):
+def close(rebuild_fts: Optional[bool] = False):
+    if rebuild_fts:
         recreate_fts_table()
         vacuum()
-    close()
+    con.close()

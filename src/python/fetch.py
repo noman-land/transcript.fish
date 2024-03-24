@@ -3,6 +3,7 @@ import feedparser
 import urllib.request
 import utils
 from classes import RssEpisode
+from typing import Optional
 
 def download_audio(episode: RssEpisode):
     audio_path = utils.make_audio_file_path(episode.episode_num)
@@ -31,7 +32,7 @@ def download_image(episode: RssEpisode):
 
 rss_feed_url = 'https://audioboom.com/channels/2399216.rss'
 
-def get_rss_episodes(episode_num: int | None):
+def get_rss_episodes(episode_num: Optional[int]):
     episodes_only = filter(
         utils.is_episode,
         reversed(feedparser.parse(rss_feed_url)['entries'])
