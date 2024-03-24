@@ -12,6 +12,7 @@ def convert(episode_num_to_reconvert: int | None):
             if new_episode_is_shorter:
                 utils.log(db_episode.episode_num, 'Shorter episode found')
             utils.delete_old_episode(db_episode)
-        fetch.download_new_media(rss_episode)
+        fetch.download_audio(rss_episode)
+        fetch.download_image(rss_episode)
         transcribed += whisper.transcribe(rss_episode)
     database.clean_up(transcribed)

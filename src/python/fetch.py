@@ -1,9 +1,8 @@
 from pathlib import Path
-import database
 import feedparser
 import urllib.request
 import utils
-from classes import DbEpisode, RssEpisode
+from classes import RssEpisode
 
 def download_audio(episode: RssEpisode):
     audio_path = utils.make_audio_file_path(episode.episode_num)
@@ -29,10 +28,6 @@ def download_image(episode: RssEpisode):
         utils.log(episode.episode_num, 'Downloading: image')
         urllib.request.install_opener(opener)
         urllib.request.urlretrieve(episode.image, image_path)
-
-def download_new_media(episode: RssEpisode):
-    download_audio(episode)
-    download_image(episode)
 
 rss_feed_url = 'https://audioboom.com/channels/2399216.rss'
 
