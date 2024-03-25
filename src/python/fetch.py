@@ -1,8 +1,9 @@
-from pathlib import Path
 import feedparser
 import urllib.request
 import utils
 from classes import RssEpisode
+from pathlib import Path
+from typing import Optional
 
 def download_audio(episode: RssEpisode):
     audio_path = utils.make_audio_file_path(episode.episode_num)
@@ -31,15 +32,12 @@ def download_image(episode: RssEpisode):
 
 rss_feed_url = 'https://audioboom.com/channels/2399216.rss'
 
-def get_rss_episodes(episode_num_to_redo: int | None):
+def get_rss_episodes(episode_num: Optional[int]):
     episodes_only = filter(
         utils.is_episode,
         reversed(feedparser.parse(rss_feed_url)['entries'])
     )
-
     episodes = map(RssEpisode, episodes_only)
-
-    if not episode_num_to_redo:
+    if not episode_num:
         return episodes
-
-    return filter(lambda e: e.episode_num == int(episode_num_to_redo), episodes)
+    return filter(lambda e: e.episode_num == int(episode_num), episodes)

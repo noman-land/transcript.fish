@@ -1,5 +1,6 @@
 import sqlite3
 from classes import RssEpisode, DbEpisode
+from typing import Optional
 
 db_path = 'db/transcript.db'
 
@@ -69,10 +70,11 @@ def select_episode(episode_num: int):
         FROM
             episodes
         WHERE
-            episode = ?
+            episode = ?;
     '''
     cur = con.cursor()
-    return DbEpisode(cur.execute(select_word_count_sql, [episode_num]).fetchone())
+    result = cur.execute(select_word_count_sql, [episode_num]).fetchone()
+    return DbEpisode(result)
 
 def select_word_count(episode_num: int) -> int:
     select_word_count_sql = '''
@@ -83,7 +85,7 @@ def select_word_count(episode_num: int) -> int:
         WHERE
             episode = ?
         GROUP BY
-            episode
+            episode;
     '''
     cur = con.cursor()
     result = cur.execute(select_word_count_sql, [episode_num]).fetchone()
@@ -95,7 +97,7 @@ def delete_transcription(episode_num: int):
         DELETE FROM
             words
         WHERE
-            episode = ?
+            episode = ?;
     '''
     reset_word_count_sql = '''
         UPDATE
@@ -103,7 +105,7 @@ def delete_transcription(episode_num: int):
         SET
             wordCount = 0
         WHERE
-            episode = ?
+            episode = ?;
     '''
     cur = con.cursor()
     cur.execute(delete_words_sql, [episode_num])
@@ -124,7 +126,7 @@ def upsert_episode(episode: RssEpisode, word_count: int):
         DO UPDATE SET
             audio = excluded.audio,
             duration = excluded.duration,
-            wordCount = excluded.wordCount
+            wordCount = excluded.wordCount;
     '''
     episode_row = make_episode_row(episode, word_count)
     cur = con.cursor()
@@ -133,5 +135,8 @@ def upsert_episode(episode: RssEpisode, word_count: int):
 def commit():
     con.commit()
 
-def close():
+def close(rebuild_fts: Optional[bool] = False):
+    if rebuild_fts:
+        recreate_fts_table()
+        vacuum()
     con.close()

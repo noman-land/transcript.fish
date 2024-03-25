@@ -14,8 +14,8 @@ class RssEpisode:
         self.image = str(episode['image']['href'])
         self.duration = int(episode['itunes_duration'])
         self.description = BeautifulSoup(getattr(episode, 'summary', ''), 'html.parser').get_text()
-        self.pub_date: str = episode['published']
-        self.guid: str = episode['id']
+        self.pub_date = str(episode['published'])
+        self.guid = str(episode['id'])
 
 class DbEpisode:
     def __init__(self, episode: tuple[int, int]):
