@@ -77,7 +77,7 @@ def select_episode(episode_num: int):
     '''
     cur = con.cursor()
     result = cur.execute(select_word_count_sql, [episode_num]).fetchone()
-    return DbEpisode(result)
+    return DbEpisode(result) if result else None
 
 def select_word_count(episode_num: int) -> int:
     select_word_count_sql = '''
