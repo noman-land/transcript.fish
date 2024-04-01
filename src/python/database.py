@@ -1,9 +1,12 @@
 import sqlite3
+import utils
 from classes import RssEpisode, DbEpisode
 from typing import Optional
 
-db_path = 'db/transcript.db'
+db_folder = 'db'
+db_path = f'{db_folder}/transcript.db'
 
+utils.maybe_create_folder(db_folder)
 con = sqlite3.connect(db_path)
 
 def recreate_fts_table():
