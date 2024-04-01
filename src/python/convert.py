@@ -9,9 +9,9 @@ from typing import Optional
 def maybe_cleanup(rss_episode: RssEpisode, episode_num: Optional[int]):
     existing_episode = database.select_episode(rss_episode.episode_num)
     if existing_episode:
-        new_episode_shorter = rss_episode.duration < existing_episode.duration
-        if episode_num or new_episode_shorter:
-            if new_episode_shorter:
+        new_episode_is_shorter = rss_episode.duration < existing_episode.duration
+        if episode_num or new_episode_is_shorter:
+            if new_episode_is_shorter:
                 utils.log(existing_episode.episode_num, 'Shorter episode found')
             database.delete_transcription(existing_episode.episode_num)
             utils.delete_audio(existing_episode.episode_num)
