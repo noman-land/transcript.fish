@@ -1,44 +1,23 @@
+import sql
 import sqlite3
-import utils
 from classes import RssEpisode, DbEpisode
 from typing import Optional
 
-db_folder = 'db'
-db_path = f'{db_folder}/transcript.db'
+con = sqlite3.connect('db/transcript.db')
 
-utils.maybe_create_folder(db_folder)
-con = sqlite3.connect(db_path)
+with open('db/migrations.sql') as migrations:
+    cur = con.cursor()
+    cur.executescript(migrations.read())
+    con.commit()
 
 def recreate_fts_table():
     cur = con.cursor()
-    cur.execute('DROP TABLE IF EXISTS words_fts;')
-    cur.execute('''
-        CREATE VIRTUAL TABLE
-            words_fts
-        USING
-            fts5 (episode, title, description, words);
-    ''')
-    cur.execute('''
-        INSERT INTO
-            words_fts (episode, title, description, words)
-        SELECT
-            w.episode,
-            e.title,
-            e.description,
-            GROUP_CONCAT(w.word, "") AS words
-        FROM
-            words w,
-            episodes e
-        WHERE
-            w.episode = e.episode
-        GROUP BY
-            w.episode;
-    ''')
+    cur.execute(sql.drop_fts_table)
+    cur.execute(sql.create_fts_table)
+    cur.execute(sql.populate_fts_table)
     con.commit()
 
 def make_episode_row(episode: RssEpisode, word_count: int):
-    # "   7: Episode Title" -> "Episode Title"
-    # "2361: Episode Title" -> "Episode Title"
     return (
         episode.episode_num, # episode
         episode.title, # title
@@ -63,77 +42,33 @@ def make_episode_row(episode: RssEpisode, word_count: int):
 
 def vacuum():
     cur = con.cursor()
-    cur.execute('VACUUM;')
+    cur.execute(sql.vacuum)
     cur = con.commit()
 
 def select_episode(episode_num: int):
-    select_word_count_sql = '''
-        SELECT
-            episode, duration
-        FROM
-            episodes
-        WHERE
-            episode = ?;
-    '''
     cur = con.cursor()
-    result = cur.execute(select_word_count_sql, [episode_num]).fetchone()
+    result = cur.execute(sql.select_episode_duration, [episode_num]).fetchone()
     return DbEpisode(result) if result else None
 
 def select_word_count(episode_num: int) -> int:
-    select_word_count_sql = '''
-        SELECT
-            COUNT(*)
-        FROM
-            words
-        WHERE
-            episode = ?
-        GROUP BY
-            episode;
-    '''
     cur = con.cursor()
-    result = cur.execute(select_word_count_sql, [episode_num]).fetchone()
+    result = cur.execute(sql.select_word_count, [episode_num]).fetchone()
     word_count = result[0] if result and result[0] > 0 else 0
     return word_count
 
 def delete_transcription(episode_num: int):
-    delete_words_sql = '''
-        DELETE FROM
-            words
-        WHERE
-            episode = ?;
-    '''
-    reset_word_count_sql = '''
-        UPDATE
-            episodes
-        SET
-            wordCount = 0
-        WHERE
-            episode = ?;
-    '''
     cur = con.cursor()
-    cur.execute(delete_words_sql, [episode_num])
-    cur.execute(reset_word_count_sql, [episode_num])
+    cur.execute(sql.delete_words, [episode_num])
+    cur.execute(sql.reset_word_count, [episode_num])
 
 def insert_words(episode_num: int, words):
     cur = con.cursor()
-    cur.executemany(f'INSERT INTO words VALUES (?, ?, ?, ?, {episode_num})', words)
+    cur.executemany(sql.insert_words(episode_num), words)
 
 def upsert_episode(episode: RssEpisode, word_count: int):
-    upsert_episode_sql = '''
-        INSERT INTO
-            episodes
-        VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT
-            (episode)
-        DO UPDATE SET
-            audio = excluded.audio,
-            duration = excluded.duration,
-            wordCount = excluded.wordCount;
-    '''
-    episode_row = make_episode_row(episode, word_count)
     cur = con.cursor()
-    cur.execute(upsert_episode_sql, episode_row)
+    episode_row = make_episode_row(episode, word_count)
+    cur.execute(sql.upsert_episode, episode_row)
 
 def commit():
     con.commit()

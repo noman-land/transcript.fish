@@ -8,6 +8,9 @@ class RssEpisode:
             episode['media_content']
         )
         self.episode_num = int(episode['itunes_episode'])
+        # Cut the numbers off the front of the title
+        # "   7: Episode Title" -> "Episode Title"
+        # "2361: Episode Title" -> "Episode Title"
         self.title = re.sub(r'^\d{1,4}:\s', '', episode['title'])
         self.audio = str(audio['url'])
         self.link = str(episode['link'])
