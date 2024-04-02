@@ -1,14 +1,21 @@
 import sql
 import sqlite3
-from classes import RssEpisode, DbEpisode
+from classes import DbEpisode, RssEpisode
 from typing import Optional
 
-con = sqlite3.connect('db/transcript.db')
+def run_migrations(con: sqlite3.Connection):
+    with open('db/migrations.sql') as migrations:
+        cur = con.cursor()
+        cur.executescript(migrations.read())
+        con.commit()
 
-with open('db/migrations.sql') as migrations:
-    cur = con.cursor()
-    cur.executescript(migrations.read())
-    con.commit()
+def connect():
+    con = sqlite3.connect('db/transcript.db')
+    run_migrations(con)
+    return con
+
+# Connection singleton
+con = connect()
 
 def recreate_fts_table():
     cur = con.cursor()
