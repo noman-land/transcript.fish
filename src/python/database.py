@@ -57,9 +57,9 @@ def select_episode(episode_num: int):
     result = cur.execute(sql.select_episode_duration, [episode_num]).fetchone()
     return DbEpisode(result) if result else None
 
-def select_word_count(episode_num: int) -> int:
+def select_word_count(episode_num: int):
     cur = con.cursor()
-    result = cur.execute(sql.select_word_count, [episode_num]).fetchone()
+    result: Optional[list[int]] = cur.execute(sql.select_word_count, [episode_num]).fetchone()
     word_count = result[0] if result and result[0] > 0 else 0
     return word_count
 
