@@ -1,29 +1,42 @@
-from datetime import datetime
 import os
 from bs4 import BeautifulSoup
+from classes import RssEpisode
+from datetime import datetime, timedelta
+from typing import Optional
 
-AUDIO_PATH = "audio"
-IMAGE_PATH = "images/episodes"
+AUDIO_PATH = 'audio'
+IMAGE_PATH = 'images/episodes'
 
-def log(episode_num, *msg):
-    print(f'-- {now()} [ Episode {episode_num} ]', *msg)
+def log(episode_num: int, *msg: str, end: Optional[str] = None):
+    print(f'[ Episode {episode_num} ]', *msg, end=end)
 
-def now():
-    return datetime.now().strftime('%H:%M:%S')
+def show_progress(episode: RssEpisode, progress: float, start_time: datetime):
+    percent_complete = int(progress / episode.duration * 1000) / 10
+    elapsed_seconds = (datetime.now() - start_time).seconds
+    elapsed = str(timedelta(seconds=(elapsed_seconds)))
+    remaining = str(timedelta(seconds=int((progress / percent_complete * 100) - progress)))
+    log(episode.episode_num, f'Transcribing ({percent_complete}%): {elapsed} elapsed. ETA: {remaining}', end='\r')
 
-def create_folder(folder_path):
+def maybe_create_folder(folder_path: str):
     # Check if the folder exists, and if not, create it
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-        print(f'-- {now()} Created folder {folder_path}')
+        print(f'-- Created folder {folder_path}')
 
-def make_audio_file_path(episode_num):
+def make_audio_file_path(episode_num: int):
     return f'{AUDIO_PATH}/{episode_num}.mp3'
 
-def make_image_file_path(episode_num, image_url):
+def make_image_file_path(episode_num: int, image_url: str):
     file_extension = os.path.splitext(image_url)[1]
     # file extension includes dot at the beginning
     return f'{IMAGE_PATH}/{episode_num}{file_extension}'
+
+def delete_audio(episode_num: int):
+    try:
+        os.remove(make_audio_file_path(episode_num))
+        log(episode_num, 'Deleted: audio')
+    except OSError as e:
+        log(episode_num, f'Error deleting {e.filename}: {e.strerror}')
 
 def get_episode_num(episode):
     return int(episode['itunes_episode'])
@@ -31,15 +44,5 @@ def get_episode_num(episode):
 def is_episode(episode):
     return True if getattr(episode,'itunes_episode', None) else False
 
-def is_audio(media):
-    return media['medium'] == 'audio'
-
-def get_audio_url(episode):
-    audio, *_ = filter(is_audio, episode['media_content'])
-    return audio['url']
-
-def get_image_url(episode):
-    return episode['image']['href']
-
-def strip_html(htmlString):
-    return BeautifulSoup(htmlString, 'html.parser').get_text()
+def strip_html(html_string: str):
+    return BeautifulSoup(html_string, 'html.parser').get_text()
