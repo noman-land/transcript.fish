@@ -17,7 +17,7 @@ def show_progress(episode: RssEpisode, progress: float, start_time: datetime):
     remaining = str(timedelta(seconds=int((progress / percent_complete * 100) - progress)))
     log(episode.episode_num, f'Transcribing ({percent_complete}%): {elapsed} elapsed. ETA: {remaining}', end='\r')
 
-def create_folder(folder_path: str):
+def maybe_create_folder(folder_path: str):
     # Check if the folder exists, and if not, create it
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)

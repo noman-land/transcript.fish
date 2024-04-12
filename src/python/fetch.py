@@ -10,7 +10,7 @@ def download_audio(episode: RssEpisode):
     if Path(audio_path).exists():
         utils.log(episode.episode_num, 'Already downloaded: audio')
     else:
-        utils.create_folder(utils.AUDIO_PATH)
+        utils.maybe_create_folder(utils.AUDIO_PATH)
         utils.log(episode.episode_num, 'Downloading: audio')
         urllib.request.urlretrieve(episode.audio, audio_path)
 
@@ -25,7 +25,7 @@ def download_image(episode: RssEpisode):
     if Path(image_path).exists():
         utils.log(episode.episode_num, 'Already downloaded: image')
     else:
-        utils.create_folder(utils.IMAGE_PATH)
+        utils.maybe_create_folder(utils.IMAGE_PATH)
         utils.log(episode.episode_num, 'Downloading: image')
         urllib.request.install_opener(opener)
         urllib.request.urlretrieve(episode.image, image_path)
