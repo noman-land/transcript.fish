@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Outlet } from 'react-router';
 import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { PAGE_SIZE } from '../constants';
 import { Paginator } from '../Paginator';
@@ -8,7 +9,6 @@ import { SearchBar } from '../SearchBar';
 import { Total } from '../Total';
 import { preventDefault } from '../utils';
 import { FiltersContext } from '../filters/FiltersContext';
-import { Outlet } from 'react-router';
 import { DatabaseContext } from '../database/DatabaseProvider';
 
 const Wrapper = styled.div`

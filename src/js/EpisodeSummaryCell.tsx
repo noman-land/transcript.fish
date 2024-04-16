@@ -4,9 +4,8 @@ import { Tags } from './Tags';
 import { EpisodeSummaryCellProps } from './types';
 import { Hosts } from './Hosts';
 import { Separator } from './Separator';
-import { formatDate, stopPropagation } from './utils';
+import { formatDate, formatVenueName, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
-import { formatVenueName } from './utils';
 import { DatabaseContext } from './database/DatabaseProvider';
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`

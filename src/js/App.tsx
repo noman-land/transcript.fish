@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Outlet } from 'react-router';
 import { ErrorBoundary } from 'react-error-boundary';
 import { UnderConstructionBanner } from './UnderConstructionBanner';
 import { EpisodeSearchFallback } from './EpisodeSearchFallback';
@@ -6,7 +7,6 @@ import { mediaUrl } from './utils';
 import { AudioContextWrapper } from './audio/AudioContext';
 import { Colors } from './constants';
 import { FiltersContextProvider } from './filters/FiltersContext';
-import { Outlet } from 'react-router';
 import { DatabaseProvider } from './database/DatabaseProvider';
 
 const Wrapper = styled.div`

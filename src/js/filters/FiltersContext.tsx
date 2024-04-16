@@ -5,6 +5,7 @@ import {
   createContext,
   useState,
 } from 'react';
+import { useParams } from 'react-router';
 import {
   Episode,
   EpisodeType,
@@ -12,7 +13,6 @@ import {
   SearchField,
   SearchFiltersState,
 } from '../types';
-import { useParams } from 'react-router';
 
 type PresenterFiltersState = number[];
 type VenueFiltersState = number[];
