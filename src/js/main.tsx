@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import './index.css';
 import { App } from './App';
-import { EpisodeSearch } from './routes/episodes';
+import { EpisodeSearch } from './EpisodeSearch';
 import { EpisodesTable } from './EpisodesTable';
 
 const router = createBrowserRouter([

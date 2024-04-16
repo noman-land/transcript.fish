@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 import { Outlet } from 'react-router';
 import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
-import { PAGE_SIZE } from '../constants';
-import { Paginator } from '../Paginator';
-import { FilterBar } from '../filters/FilterBar';
-import { EmptyState } from '../EmptyState';
-import { SearchBar } from '../SearchBar';
-import { Total } from '../Total';
-import { preventDefault } from '../utils';
-import { FiltersContext } from '../filters/FiltersContext';
-import { DatabaseContext } from '../database/DatabaseProvider';
+import { PAGE_SIZE } from './constants';
+import { Paginator } from './Paginator';
+import { FilterBar } from './filters/FilterBar';
+import { EmptyState } from './EmptyState';
+import { SearchBar } from './SearchBar';
+import { Total } from './Total';
+import { preventDefault } from './utils';
+import { FiltersContext } from './filters/FiltersContext';
+import { DatabaseContext } from './database/DatabaseProvider';
 
 const Wrapper = styled.div`
   display: flex;
