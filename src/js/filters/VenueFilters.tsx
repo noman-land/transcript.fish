@@ -1,11 +1,11 @@
 import { useCallback, useContext, useMemo } from 'react';
 import { MultiValue } from 'react-select';
 import { Option, Venue } from '../types';
-import { useDb } from '../dbHooks';
 import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
 import { formatVenueName, sortByLabel } from '../utils';
 import { DropdownMultiselect } from './DropdownMultiselect';
+import { DatabaseContext } from '../database/DatabaseProvider';
 
 const nothingFound = () => 'Nothing found';
 
@@ -14,7 +14,7 @@ type GroupedVenueOptions = Record<string, Venue[]>;
 export const VenueFilters = () => {
   const {
     venues: { data: venues },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
   const { venueFilters, setVenueFilters } = useContext(FiltersContext);
 

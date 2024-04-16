@@ -8,8 +8,8 @@ import {
   SearchFiltersState,
   Word,
   Venue,
-} from './types';
-import { mediaUrl } from './utils';
+} from '../types';
+import { mediaUrl } from '../utils';
 
 const response = await fetch(mediaUrl.db(`latest.json?t=${Date.now()}`));
 const { latest } = await response.json();

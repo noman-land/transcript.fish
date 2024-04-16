@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import styled from 'styled-components';
 import { Tags } from './Tags';
 import { EpisodeSummaryCellProps } from './types';
@@ -6,8 +6,8 @@ import { Hosts } from './Hosts';
 import { Separator } from './Separator';
 import { formatDate, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
-import { useDb } from './dbHooks';
 import { formatVenueName } from './utils';
+import { DatabaseContext } from './database/DatabaseProvider';
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
   display: flex;
@@ -95,7 +95,7 @@ export const EpisodeSummaryCell = ({
   );
   const {
     venues: { data: venues },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
   const venueText = venues && !!venue && formatVenueName(venues[venue]);
 

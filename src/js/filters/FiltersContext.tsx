@@ -12,6 +12,7 @@ import {
   SearchField,
   SearchFiltersState,
 } from '../types';
+import { useParams } from 'react-router';
 
 type PresenterFiltersState = number[];
 type VenueFiltersState = number[];
@@ -77,6 +78,7 @@ export const FiltersContextProvider = ({
 }: {
   children: ReactElement;
 }) => {
+  const { episodeId } = useParams();
   const [presenterFilters, setPresenterFilters] =
     useState<PresenterFiltersState>([]);
 
@@ -111,11 +113,16 @@ export const FiltersContextProvider = ({
 
   const getFilteredEpisodes = (episodes: Episode[] = []) =>
     episodes
+      .filter(({ episode }) => {
+        if (!episodeId) {
+          return true;
+        }
+        return episode === parseInt(episodeId, 10);
+      })
       .filter(ep => {
         if (presenterFilters.length === 0) {
           return true;
         }
-
         return (
           presenterFilters.includes(ep.presenter1) ||
           presenterFilters.includes(ep.presenter2) ||
@@ -128,7 +135,6 @@ export const FiltersContextProvider = ({
         if (venueFilters.length === 0) {
           return true;
         }
-
         return venueFilters.includes(ep.venue);
       })
       .filter(ep => {

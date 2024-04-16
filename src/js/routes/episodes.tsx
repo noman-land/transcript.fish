@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
-import { EpisodesTable } from './EpisodesTable';
-import { useDb } from './dbHooks';
-import { PAGE_SIZE } from './constants';
-import { Paginator } from './Paginator';
-import { FilterBar } from './filters/FilterBar';
-import { EmptyState } from './EmptyState';
-import { SearchBar } from './SearchBar';
-import { Total } from './Total';
-import { preventDefault } from './utils';
-import { FiltersContext } from './filters/FiltersContext';
+import { PAGE_SIZE } from '../constants';
+import { Paginator } from '../Paginator';
+import { FilterBar } from '../filters/FilterBar';
+import { EmptyState } from '../EmptyState';
+import { SearchBar } from '../SearchBar';
+import { Total } from '../Total';
+import { preventDefault } from '../utils';
+import { FiltersContext } from '../filters/FiltersContext';
+import { Outlet } from 'react-router';
+import { DatabaseContext } from '../database/DatabaseProvider';
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,7 +66,7 @@ export const EpisodeSearch = () => {
       loading: episodesLoading,
       total: totalEpisodes,
     },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
   const {
     getFilteredEpisodes,
@@ -147,11 +147,13 @@ export const EpisodeSearch = () => {
         </>
       ) : (
         <>
-          <EpisodesTable
-            episodes={filteredEpisodes}
-            page={page}
-            loading={episodesLoading}
-            expanded={expanded}
+          <Outlet
+            context={{
+              episodes: filteredEpisodes,
+              loading: episodesLoading,
+              page,
+              expanded,
+            }}
           />
           {totalPages > 1 && !episodesLoading ? (
             <Paginator
