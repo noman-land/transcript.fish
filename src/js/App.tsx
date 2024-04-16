@@ -8,6 +8,7 @@ import { AudioContextWrapper } from './audio/AudioContext';
 import { Colors } from './constants';
 import { FiltersContextProvider } from './filters/FiltersContext';
 import { DatabaseProvider } from './database/DatabaseProvider';
+import { Header } from './Header';
 
 const Wrapper = styled.div`
   display: flex;
@@ -55,11 +56,7 @@ export const App = () => {
       <DatabaseProvider>
         <AudioContextWrapper>
           <>
-            <header>
-              <a href="https://github.com/noman-land/transcript.fish">
-                <img width={32} src={mediaUrl.images('github-logo.png')} />
-              </a>
-            </header>
+            <Header />
             <div className="app-body">
               <h1>transcript.fish</h1>
               <UnderConstructionBanner />
