@@ -6,6 +6,7 @@ import './index.css';
 import { App } from './App';
 import { EpisodeSearch } from './EpisodeSearch';
 import { EpisodesTable } from './EpisodesTable';
+import { NotFoundError } from './NotFoundError';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: '*',
+    element: <NotFoundError />,
   },
 ]);
 
