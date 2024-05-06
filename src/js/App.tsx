@@ -61,7 +61,10 @@ export const App = () => {
           <div className="app-body">
             <h1>transcript.fish</h1>
             <UnderConstructionBanner />
-            <img className="logo" src={mediaUrl.images('logo.png?v=1')} />
+            <img
+              className="logo"
+              src={mediaUrl.images('logo-transparent.png')}
+            />
             <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
               <FiltersContextProvider>
                 <EpisodeSearch />
