@@ -42,7 +42,7 @@ const Wrapper = styled.div`
       }
     }
 
-    .nstaaf-logo {
+    .logo {
       margin-bottom: 1.5em;
       width: 80%;
       max-width: 316px;
@@ -60,7 +60,7 @@ export const App = () => {
             <div className="app-body">
               <h1>transcript.fish</h1>
               <UnderConstructionBanner />
-              <img className="nstaaf-logo" src={mediaUrl.images('logo.jpg')} />
+              <img className="nstaaf-logo" src={mediaUrl.images('logo.png')} />
               <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
                 <FiltersContextProvider>
                   <Outlet />
