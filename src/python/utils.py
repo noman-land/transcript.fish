@@ -1,5 +1,4 @@
 import os
-from bs4 import BeautifulSoup
 from classes import RssEpisode
 from datetime import datetime, timedelta
 from typing import Optional
@@ -38,11 +37,5 @@ def delete_audio(episode_num: int):
     except OSError as e:
         log(episode_num, f'Error deleting {e.filename}: {e.strerror}')
 
-def get_episode_num(episode):
-    return int(episode['itunes_episode'])
-
 def is_episode(episode):
     return True if getattr(episode,'itunes_episode', None) else False
-
-def strip_html(html_string: str):
-    return BeautifulSoup(html_string, 'html.parser').get_text()
