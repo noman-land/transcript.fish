@@ -7,6 +7,7 @@ import { mediaUrl } from './utils';
 import { AudioContextWrapper } from './audio/AudioContext';
 import { Colors } from './constants';
 import { FiltersContextProvider } from './filters/FiltersContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -52,26 +53,30 @@ export const App = () => {
   return (
     <Wrapper>
       <AudioContextWrapper>
-        <>
-          <header>
-            <a href="https://github.com/noman-land/transcript.fish">
-              <img width={32} src={mediaUrl.images('github-logo.png')} />
-            </a>
-          </header>
-          <div className="app-body">
-            <h1>transcript.fish</h1>
-            <UnderConstructionBanner />
-            <img
+        <Router>
+          <>
+            <header>
+              <a href="https://github.com/noman-land/transcript.fish">
+                <img width={32} src={mediaUrl.images('github-logo.png')} />
+              </a>
+            </header>
+            <div className="app-body">
+              <h1>transcript.fish</h1>
+              <UnderConstructionBanner />
+              <img
               className="logo"
               src={mediaUrl.images('logo-transparent.png')}
             />
-            <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
-              <FiltersContextProvider>
-                <EpisodeSearch />
-              </FiltersContextProvider>
-            </ErrorBoundary>
-          </div>
-        </>
+              <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
+                <FiltersContextProvider>
+                  <Routes>
+                    <Route path="/" element={<EpisodeSearch />} />
+                  </Routes>
+                </FiltersContextProvider>
+              </ErrorBoundary>
+            </div>
+          </>
+        </Router>
       </AudioContextWrapper>
     </Wrapper>
   );

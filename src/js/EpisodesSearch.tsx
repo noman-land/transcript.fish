@@ -10,6 +10,7 @@ import { SearchBar } from './SearchBar';
 import { Total } from './Total';
 import { preventDefault } from './utils';
 import { FiltersContext } from './filters/FiltersContext';
+import { URLSearchParamsInit, useSearchParams } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -54,8 +55,23 @@ const PaginationSpacer = styled.div`
 `;
 
 export const EpisodeSearch = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [page, setPage] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get('search') || ''
+  );
+  const [page, setPage] = useState(parseInt(searchParams.get('page') ?? '0'));
+
+  useEffect(() => {
+    const paramsToUpdate: URLSearchParamsInit | undefined = {};
+    if (searchTerm) {
+      paramsToUpdate.search = searchTerm;
+    }
+    if (page !== 0) {
+      paramsToUpdate.page = page.toString();
+    }
+    if (paramsToUpdate) setSearchParams(paramsToUpdate, { replace: true });
+  }, [searchTerm, page, setSearchParams]);
   const [expanded, setExpanded] = useState(false);
 
   const {
@@ -77,17 +93,30 @@ export const EpisodeSearch = () => {
   } = useContext(FiltersContext);
 
   useEffect(() => {
-    search(searchTerm, searchFilters);
-  }, [search, searchTerm, searchFilters]);
+    if (isMounted) {
+      setPage(0);
+    } else {
+      setIsMounted(true);
+    }
+  }, [
+    episodeTypeFilters,
+    presenterFilters,
+    searchTerm,
+    searchFilters,
+    isMounted,
+  ]);
 
   useEffect(() => {
-    setPage(0);
+    if (isMounted) {
+      search(searchTerm, searchFilters);
+    }
   }, [
     episodeTypeFilters,
     presenterFilters,
     searchTerm,
     searchFilters,
     venueFilters,
+    isMounted
   ]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
@@ -117,7 +146,7 @@ export const EpisodeSearch = () => {
   return (
     <Wrapper>
       <SearchBar
-        placeholder="no such thing as a search bar"
+        placeholder={searchTerm ?? 'no such thing as a search bar'}
         onSubmit={handleSubmit}
       />
       <FilterBar />
