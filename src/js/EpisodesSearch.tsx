@@ -94,6 +94,12 @@ export const EpisodeSearch = () => {
 
   useEffect(() => {
     if (isMounted) {
+      search(searchTerm, searchFilters);
+    }
+  }, [search, searchTerm, searchFilters, isMounted]);
+
+  useEffect(() => {
+    if (isMounted) {
       setPage(0);
     } else {
       setIsMounted(true);
@@ -103,20 +109,8 @@ export const EpisodeSearch = () => {
     presenterFilters,
     searchTerm,
     searchFilters,
-    isMounted,
-  ]);
-
-  useEffect(() => {
-    if (isMounted) {
-      search(searchTerm, searchFilters);
-    }
-  }, [
-    episodeTypeFilters,
-    presenterFilters,
-    searchTerm,
-    searchFilters,
     venueFilters,
-    isMounted
+    isMounted,
   ]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
