@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Colors } from './constants';
 
 const CenterWrapper = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ const CenterWrapper = styled.div`
   justify-content: center;
 
   a {
-    color: black;
+    color: ${Colors.night};
   }
 `;
 
