@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Episode,
   Presenter,
@@ -6,7 +6,7 @@ import {
   SearchResults,
   Venue,
   Word,
-} from './types';
+} from '../types';
 import {
   resetDbWorker,
   selectEpisodes,
@@ -14,9 +14,18 @@ import {
   selectEpisodeWords,
   selectPresenters,
   selectVenues,
-} from './database';
+} from './queries';
 
-const useEpisodes = () => {
+export type UseEpisodes = () => {
+  total?: number;
+  data?: Episode[];
+  error?: Error;
+  loading: boolean;
+  get: () => void;
+  search: (searchTerm: string, selectedFilters: SearchFiltersState) => void;
+};
+
+export const useEpisodes: UseEpisodes = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [episodes, setEpisodes] = useState<Episode[]>();
@@ -98,7 +107,14 @@ const useEpisodes = () => {
 
 type PresentersState = Record<number, Presenter>;
 
-const usePresenters = () => {
+export type UsePresenters = () => {
+  data?: PresentersState;
+  error?: Error;
+  loading: boolean;
+  get: () => void;
+};
+
+export const usePresenters: UsePresenters = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [presenters, setPresenters] = useState<PresentersState>();
@@ -131,7 +147,14 @@ const usePresenters = () => {
 
 type VenuesState = Record<number, Venue>;
 
-const useVenues = () => {
+export type UseVenues = () => {
+  data?: VenuesState;
+  error?: Error;
+  loading: boolean;
+  get: () => void;
+};
+
+export const useVenues = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [venues, setVenues] = useState<VenuesState>();
@@ -162,7 +185,14 @@ const useVenues = () => {
   );
 };
 
-const useTranscript = () => {
+export type UseTranscript = () => {
+  data?: Word[];
+  error?: Error;
+  loading: boolean;
+  get: (episodeNum: number) => void;
+};
+
+export const useTranscript = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [transcript, setTranscript] = useState<Word[]>();
@@ -185,24 +215,4 @@ const useTranscript = () => {
     }),
     [transcript, error, loading, getTranscript]
   );
-};
-
-export const useDb = () => {
-  const { get: getEpisodes, ...episodes } = useEpisodes();
-  const { get: getPresenters, ...presenters } = usePresenters();
-  const { get: getVenues, ...venues } = useVenues();
-  const transcript = useTranscript();
-
-  useEffect(() => {
-    getPresenters();
-    getEpisodes();
-    getVenues();
-  }, [getPresenters, getEpisodes, getVenues]);
-
-  return {
-    presenters,
-    episodes,
-    transcript,
-    venues,
-  };
 };

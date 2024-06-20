@@ -1,12 +1,14 @@
 import styled from 'styled-components';
+import { Outlet } from 'react-router';
 import { ErrorBoundary } from 'react-error-boundary';
-import { EpisodeSearch } from './EpisodesSearch';
 import { UnderConstructionBanner } from './UnderConstructionBanner';
 import { EpisodeSearchFallback } from './EpisodeSearchFallback';
 import { mediaUrl } from './utils';
 import { AudioContextWrapper } from './audio/AudioContext';
 import { Colors } from './constants';
 import { FiltersContextProvider } from './filters/FiltersContext';
+import { DatabaseProvider } from './database/DatabaseProvider';
+import { Header } from './Header';
 
 const Wrapper = styled.div`
   display: flex;
@@ -51,28 +53,26 @@ const Wrapper = styled.div`
 export const App = () => {
   return (
     <Wrapper>
-      <AudioContextWrapper>
-        <>
-          <header>
-            <a href="https://github.com/noman-land/transcript.fish">
-              <img width={32} src={mediaUrl.images('github-logo.png')} />
-            </a>
-          </header>
-          <div className="app-body">
-            <h1>transcript.fish</h1>
-            <UnderConstructionBanner />
-            <img
-              className="logo"
-              src={mediaUrl.images('logo-transparent.png')}
-            />
-            <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
-              <FiltersContextProvider>
-                <EpisodeSearch />
-              </FiltersContextProvider>
-            </ErrorBoundary>
-          </div>
-        </>
-      </AudioContextWrapper>
+      <DatabaseProvider>
+        <AudioContextWrapper>
+          <>
+            <Header />
+            <div className="app-body">
+              <h1>transcript.fish</h1>
+              <UnderConstructionBanner />
+              <img
+                className="logo"
+                src={mediaUrl.images('logo-transparent.png')}
+              />
+              <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
+                <FiltersContextProvider>
+                  <Outlet />
+                </FiltersContextProvider>
+              </ErrorBoundary>
+            </div>
+          </>
+        </AudioContextWrapper>
+      </DatabaseProvider>
     </Wrapper>
   );
 };

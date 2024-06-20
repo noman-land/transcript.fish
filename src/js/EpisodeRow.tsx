@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { EpisodeRowProps } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
-import { useDb } from './dbHooks';
 import { makeEpisodeCoverUrl } from './utils';
 import { Colors } from './constants';
+import { DatabaseContext } from './database/DatabaseProvider';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
   background-color: ${({ $isOpen }) => $isOpen && Colors.cirtineWhite};
@@ -48,7 +48,7 @@ export const EpisodeRow = ({ episode, expanded }: EpisodeRowProps) => {
 
   const {
     transcript: { get: getTranscript, data: transcript },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
   const handleClick = useCallback(() => {
     setIsOpen(open => !open);
