@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import type { Word } from './types';
 import { TimePrefixedWord } from './TimePrefixedWord';
+import { useHighlightWords } from './transcriptHooks';
 
 const makeKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
@@ -22,6 +23,12 @@ const StyledTd = styled.td`
   }
 `;
 
+interface EpisodeTranscriptCellProps {
+  words: Word[];
+  episode: number;
+  searchTerm: string;
+}
+
 function findSubarrayIndex(a: Word[], b: string[]) {
   for (let i = 0; i <= a.length - b.length; i++) {
     let match = true;
@@ -42,11 +49,13 @@ function findSubarrayIndex(a: Word[], b: string[]) {
 
 export const EpisodeTranscriptCell = ({
   words,
+  episode,
   searchTerm,
-}: {
-  words: Word[];
-  searchTerm: string;
-}) => {
+}: EpisodeTranscriptCellProps) => {
+  const shouldHighlight = useHighlightWords({
+    words,
+    episode,
+  });
   const searchWords = searchTerm.split(' ');
   const start = findSubarrayIndex(words, searchWords);
   return (
@@ -58,6 +67,7 @@ export const EpisodeTranscriptCell = ({
               key={makeKey(word)}
               $timestamp={word.startTime}
               $showPrefix={i > 0 && i % 200 === 0}
+              style={shouldHighlight(i)}
               $found={i >= start && i <= start + searchWords.length - 1}
             >
               {word.word}

@@ -1,19 +1,20 @@
 import styled from 'styled-components';
-import { useCallback, useState } from 'react';
-import { Episode } from './types';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { EpisodeRowProps } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
-import { useDb } from './dbHooks';
-import { mediaUrl } from './utils';
+import { makeEpisodeCoverUrl } from './utils';
+import { Colors } from './constants';
+import { DatabaseContext } from './database/DatabaseProvider';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
-  background-color: ${({ $isOpen }) => $isOpen && '#fff189'};
+  background-color: ${({ $isOpen }) => $isOpen && Colors.cirtineWhite};
   display: block;
   position: relative;
   z-index: 0;
 
   &:not(:last-child) {
-    border-bottom: 2px solid #d2bb3d;
+    border-bottom: 2px solid ${Colors.citrineDim};
   }
 
   &::after {
@@ -42,61 +43,46 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
   }
 `;
 
-const makeImageUrl = (episode: number, imageUrl: string) => {
-  const extension = imageUrl.split('.').pop();
-  return extension
-    ? `${mediaUrl()}/images/episodes/${episode}.${extension}`
-    : '';
-};
-
-interface EpisodeRowProps {
-  episode: Episode;
-  searchTerm: string;
-}
-
 export const EpisodeRow = ({
-  episode: {
-    image,
-    episode,
-    title,
-    description,
-    pubDate,
-    duration,
-    live,
-    compilation,
-  },
+  episode,
+  expanded,
   searchTerm,
 }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { episodeWords, getEpisode } = useDb();
+
+  const {
+    transcript: { get: getTranscript, data: transcript },
+  } = useContext(DatabaseContext);
 
   const handleClick = useCallback(() => {
-    if (!episodeWords) {
-      getEpisode(episode);
-    }
-
     setIsOpen(open => !open);
-  }, [episode, episodeWords, getEpisode]);
+  }, []);
+
+  const opened = isOpen || expanded;
+
+  useEffect(() => {
+    if (opened && !transcript) {
+      getTranscript(episode.episode);
+    }
+  }, [transcript, episode.episode, getTranscript, opened]);
 
   return (
     <TrWithBackground
-      $isOpen={isOpen}
-      $image={makeImageUrl(episode, image)}
-      key={episode}
+      $isOpen={opened}
+      $image={makeEpisodeCoverUrl(episode.episode, episode.image)}
+      key={episode.episode}
     >
       <EpisodeSummaryCell
-        isOpen={isOpen}
+        isOpen={opened}
         onClick={handleClick}
-        episodeNum={episode}
-        title={title}
-        description={description}
-        pubDate={pubDate}
-        duration={duration}
-        live={Boolean(live)}
-        compilation={Boolean(compilation)}
+        episode={episode}
       />
-      {isOpen && episodeWords && (
-        <EpisodeTranscriptCell words={episodeWords} searchTerm={searchTerm} />
+      {opened && transcript && (
+        <EpisodeTranscriptCell
+          words={transcript}
+          episode={episode.episode}
+          searchTerm={searchTerm}
+        />
       )}
     </TrWithBackground>
   );

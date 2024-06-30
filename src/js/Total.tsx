@@ -1,41 +1,27 @@
-import { styled } from 'styled-components';
-import { Spinner } from './Spinner';
+import styled from 'styled-components';
 
-export const StyledDiv = styled.div`
-  position: relative;
-  text-align: left;
-  font-size: 90%;
-  margin: 0.6rem 3vw;
-  opacity: 0.6;
-  bottom: 0;
-
-  .results {
-    display: inline-block;
-    max-height: 19px;
-  }
-
-  @media (max-width: 900px) {
-    margin: 0.6rem 4.5vw;
-  }
-
-  @media (max-width: 650px) {
-    margin: 0.6rem 6vw;
-  }
+const StyledDiv = styled.div`
+  align-self: flex-end;
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  text-align: right;
 `;
 
-export const Total = ({
-  searchTerm,
-  loading,
-  results,
-  total,
-}: {
-  searchTerm: string;
-  loading: boolean;
-  results: number;
+interface TotalProps {
+  isShowingAll: boolean;
+  resultsCount: number;
   total: number;
-}) => (
-  <StyledDiv>
-    showing <span className="results">{loading ? <Spinner /> : results}</span>{' '}
-    of {total} episodes {searchTerm && `containing "${searchTerm}"`}
-  </StyledDiv>
-);
+}
+
+export const Total = ({ isShowingAll, resultsCount, total }: TotalProps) => {
+  const foundResults = isShowingAll
+    ? 'showing all'
+    : `found ${resultsCount} of`;
+
+  return (
+    <StyledDiv>
+      {foundResults} {total} episodes
+    </StyledDiv>
+  );
+};

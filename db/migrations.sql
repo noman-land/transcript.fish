@@ -1,6 +1,6 @@
 PRAGMA page_size = 16384;
 
-CREATE TABLE "episodes" (
+CREATE TABLE IF NOT EXISTS "episodes" (
   "episode" INTEGER NOT NULL UNIQUE,
   "title" TEXT,
   "audio" TEXT UNIQUE,
@@ -19,18 +19,30 @@ CREATE TABLE "episodes" (
   "venue" INTEGER,
   "live" INTEGER,
   "compilation" INTEGER,
+  "event" INTEGER,
   FOREIGN KEY("presenter1") REFERENCES "presenters"("id"),
   FOREIGN KEY("presenter2") REFERENCES "presenters"("id"),
   FOREIGN KEY("presenter3") REFERENCES "presenters"("id"),
   FOREIGN KEY("presenter4") REFERENCES "presenters"("id"),
   FOREIGN KEY("presenter5") REFERENCES "presenters"("id"),
   FOREIGN KEY("venue") REFERENCES "venues"("id"),
+  FOREIGN KEY("event") REFERENCES "events"("id"),
   PRIMARY KEY("episode")
 );
 
-CREATE UNIQUE INDEX "episodes_episode" ON "episodes" ("episode");
+CREATE UNIQUE INDEX IF NOT EXISTS "episodes_episode" ON "episodes" ("episode");
 
-CREATE TABLE "presenters" (
+CREATE TABLE IF NOT EXISTS "events" (
+  "id" INTEGER NOT NULL UNIQUE,
+  "name" TEXT NOT NULL,
+  "city" TEXT NOT NULL,
+  "country" TEXT NOT NULL,
+  PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS "events_index" ON "events" ("id");
+
+CREATE TABLE IF NOT EXISTS "presenters" (
   "id" INTEGER NOT NULL UNIQUE,
   "firstName" TEXT NOT NULL,
   "middleName" TEXT,
@@ -41,7 +53,7 @@ CREATE TABLE "presenters" (
   UNIQUE("firstName", "middleName", "lastName")
 );
 
-CREATE UNIQUE INDEX "presenters_index" ON "presenters" (
+CREATE UNIQUE INDEX IF NOT EXISTS "presenters_index" ON "presenters" (
   "firstName",
   "middleName",
   "lastName",
@@ -49,18 +61,20 @@ CREATE UNIQUE INDEX "presenters_index" ON "presenters" (
   "guest"
 );
 
-CREATE TABLE "venues" (
+CREATE TABLE IF NOT EXISTS "venues" (
   "id" INTEGER NOT NULL UNIQUE,
-  "name" TEXT NOT NULL,
+  "name" TEXT,
+  "streetAddress" TEXT,
+  "region" TEXT,
   "city" TEXT,
   "state" TEXT,
   "country" TEXT,
   PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-CREATE UNIQUE INDEX "venues_index" ON "venues" ("id");
+CREATE UNIQUE INDEX IF NOT EXISTS "venues_index" ON "venues" ("id");
 
-CREATE TABLE "words" (
+CREATE TABLE IF NOT EXISTS "words" (
   "startTime" NUMERIC NOT NULL,
   "endTime" NUMERIC NOT NULL,
   "word" TEXT NOT NULL COLLATE NOCASE,
@@ -76,15 +90,15 @@ CREATE TABLE "words" (
   FOREIGN KEY ("episode") REFERENCES "episodes" ("episode")
 );
 
-CREATE INDEX "words_episode" ON "words" ("episode");
+CREATE INDEX IF NOT EXISTS "words_episode" ON "words" ("episode");
 
-CREATE INDEX "words_startTime" ON "words" ("startTime");
+CREATE INDEX IF NOT EXISTS "words_startTime" ON "words" ("startTime");
 
-CREATE INDEX "words_endTime" ON "words" ("endTime");
+CREATE INDEX IF NOT EXISTS "words_endTime" ON "words" ("endTime");
 
-CREATE INDEX "words_word" ON "words" ("word");
+CREATE INDEX IF NOT EXISTS "words_word" ON "words" ("word");
 
-CREATE UNIQUE INDEX "words_unique" ON "words" (
+CREATE UNIQUE INDEX IF NOT EXISTS "words_unique" ON "words" (
   "episode",
   "startTime",
   "endTime",

@@ -1,25 +1,14 @@
-import { MouseEvent } from 'react';
+import { useContext, useMemo } from 'react';
 import styled from 'styled-components';
-import { Tag, TagWrapper } from './Tag';
-
-const formatDate = (date: string) => {
-  if (!date) {
-    return '';
-  }
-
-  return new Intl.DateTimeFormat(undefined, {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  }).format(new Date(date));
-};
-
-const formatDuration = (duration: number) => {
-  return `${Math.floor(duration / 60)} minutes`;
-};
+import { Tags } from './Tags';
+import { EpisodeSummaryCellProps } from './types';
+import { Hosts } from './Hosts';
+import { Separator } from './Separator';
+import { formatDate, formatVenueName, stopPropagation } from './utils';
+import { AudioControls } from './audio/AudioControls';
+import { DatabaseContext } from './database/DatabaseProvider';
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -31,122 +20,103 @@ const StyledTd = styled.td<{ $isOpen: boolean }>`
   @media (max-width: 650px) {
     padding: 8vw 6vw ${({ $isOpen }) => ($isOpen ? 0 : 8)}vw 6vw;
   }
+`;
 
-  .episode-title-wrapper {
-    display: flex;
+const TitleWrapper = styled.div`
+  display: flex;
 
-    @media (max-width: 700px) {
-      flex-direction: column-reverse;
-    }
-  }
-
-  .episode-title {
-    margin-top: 0;
-    margin-right: 1em;
-    flex-grow: 1;
-
-    @media (max-width: 700px) {
-      margin-right: 0;
-    }
-  }
-
-  .episode-published-date {
-    font-style: italic;
-    margin-bottom: 1em;
-  }
-
-  .episode-description {
-    text-align: justify;
-
-    a {
-      word-break: break-all;
-    }
-
-    // Some descriptions end in <br> tags
-    // which add unwanted line breaks
-    & > :last-child > br:last-child {
-      display: none;
-    }
-
-    // Some descriptions are wrapped in a <p>
-    // which adds unwanted margin
-    & > p {
-      margin: 0;
-    }
-  }
-
-  .episode-duration {
-    font-weight: 600;
-    font-style: italic;
-    margin-top: 1em;
-  }
-
-  .separator {
-    text-align: center;
-    margin: 1.8em 0;
-  }
-
-  &:hover {
-    background-color: #fff189;
-
-    .episode-title {
-      text-decoration: underline;
-    }
-
-    & + td {
-      background-color: #fff189;
-    }
+  @media (max-width: 700px) {
+    flex-direction: column-reverse;
   }
 `;
 
-const stopPropagation = (event: MouseEvent) => {
-  if ((event.target as HTMLElement).nodeName === 'A') {
-    event.stopPropagation();
-  }
-};
+const Title = styled.h3`
+  margin-top: 0;
+  margin-right: 1em;
+  flex-grow: 1;
 
-interface EpisodeSummaryCellProps {
-  isOpen: boolean;
-  onClick: () => void;
-  episodeNum: number;
-  title: string;
-  pubDate: string;
-  description: string;
-  duration: number;
-  live: boolean;
-  compilation: boolean;
-}
+  a {
+    display: inline-block;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @media (max-width: 700px) {
+    margin-right: 0;
+  }
+`;
+
+const Description = styled.span`
+  text-align: justify;
+  margin-top: 1em;
+
+  a {
+    word-break: break-all;
+  }
+
+  // Some descriptions end in <br> tags
+  // which add unwanted line breaks
+  & > :last-child > br:last-child {
+    display: none;
+  }
+
+  // Some descriptions are wrapped in a <p>
+  // which adds unwanted margin
+  & > p {
+    margin: 0;
+  }
+`;
 
 export const EpisodeSummaryCell = ({
   isOpen,
   onClick,
-  episodeNum,
-  title,
-  pubDate,
-  description,
-  duration,
-  live,
-  compilation,
+  episode: {
+    episode: episodeNum,
+    duration,
+    title,
+    live,
+    compilation,
+    pubDate,
+    description,
+    venue,
+    presenter1,
+    presenter2,
+    presenter3,
+    presenter4,
+  },
 }: EpisodeSummaryCellProps) => {
+  const presenters = useMemo(
+    () => [presenter1, presenter2, presenter3, presenter4],
+    [presenter1, presenter2, presenter3, presenter4]
+  );
+  const {
+    venues: { data: venues },
+  } = useContext(DatabaseContext);
+
+  const venueText = venues && !!venue && formatVenueName(venues[venue]);
+
   return (
-    <StyledTd $isOpen={isOpen} onClick={onClick}>
-      <div className="episode-title-wrapper">
-        <h3 className="episode-title">
-          <span>{episodeNum}</span>: {title}
-        </h3>
-        <TagWrapper>
-          {live && <Tag>Live</Tag>}
-          {compilation && <Tag>Compilation</Tag>}
-        </TagWrapper>
-      </div>
-      <div className="episode-published-date">{formatDate(pubDate)}</div>
-      <span
+    <StyledTd $isOpen={isOpen}>
+      <TitleWrapper>
+        <Title>
+          <a onClick={onClick}>
+            {episodeNum}: {title}
+          </a>
+        </Title>
+        <Tags live={live} compilation={compilation} />
+      </TitleWrapper>
+      <div>{formatDate(pubDate)}</div>
+      <div>{venueText}</div>
+      <Hosts $presenters={presenters} />
+      <Description
         onClick={stopPropagation}
-        className="episode-description"
         dangerouslySetInnerHTML={{ __html: description }}
       />
-      <span className="episode-duration">{formatDuration(duration)}</span>
-      {isOpen && <div className="separator">* * *</div>}
+      <AudioControls episodeNum={episodeNum} duration={duration} />
+      {isOpen && <Separator />}
     </StyledTd>
   );
 };

@@ -1,40 +1,42 @@
 import {
   ChangeEventHandler,
-  FocusEventHandler,
-  FormEventHandler,
   KeyboardEventHandler,
-  useCallback,
   useEffect,
   useState,
 } from 'react';
-import { styled } from 'styled-components';
+import styled, { css } from 'styled-components';
+import { PaginatorProps } from './types';
+import { preventDefault } from './utils';
 
 const StyledPaginator = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0.6rem 0;
+`;
 
-  .page-numbers {
-    padding: 0 0.6rem;
-    text-align: center;
-    min-width: 150px;
+const PageNumbers = styled.span`
+  padding: 0 0.6rem;
+  text-align: center;
+  min-width: 150px;
 
-    @media (max-width: 360px) {
-      padding: 0;
-    }
-
-    @media (max-width: 300px) {
-      min-width: 80px;
-
-      .total-pages {
-        display: none;
-      }
-    }
+  @media (max-width: 360px) {
+    padding: 0;
   }
 
-  .page-number {
-    font-family: TTE, 'Courier New', Courier, monospace;
+  @media (max-width: 300px) {
+    min-width: 80px;
+
+    .total-pages {
+      display: none;
+    }
+  }
+`;
+
+const PageNumber = styled.form`
+  display: inline;
+
+  input {
     font-size: 1em;
     cursor: pointer;
     padding: 1rem 0.6rem;
@@ -57,8 +59,7 @@ const StyledPaginator = styled.div`
 const Button = styled.button`
   background: none;
   border: none;
-  font-family: TTE, 'Courier New', Courier, monospace;
-  font-size: 1.2em;
+  font-size: 1.1em;
   min-width: 50px;
   max-width: 50px;
   padding: 1rem 0;
@@ -78,28 +79,16 @@ const Button = styled.button`
 
   ${({ disabled }) =>
     disabled
-      ? `
-      opacity: 0.5;
-      `
-      : `
-      cursor: pointer;
+      ? css`
+          opacity: 0.5;
+        `
+      : css`
+          cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-      }
-    `}
-`;
-
-interface PaginatorProps {
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
-
-const preventDefault: FormEventHandler = e => e.preventDefault();
-
-export const PaginationSpacer = styled.div`
-  height: 116.2px;
+          &:hover {
+            text-decoration: underline;
+          }
+        `}
 `;
 
 export const Paginator = ({
@@ -116,86 +105,75 @@ export const Paginator = ({
   // internal value for validation purposes
   useEffect(() => setLocalValue(page), [page]);
 
-  const handleFocus: FocusEventHandler<HTMLInputElement> = useCallback(
-    e => e.target.select(),
-    []
-  );
-
-  const handleBlur = useCallback(() => {
+  const handleBlur = () => {
     if (localValue === '') {
       setLocalValue(page);
     } else {
       onPageChange(localValue);
     }
-  }, [localValue, page, onPageChange]);
+  };
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-    e => {
-      if (e.target.value === '') {
-        return setLocalValue('');
-      }
-      const number = Number(e.target.value);
-      if (number > 0 && number <= totalPages) {
-        setLocalValue(number - 1);
-      }
-    },
-    [totalPages]
-  );
+  const handleChange: ChangeEventHandler<HTMLInputElement> = e => {
+    if (e.target.value === '') {
+      setLocalValue('');
+      return;
+    }
+    const number = Number(e.target.value);
+    if (number > 0 && number <= totalPages) {
+      setLocalValue(number - 1);
+    }
+  };
 
-  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
-    e => {
-      if (e.key === 'Enter') {
-        (e.target as HTMLInputElement).blur();
-        handleBlur();
-      }
-    },
-    [handleBlur]
-  );
-
-  const handleFirst = useCallback(() => {
-    onPageChange(0);
-  }, [onPageChange]);
-
-  const handlePrev = useCallback(() => {
-    onPageChange(page - 1);
-  }, [onPageChange, page]);
-
-  const handleNext = useCallback(() => {
-    onPageChange(page + 1);
-  }, [onPageChange, page]);
-
-  const handleLast = useCallback(() => {
-    onPageChange(totalPages - 1);
-  }, [onPageChange, totalPages]);
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
+    if (e.key === 'Enter') {
+      (e.target as HTMLInputElement).blur();
+      handleBlur();
+    }
+  };
 
   const value = typeof localValue === 'number' ? localValue + 1 : '';
 
   return (
     <StyledPaginator>
-      <Button name="first-page" disabled={isFirstPage} onClick={handleFirst}>
+      <Button
+        name="first-page"
+        disabled={isFirstPage}
+        onClick={() => onPageChange(0)}
+      >
         {'<<'}
       </Button>
-      <Button name="previous-page" disabled={isFirstPage} onClick={handlePrev}>
+      <Button
+        name="previous-page"
+        disabled={isFirstPage}
+        onClick={() => onPageChange(page - 1)}
+      >
         {'<'}
       </Button>
-      <span className="page-numbers">
+      <PageNumbers>
         page
-        <form style={{ display: 'inline' }} onSubmit={preventDefault}>
+        <PageNumber onSubmit={preventDefault}>
           <input
-            onFocus={handleFocus}
+            onFocus={e => e.target.select()}
             onBlur={handleBlur}
             onChange={handleChange}
-            className="page-number"
             onKeyDown={handleKeyDown}
             value={value}
           />
-        </form>
+        </PageNumber>
         <span className="total-pages">of {totalPages}</span>
-      </span>
-      <Button name="next-page" disabled={isLastPage} onClick={handleNext}>
+      </PageNumbers>
+      <Button
+        name="next-page"
+        disabled={isLastPage}
+        onClick={() => onPageChange(page + 1)}
+      >
         {'>'}
       </Button>
-      <Button name="last-page" disabled={isLastPage} onClick={handleLast}>
+      <Button
+        name="last-page"
+        disabled={isLastPage}
+        onClick={() => onPageChange(totalPages - 1)}
+      >
         {'>>'}
       </Button>
     </StyledPaginator>

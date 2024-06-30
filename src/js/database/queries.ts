@@ -1,15 +1,17 @@
 import { createDbWorker } from 'sql.js-httpvfs';
 import {
   Episode,
-  FiltersState,
+  Presenter,
   SearchEpisodeWords,
   SearchEpisodeWordsResult,
   SelectEpisodeWords,
+  SearchFiltersState,
   Word,
-} from './types';
-import { mediaUrl } from './utils';
+  Venue,
+} from '../types';
+import { mediaUrl } from '../utils';
 
-const response = await fetch(`${mediaUrl()}/db/latest.json?t=${Date.now()}`);
+const response = await fetch(mediaUrl.db(`latest.json?t=${Date.now()}`));
 const { latest } = await response.json();
 
 const workerUrl = new URL(
@@ -23,7 +25,7 @@ const createWorker = async () =>
     [
       {
         from: 'jsonconfig',
-        configUrl: `${mediaUrl()}/db/${latest}/config.json`,
+        configUrl: mediaUrl.db(`${latest}/config.json`),
       },
     ],
     workerUrl.toString(),
@@ -31,6 +33,56 @@ const createWorker = async () =>
   );
 
 let worker = await createWorker();
+
+const selectPresentersQuery = `
+  SELECT
+    *
+  FROM
+    presenters
+  ORDER BY
+    id
+`;
+
+type SelectPresenters = () => Promise<Presenter[]>;
+
+export const selectPresenters: SelectPresenters = () => {
+  return new Promise((resolve, reject) => {
+    worker.db
+      .query(selectPresentersQuery)
+      .then(presenters => resolve(presenters as Presenter[]), reject)
+      .catch((err: Error) =>
+        console.error(
+          'Something unexpected happened while getting presenters from database.',
+          err
+        )
+      );
+  });
+};
+
+const selectVenuesQuery = `
+  SELECT
+    *
+  FROM
+    venues
+  ORDER BY
+    name
+`;
+
+type SelectVenues = () => Promise<Venue[]>;
+
+export const selectVenues: SelectVenues = () => {
+  return new Promise((resolve, reject) => {
+    worker.db
+      .query(selectVenuesQuery)
+      .then(venues => resolve(venues as Venue[]), reject)
+      .catch((err: Error) =>
+        console.error(
+          'Something unexpected happened while getting venues from database.',
+          err
+        )
+      );
+  });
+};
 
 const selectEpisodesQuery = `
   SELECT
@@ -104,12 +156,13 @@ const searchEpisodeWordsQuery = (searchTerm: string) => `
     words_fts MATCH '${searchTerm}'
 `;
 
-const makeSearchFilters = (searchTerm: string, filters: FiltersState) => {
+const makeSearchFilters = (searchTerm: string, filters: SearchFiltersState) => {
   return Object.entries(filters)
     .filter(([, enabled]) => enabled)
-    .map(([column]) => `${column}:${searchTerm}`)
+    .map(([column]) => `${column}:"${searchTerm}"`)
     .join(' OR ');
 };
+
 export const searchEpisodeWords: SearchEpisodeWords = async (
   searchTerm,
   filters

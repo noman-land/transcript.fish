@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { mediaUrl } from './utils';
 
 const BannerWrapper = styled.div`
@@ -8,32 +8,27 @@ const BannerWrapper = styled.div`
   justify-content: center;
   margin-bottom: 1.5em;
   text-align: center;
-
-  h2 {
-    margin-left: 1vw;
-    margin-right: 1vw;
-  }
-
-  .construction-sign {
-    width: 50px;
-
-    @media (max-width: 400px) {
-      width: 12.5vw;
-    }
-  }
 `;
 
-const ConstructionSign = () => (
-  <img
-    className="construction-sign"
-    src={`${mediaUrl()}/images/construction-sign.gif`}
-  />
-);
+const H2 = styled.h2`
+  margin-left: 1vw;
+  margin-right: 1vw;
+`;
+
+const ConstructionSign = styled.img.attrs({
+  src: mediaUrl.images('construction-sign.gif'),
+})`
+  width: 50px;
+
+  @media (max-width: 400px) {
+    width: 12.5vw;
+  }
+`;
 
 export const UnderConstructionBanner = () => (
   <BannerWrapper>
     <ConstructionSign />
-    <h2>under construction</h2>
+    <H2>under construction</H2>
     <ConstructionSign />
   </BannerWrapper>
 );

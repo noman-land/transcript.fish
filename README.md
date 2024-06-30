@@ -17,6 +17,10 @@ Unofficial No Such Thing As A Fish episode transcripts.
 
 2. Download most recent episodes and transcribe them
 
+   - Change line 11 of whisper.py to `local_files_only=False`
+
+   - (Optional): Change line 5 of whisper.py `model_size = 'large-v2'` to your preferred model, see note below for details, [see available models.](https://huggingface.co/guillaumekln)
+
    - Run `npm run convert` (this is idempotent and will go through _all episodes_)
 
      **NOTE**: By default this uses the `medium.en` Whisper model. On an M1 Mac with 64GB of RAM this transcribes at about `1.4x` speed. This means an hour long episode gets transcribed in about 42 minutes.
@@ -44,7 +48,7 @@ Unofficial No Such Thing As A Fish episode transcripts.
 
      The other good news is you can kill the script (`Ctrl + C`) and restart it at any time and it will pick back up after the last fully transcribed episode.
 
-     **NOTE:** This script also [downloads](/src/python/convert.py#L7-L8) all the audio files for the episodes as well as each episode's album art. As of 25 July 2023 this amounts to 487 episodes, ~20GB audio, ~130MB images.
+     **NOTE:** This script also [downloads](/src/python/convert.py#L8-L9) all the audio files for the episodes as well as each episode's album art. As of 25 July 2023 this amounts to 487 episodes, ~20GB audio, ~130MB images.
 
 3. Split database into chunks
 
@@ -53,7 +57,3 @@ Unofficial No Such Thing As A Fish episode transcripts.
 4. (Optional) Sync database, audio, images, and fonts to (Cloudflare) R2. Needs [`rclone`](https://rclone.org/) and [`jq`](https://jqlang.github.io/jq/) installed.
 
    - Run `npm run sync`
-
-5. Update episode number query param in [dbHooks.tsx](/src/js/dbHooks.tsx#L19) for cache busting purposes
-
-   **TODO:** Automate this
