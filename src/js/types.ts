@@ -1,5 +1,3 @@
-import { Word } from './types';
-
 export interface Presenter {
   id: number;
   firstName: string;
