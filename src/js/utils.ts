@@ -70,29 +70,25 @@ export const makeRowKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
 };
 
-const cleanWord = (word: string) => {
+const clean = (word: string) => {
   return word.replace(/[\s.,!?"]/g, '').toLowerCase();
 };
 
 export const findMatches = (words: Word[], searchTerm: string) => {
   const searchWords = searchTerm.split(' ');
-  return words.reduce(
-    (acc, _, i) => {
-      const matches: Matches = { length: 0 };
-      let j = 0;
-      while (
-        j < searchWords.length &&
-        cleanWord(words[i + j].word) === cleanWord(searchWords[j])
-      ) {
-        matches[i + j] = true;
-        matches.length++;
-        j++;
-      }
-      if (matches.length === searchWords.length) {
-        return Object.assign(acc, matches);
-      }
-      return acc;
-    },
-    { length: searchWords.length } as Matches
-  );
+  return words.reduce((acc, _, i, _words) => {
+    const matches: Matches = {};
+    let j = 0;
+    while (
+      j < searchWords.length &&
+      clean(_words[i + j].word) === clean(searchWords[j])
+    ) {
+      matches[i + j] = true;
+      j++;
+    }
+    if (Object.keys(matches).length === searchWords.length) {
+      return Object.assign(acc, matches);
+    }
+    return acc;
+  }, {} as Matches);
 };
