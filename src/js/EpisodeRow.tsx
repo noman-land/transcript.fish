@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { EpisodeRowProps } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
 import { makeEpisodeCoverUrl } from './utils';
 import { Colors } from './constants';
-import { DatabaseContext } from './database/DatabaseProvider';
+import { useTranscript } from './database/dbHooks';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
   background-color: ${({ $isOpen }) => $isOpen && Colors.cirtineWhite};
@@ -49,10 +49,7 @@ export const EpisodeRow = ({
   searchTerm,
 }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const {
-    transcript: { get: getTranscript, data: transcript },
-  } = useContext(DatabaseContext);
+  const { get: getTranscript, data: transcript } = useTranscript();
 
   const handleClick = useCallback(() => {
     setIsOpen(open => !open);
