@@ -22,6 +22,7 @@ export const Colors = {
   lightBlue: '#B1D2D3',
   lighterBlue: '#DBE6E6',
   lightPurple: 'rgb(207, 177, 211)',
+  lightGreen: '#65d665',
   night: '#090a0b',
   white: '#ffffff',
   dimWhite: '#eeeeee',

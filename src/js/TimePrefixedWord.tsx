@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { formatTimestamp } from './utils';
+import { Colors } from './constants';
 
 export const TimePrefixedWord = styled.span<{
   $timestamp: number;
@@ -11,7 +12,7 @@ export const TimePrefixedWord = styled.span<{
   ${({ $found }) =>
     $found &&
     css`
-      background: #65d665;
+      background: ${Colors.lightGreen};
     `}
 
   ${({ $showPrefix, $timestamp }) =>
