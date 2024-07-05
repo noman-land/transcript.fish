@@ -29,22 +29,40 @@ interface EpisodeTranscriptCellProps {
   searchTerm: string;
 }
 
-function findSubarrayIndex(a: Word[], b: string[]) {
-  for (let i = 0; i <= a.length - b.length; i++) {
-    let match = true;
-    for (let j = 0; j < b.length; j++) {
-      if (
-        a[i + j].word.trim().toLocaleLowerCase() !== b[j].toLocaleLowerCase()
+type Matches = Record<number, boolean> & Record<'length', number>;
+
+/**
+ * I have an array of word[] and an array of searchWord[]
+ * I need to find all the instances of the entire searchWord[] array inside the word[] array
+ * The return value should be an array of indices of word[] that correspond to the start of all the instances of searchWord[].
+ *
+ * Example:
+ *
+ * const words = ['what', 'the', 'hell', 'also', 'what', 'the', 'hell'];
+ * const searchWords = ['what', 'the', 'hell'];
+ * const matches = findMatches(words, searchWords);
+ * // matches === { 0: true, 4: true, length: 3 };
+ */
+function findMatches(words: Word[], searchTerm: string) {
+  const searchWords = searchTerm.split(' ');
+  return words.reduce(
+    (acc, _, i) => {
+      const matches: Matches = { length: 0 };
+      let j = 0;
+      while (
+        j < searchWords.length &&
+        words[i + j].word.trim().toLowerCase() === searchWords[j].toLowerCase()
       ) {
-        match = false;
-        break;
+        matches[i + j] = true;
+        matches.length++;
+        j++;
       }
-    }
-    if (match) {
-      return i;
-    }
-  }
-  return -1;
+      return matches.length === searchWords.length
+        ? { ...acc, ...matches }
+        : acc;
+    },
+    { length: searchWords.length } as Matches
+  );
 }
 
 export const EpisodeTranscriptCell = ({
@@ -56,8 +74,7 @@ export const EpisodeTranscriptCell = ({
     words,
     episode,
   });
-  const searchWords = searchTerm.split(' ');
-  const start = findSubarrayIndex(words, searchWords);
+  const matches = findMatches(words, searchTerm);
   return (
     <StyledTd>
       <div className="episode-words">
@@ -68,7 +85,7 @@ export const EpisodeTranscriptCell = ({
               $timestamp={word.startTime}
               $showPrefix={i > 0 && i % 200 === 0}
               style={shouldHighlight(i)}
-              $found={i >= start && i <= start + searchWords.length - 1}
+              $found={matches[i]}
             >
               {word.word}
             </TimePrefixedWord>
