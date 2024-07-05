@@ -30,6 +30,6 @@ if ! test -d "$output_dir"; then
     "suffixLength": '$suffix_length'
   }' > "$output_dir/config.json"
 else
-  echo '-- Remote database is up to date. Skipping upload.'
+  echo '-- Database chunks are up to date'
 fi
 
