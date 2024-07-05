@@ -1,5 +1,5 @@
 import { FormEventHandler, MouseEventHandler } from 'react';
-import { Option, Venue, Presenter } from './types';
+import { Option, Venue, Presenter, Word, Matches } from './types';
 
 const MEDIA_URL = 'https://media.transcript.fish' as const;
 
@@ -64,4 +64,35 @@ export const formatVenueName = (venue: Venue) => {
 
 export const sortByLabel = (a: Option, b: Option) => {
   return a.label.toLocaleLowerCase().localeCompare(b.label.toLowerCase());
+};
+
+export const makeRowKey = (w: Word) => {
+  return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
+};
+
+const cleanWord = (word: string) => {
+  return word.replace(/[\s.,!?"]/g, '').toLowerCase();
+};
+
+export const findMatches = (words: Word[], searchTerm: string) => {
+  const searchWords = searchTerm.split(' ');
+  return words.reduce(
+    (acc, _, i) => {
+      const matches: Matches = { length: 0 };
+      let j = 0;
+      while (
+        j < searchWords.length &&
+        cleanWord(words[i + j].word) === cleanWord(searchWords[j])
+      ) {
+        matches[i + j] = true;
+        matches.length++;
+        j++;
+      }
+      if (matches.length === searchWords.length) {
+        return Object.assign(acc, matches);
+      }
+      return acc;
+    },
+    { length: searchWords.length } as Matches
+  );
 };

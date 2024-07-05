@@ -1,3 +1,5 @@
+import { Word } from './types';
+
 export interface Presenter {
   id: number;
   firstName: string;
@@ -104,3 +106,9 @@ export interface PaginatorProps {
   totalPages: number;
   onPageChange: (page: number) => void;
 }
+export interface EpisodeTranscriptCellProps {
+  words: Word[];
+  episode: number;
+  searchTerm: string;
+}
+export type Matches = Record<number, boolean> & Record<'length', number>;

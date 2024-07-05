@@ -11,7 +11,7 @@ export const TimePrefixedWord = styled.span<{
   ${({ $found }) =>
     $found &&
     css`
-      background: green;
+      background: #65d665;
     `}
 
   ${({ $showPrefix, $timestamp }) =>
