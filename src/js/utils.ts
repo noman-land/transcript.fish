@@ -70,12 +70,17 @@ export const makeRowKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
 };
 
+const WORD_REGEX = /[\s.,!?-"]/g;
+
 const clean = (word: string) => {
-  return word.replace(/[\s.,!?"]/g, '').toLowerCase();
+  return word.replace(WORD_REGEX, '').toLowerCase();
 };
 
 export const findMatches = (words: Word[], searchTerm: string) => {
-  const searchWords = searchTerm.split(' ');
+  const searchWords = searchTerm
+    .replace(WORD_REGEX, ' ')
+    .split(' ')
+    .filter(n => n);
   return words.reduce((acc, _, i, _words) => {
     const matches: Matches = {};
     let j = 0;
