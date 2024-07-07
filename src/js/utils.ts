@@ -70,7 +70,7 @@ export const makeRowKey = (w: Word) => {
   return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
 };
 
-const WORD_REGEX = /[\s.,!?-"]/g;
+const WORD_REGEX = /[\s.,!?\-"]/g;
 
 const clean = (word: string) => {
   return word.replace(WORD_REGEX, '').toLowerCase();
