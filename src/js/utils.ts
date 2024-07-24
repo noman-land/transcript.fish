@@ -63,7 +63,7 @@ export const formatVenueName = (venue: Venue) => {
 };
 
 export const sortByLabel = (a: Option, b: Option) => {
-  return a.label.toLocaleLowerCase().localeCompare(b.label.toLowerCase());
+  return a.label.toLocaleLowerCase().localeCompare(b.label.toLocaleLowerCase());
 };
 
 export const makeRowKey = (w: Word) => {
