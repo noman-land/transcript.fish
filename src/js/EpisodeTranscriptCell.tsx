@@ -1,11 +1,8 @@
 import styled from 'styled-components';
-import type { Word } from './types';
+import type { EpisodeTranscriptCellProps } from './types';
 import { TimePrefixedWord } from './TimePrefixedWord';
 import { useHighlightWords } from './transcriptHooks';
-
-const makeKey = (w: Word) => {
-  return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
-};
+import { findMatches, makeRowKey } from './utils';
 
 const StyledTd = styled.td`
   padding: 0 3vw 4vw 3vw;
@@ -23,33 +20,32 @@ const StyledTd = styled.td`
   }
 `;
 
-interface EpisodeTranscriptCellProps {
-  words: Word[];
-  episode: number;
-}
-
 export const EpisodeTranscriptCell = ({
   words,
   episode,
+  searchTerm,
 }: EpisodeTranscriptCellProps) => {
   const shouldHighlight = useHighlightWords({
     words,
     episode,
   });
-
+  const matches = findMatches(words, searchTerm);
   return (
     <StyledTd>
       <div className="episode-words">
-        {words.map((word, i) => (
-          <TimePrefixedWord
-            key={makeKey(word)}
-            $timestamp={word.startTime}
-            $showPrefix={i > 0 && i % 200 === 0}
-            style={shouldHighlight(i)}
-          >
-            {word.word}
-          </TimePrefixedWord>
-        ))}
+        {words.map((word, i) => {
+          return (
+            <TimePrefixedWord
+              key={makeRowKey(word)}
+              $timestamp={word.startTime}
+              $showPrefix={i > 0 && i % 200 === 0}
+              style={shouldHighlight(i)}
+              $found={matches[i]}
+            >
+              {word.word}
+            </TimePrefixedWord>
+          );
+        })}
       </div>
     </StyledTd>
   );

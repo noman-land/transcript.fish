@@ -96,6 +96,7 @@ export interface EpisodeSummaryCellProps {
 export interface EpisodeRowProps {
   episode: Episode;
   expanded: boolean;
+  searchTerm: string;
 }
 
 export interface PaginatorProps {
@@ -103,3 +104,11 @@ export interface PaginatorProps {
   totalPages: number;
   onPageChange: (page: number) => void;
 }
+
+export interface EpisodeTranscriptCellProps {
+  words: Word[];
+  episode: number;
+  searchTerm: string;
+}
+
+export type Matches = Record<number, boolean>;

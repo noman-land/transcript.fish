@@ -11,6 +11,7 @@ interface EpisodesTableProps {
   page: number;
   loading: boolean;
   expanded: boolean;
+  searchTerm: string;
 }
 
 const StyledTable = styled.table`
@@ -26,7 +27,7 @@ const LoaderWrapper = styled.div`
 `;
 
 export const EpisodesTable = () => {
-  const { episodes, page, loading, expanded } =
+  const { episodes, page, loading, expanded, searchTerm } =
     useOutletContext<EpisodesTableProps>();
 
   if (loading) {
@@ -52,6 +53,7 @@ export const EpisodesTable = () => {
             <EpisodeRow
               episode={episode}
               key={episode.episode}
+              searchTerm={searchTerm}
               expanded={expanded}
             />
           ))}

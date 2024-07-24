@@ -43,7 +43,11 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
   }
 `;
 
-export const EpisodeRow = ({ episode, expanded }: EpisodeRowProps) => {
+export const EpisodeRow = ({
+  episode,
+  expanded,
+  searchTerm,
+}: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { get: getTranscript, data: transcript } = useTranscript();
 
@@ -71,7 +75,11 @@ export const EpisodeRow = ({ episode, expanded }: EpisodeRowProps) => {
         episode={episode}
       />
       {opened && transcript && (
-        <EpisodeTranscriptCell words={transcript} episode={episode.episode} />
+        <EpisodeTranscriptCell
+          words={transcript}
+          episode={episode.episode}
+          searchTerm={searchTerm}
+        />
       )}
     </TrWithBackground>
   );

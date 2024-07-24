@@ -153,6 +153,7 @@ export const EpisodeSearch = () => {
               loading: episodesLoading,
               page,
               expanded,
+              searchTerm,
             }}
           />
           {totalPages > 1 && !episodesLoading ? (
