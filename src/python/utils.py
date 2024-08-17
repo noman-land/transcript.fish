@@ -38,4 +38,4 @@ def delete_audio(episode_num: int):
         log(episode_num, f'Error deleting {e.filename}: {e.strerror}')
 
 def is_episode(episode):
-    return True if getattr(episode,'itunes_episode', None) else False
+    return True if getattr(episode, 'itunes_episode', None) else False
