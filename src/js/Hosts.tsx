@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { HostIcon } from './HostIcon';
-import { Host } from './types';
+import type { Host } from './types';
 import { hosts } from './constants';
 
 interface HostsProps {

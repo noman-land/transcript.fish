@@ -1,5 +1,5 @@
 import { FormEventHandler, MouseEventHandler } from 'react';
-import { Option, Venue, Presenter, Word, Matches } from './types';
+import type { Option, Venue, Presenter, Word, Matches } from './types';
 
 const MEDIA_URL = 'https://media.transcript.fish' as const;
 

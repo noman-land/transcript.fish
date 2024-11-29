@@ -1,4 +1,4 @@
-import { Host } from './types';
+import type { Host } from './types';
 
 export const PAGE_SIZE = 10;
 

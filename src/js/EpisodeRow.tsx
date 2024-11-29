@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
-import { EpisodeRowProps } from './types';
+import type { EpisodeRowProps } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
 import { makeEpisodeCoverUrl } from './utils';

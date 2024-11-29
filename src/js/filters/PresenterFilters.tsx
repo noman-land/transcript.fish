@@ -1,6 +1,6 @@
 import { useCallback, useContext, useMemo } from 'react';
 import { MultiValue } from 'react-select';
-import { Option, Presenter } from '../types';
+import type { Option, Presenter } from '../types';
 import { formatName } from '../utils';
 import { hosts } from '../constants';
 import { FilterSection } from './FilterSection';

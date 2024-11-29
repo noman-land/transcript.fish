@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react';
 import styled from 'styled-components';
 import { Tags } from './Tags';
-import { EpisodeSummaryCellProps } from './types';
+import type { EpisodeSummaryCellProps } from './types';
 import { Hosts } from './Hosts';
 import { Separator } from './Separator';
 import { formatDate, formatVenueName, stopPropagation } from './utils';

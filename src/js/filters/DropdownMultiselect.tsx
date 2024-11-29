@@ -4,7 +4,7 @@ import Select, {
   StylesConfig,
   GroupBase,
 } from 'react-select';
-import { Option } from '../types';
+import type { Option } from '../types';
 import { Colors } from '../constants';
 
 const customTheme = (theme: Theme) => ({

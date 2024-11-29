@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useOutletContext } from 'react-router';
 import { EmptyState } from './EmptyState';
 import { EpisodeRow } from './EpisodeRow';
-import { Episode } from './types';
+import type { Episode } from './types';
 import { Colors, PAGE_SIZE } from './constants';
 import { Spinner } from './Spinner';
 

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AudioContext } from './audio/AudioContext';
 import { Colors } from './constants';
-import { Word } from './types';
+import type { Word } from './types';
 
 const punc = ['.', '?', '!'];
 

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { mediaUrl } from './utils';
-import { Host } from './types';
+import type { Host } from './types';
 import { Colors } from './constants';
 
 interface HostIconProps {

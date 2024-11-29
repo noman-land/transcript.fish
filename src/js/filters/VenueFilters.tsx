@@ -1,6 +1,6 @@
 import { useCallback, useContext, useMemo } from 'react';
 import { MultiValue } from 'react-select';
-import { Option, Venue } from '../types';
+import type { Option, Venue } from '../types';
 import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
 import { formatVenueName, sortByLabel } from '../utils';

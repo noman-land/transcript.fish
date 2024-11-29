@@ -5,7 +5,7 @@ import {
   useState,
 } from 'react';
 import styled, { css } from 'styled-components';
-import { PaginatorProps } from './types';
+import type { PaginatorProps } from './types';
 import { preventDefault } from './utils';
 
 const StyledPaginator = styled.div`

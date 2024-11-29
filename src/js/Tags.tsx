@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Colors } from './constants';
 import { useContext } from 'react';
 import { FiltersContext } from './filters/FiltersContext';
-import { EpisodeType, EpisodeTypeFiltersState } from './types';
+import type { EpisodeType, EpisodeTypeFiltersState } from './types';
 
 const TagWrapper = styled.div`
   display: flex;

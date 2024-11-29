@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import styled from 'styled-components';
-import { SearchFilterLabels, SearchField, SelectedOption } from '../types';
+import type { SearchFilterLabels, SearchField, SelectedOption } from '../types';
 import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
 

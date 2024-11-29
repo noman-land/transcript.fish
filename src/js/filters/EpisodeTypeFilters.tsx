@@ -1,6 +1,10 @@
 import { useCallback, useContext } from 'react';
 import { FilterSection } from './FilterSection';
-import { EpisodeType, EpisodeTypeFilterLabels, SelectedOption } from '../types';
+import type {
+  EpisodeType,
+  EpisodeTypeFilterLabels,
+  SelectedOption,
+} from '../types';
 import styled from 'styled-components';
 import { FiltersContext } from './FiltersContext';
 

@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 import { useParams } from 'react-router';
-import {
+import type {
   Episode,
   EpisodeType,
   EpisodeTypeFiltersState,

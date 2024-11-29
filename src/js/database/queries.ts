@@ -1,5 +1,5 @@
 import { createDbWorker } from 'sql.js-httpvfs';
-import {
+import type {
   Episode,
   Presenter,
   SearchEpisodeWords,
