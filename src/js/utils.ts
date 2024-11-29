@@ -30,13 +30,13 @@ export const formatDuration = (duration: number) => {
   return `${Math.floor(duration / 60)} minutes`;
 };
 
+const zeroPad = (num: number) => {
+  return Math.floor(num).toString().padStart(2, '0');
+};
+
 export const formatTimestamp = (duration: number) => {
-  const minutes = Math.floor(duration / 60)
-    .toString()
-    .padStart(2, '0');
-  const seconds = Math.floor(duration % 60)
-    .toString()
-    .padStart(2, '0');
+  const minutes = zeroPad(duration / 60);
+  const seconds = zeroPad(duration % 60);
   return `${minutes}:${seconds}`;
 };
 
@@ -57,9 +57,10 @@ export const formatName = ({ firstName, middleName, lastName }: Presenter) =>
   [firstName, middleName, lastName].filter(n => n).join(' ');
 
 export const formatVenueName = (venue: Venue) => {
-  return `${venue.name} (${[venue.region, venue.city, venue.state]
+  const location = [venue.region, venue.city, venue.state]
     .filter(n => n)
-    .join(', ')})`;
+    .join(', ');
+  return `${venue.name} (${location})`;
 };
 
 export const sortByLabel = (a: Option, b: Option) => {
