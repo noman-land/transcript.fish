@@ -50,3 +50,7 @@ h3,
 .bold {
   font-family: TTB, 'Courier New', Courier, monospace;
 }
+
+.align-right {
+  text-align: right;
+}

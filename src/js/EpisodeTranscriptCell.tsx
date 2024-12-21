@@ -29,9 +29,15 @@ export const EpisodeTranscriptCell = ({
     words,
     episode,
   });
-  const matches = findMatches(words, searchTerm);
+  const { matches, occurences } = findMatches(words, searchTerm);
   return (
     <StyledTd>
+      {searchTerm && (
+        <p className="bold align-right">
+          found {occurences} utterance{occurences === 1 ? '' : 's'} of "
+          {searchTerm}"
+        </p>
+      )}
       <div className="episode-words">
         {words.map((word, i) => {
           return (
