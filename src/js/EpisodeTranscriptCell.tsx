@@ -3,6 +3,7 @@ import type { EpisodeTranscriptCellProps } from './types';
 import { TimePrefixedWord } from './TimePrefixedWord';
 import { useHighlightWords } from './transcriptHooks';
 import { findMatches, makeRowKey } from './utils';
+import { Occurrences } from './Occurrences';
 
 const StyledTd = styled.td`
   padding: 0 3vw 4vw 3vw;
@@ -33,10 +34,7 @@ export const EpisodeTranscriptCell = ({
   return (
     <StyledTd>
       {searchTerm && (
-        <p className="bold align-right">
-          found {occurrences} utterance{occurrences === 1 ? '' : 's'} of "
-          {searchTerm}"
-        </p>
+        <Occurrences searchTerm={searchTerm} occurrences={occurrences} />
       )}
       <div className="episode-words">
         {words.map((word, i) => {
