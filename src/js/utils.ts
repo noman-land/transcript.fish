@@ -82,7 +82,8 @@ export const findMatches = (words: Word[], searchTerm: string) => {
     .replace(WORD_REGEX, ' ')
     .split(' ')
     .filter(n => n);
-  return words.reduce((acc, _, i, _words) => {
+
+  const allMatches = words.reduce((acc, _, i, _words) => {
     const matches: Matches = {};
     let j = 0;
     while (
@@ -97,4 +98,9 @@ export const findMatches = (words: Word[], searchTerm: string) => {
     }
     return acc;
   }, {} as Matches);
+
+  return {
+    matches: allMatches,
+    occurrences: Object.keys(allMatches).length / searchWords.length,
+  };
 };
