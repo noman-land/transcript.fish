@@ -101,6 +101,6 @@ export const findMatches = (words: Word[], searchTerm: string) => {
 
   return {
     matches: allMatches,
-    occurences: Object.keys(allMatches).length / searchWords.length,
+    occurrences: Object.keys(allMatches).length / searchWords.length,
   };
 };
