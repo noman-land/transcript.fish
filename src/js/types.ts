@@ -22,8 +22,8 @@ export interface Episode {
   presenter4: number;
   presenter5: number;
   venue: number;
-  live: number;
-  compilation: number;
+  live: 0 | 1;
+  compilation: 0 | 1;
 }
 
 export interface Word {

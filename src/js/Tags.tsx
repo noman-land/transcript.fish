@@ -26,8 +26,8 @@ const Tag = styled.button`
 `;
 
 interface TagsProps {
-  live: number;
-  compilation: number;
+  live: 0 | 1;
+  compilation: 0 | 1;
 }
 
 export const Tags = ({ live, compilation }: TagsProps) => {
