@@ -4,10 +4,10 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { UnderConstructionBanner } from './UnderConstructionBanner';
 import { EpisodeSearchFallback } from './EpisodeSearchFallback';
 import { mediaUrl } from './utils';
-import { AudioContextWrapper } from './audio/AudioContext';
+import { AudioContextProvider } from './audio/AudioContextProvider';
 import { Colors } from './constants';
-import { FiltersContextProvider } from './filters/FiltersContext';
-import { DatabaseProvider } from './database/DatabaseProvider';
+import { FiltersContextProvider } from './filters/FiltersContextProvider';
+import { DatabaseContextProvider } from './database/DatabaseContextProvider';
 import { Header } from './Header';
 
 const Wrapper = styled.div`
@@ -53,17 +53,14 @@ const Wrapper = styled.div`
 export const App = () => {
   return (
     <Wrapper>
-      <DatabaseProvider>
-        <AudioContextWrapper>
+      <DatabaseContextProvider>
+        <AudioContextProvider>
           <>
             <Header />
             <div className="app-body">
               <h1>transcript.fish</h1>
               <UnderConstructionBanner />
-              <img
-                className="logo"
-                src={mediaUrl.images('logo-transparent.png')}
-              />
+              <img className="logo" src={mediaUrl.images('logo-transparent.png')} />
               <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
                 <FiltersContextProvider>
                   <Outlet />
@@ -71,8 +68,8 @@ export const App = () => {
               </ErrorBoundary>
             </div>
           </>
-        </AudioContextWrapper>
-      </DatabaseProvider>
+        </AudioContextProvider>
+      </DatabaseContextProvider>
     </Wrapper>
   );
 };

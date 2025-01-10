@@ -33,13 +33,12 @@ export const EpisodeTranscriptCell = ({
   const { matches, occurrences } = findMatches(words, searchTerm);
   return (
     <StyledTd>
-      {searchTerm && (
-        <Occurrences searchTerm={searchTerm} occurrences={occurrences} />
-      )}
+      {searchTerm && <Occurrences searchTerm={searchTerm} occurrences={occurrences} />}
       <div className="episode-words">
         {words.map((word, i) => {
           return (
             <TimePrefixedWord
+              id={`${episode}-${i}`}
               key={makeRowKey(word)}
               $timestamp={word.startTime}
               $showPrefix={i > 0 && i % 200 === 0}

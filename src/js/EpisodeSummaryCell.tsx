@@ -6,7 +6,7 @@ import { Hosts } from './Hosts';
 import { Separator } from './Separator';
 import { formatDate, formatVenueName, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
-import { DatabaseContext } from './database/DatabaseProvider';
+import { DatabaseContext } from './database/DatabaseContext';
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
   display: flex;
@@ -111,10 +111,7 @@ export const EpisodeSummaryCell = ({
       <div>{formatDate(pubDate)}</div>
       <div>{venueText}</div>
       <Hosts $presenters={presenters} />
-      <Description
-        onClick={stopPropagation}
-        dangerouslySetInnerHTML={{ __html: description }}
-      />
+      <Description onClick={stopPropagation} dangerouslySetInnerHTML={{ __html: description }} />
       <AudioControls episodeNum={episodeNum} duration={duration} />
       {isOpen && <Separator />}
     </StyledTd>

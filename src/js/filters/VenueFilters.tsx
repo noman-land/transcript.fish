@@ -5,7 +5,7 @@ import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
 import { formatVenueName, sortByLabel } from '../utils';
 import { DropdownMultiselect } from './DropdownMultiselect';
-import { DatabaseContext } from '../database/DatabaseProvider';
+import { DatabaseContext } from '../database/DatabaseContext';
 
 const nothingFound = () => 'Nothing found';
 
@@ -26,17 +26,14 @@ export const VenueFilters = () => {
   );
 
   const options = useMemo(() => {
-    const groupedOptions = Object.entries(venues || {}).reduce(
-      (accum, [, venue]) => {
-        if (accum[venue.country]) {
-          accum[venue.country].push(venue);
-        } else {
-          accum[venue.country] = [venue];
-        }
-        return accum;
-      },
-      {} as GroupedVenueOptions
-    );
+    const groupedOptions = Object.entries(venues || {}).reduce((accum, [, venue]) => {
+      if (accum[venue.country]) {
+        accum[venue.country].push(venue);
+      } else {
+        accum[venue.country] = [venue];
+      }
+      return accum;
+    }, {} as GroupedVenueOptions);
 
     return Object.entries(groupedOptions)
       .sort(([a], [b]) => a.localeCompare(b))

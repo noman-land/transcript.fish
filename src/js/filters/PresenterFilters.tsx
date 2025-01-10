@@ -7,7 +7,7 @@ import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
 import { DropdownMultiselect } from './DropdownMultiselect';
 import { sortByLabel } from '../utils';
-import { DatabaseContext } from '../database/DatabaseProvider';
+import { DatabaseContext } from '../database/DatabaseContext';
 
 const noOneFound = () => 'No one found';
 
