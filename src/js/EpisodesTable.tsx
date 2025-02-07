@@ -27,8 +27,7 @@ const LoaderWrapper = styled.div`
 `;
 
 export const EpisodesTable = () => {
-  const { episodes, page, loading, expanded, searchTerm } =
-    useOutletContext<EpisodesTableProps>();
+  const { episodes, page, loading, expanded, searchTerm } = useOutletContext<EpisodesTableProps>();
 
   if (loading) {
     return (
@@ -39,24 +38,20 @@ export const EpisodesTable = () => {
   }
 
   if (!episodes.length) {
-    return (
-      <EmptyState title="No results found" body="Try doing another search." />
-    );
+    return <EmptyState title="No results found" body="Try doing another search." />;
   }
 
   return (
     <StyledTable>
       <tbody>
-        {episodes
-          .slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
-          .map(episode => (
-            <EpisodeRow
-              episode={episode}
-              key={episode.episode}
-              searchTerm={searchTerm}
-              expanded={expanded}
-            />
-          ))}
+        {episodes.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE).map(episode => (
+          <EpisodeRow
+            episode={episode}
+            key={episode.episode}
+            searchTerm={searchTerm}
+            expanded={expanded}
+          />
+        ))}
       </tbody>
     </StyledTable>
   );

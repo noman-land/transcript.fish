@@ -43,11 +43,7 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
   }
 `;
 
-export const EpisodeRow = ({
-  episode,
-  expanded,
-  searchTerm,
-}: EpisodeRowProps) => {
+export const EpisodeRow = ({ episode, expanded, searchTerm }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { get: getTranscript, data: transcript } = useTranscript();
 
@@ -69,11 +65,7 @@ export const EpisodeRow = ({
       $image={makeEpisodeCoverUrl(episode.episode, episode.image)}
       key={episode.episode}
     >
-      <EpisodeSummaryCell
-        isOpen={opened}
-        onClick={handleClick}
-        episode={episode}
-      />
+      <EpisodeSummaryCell isOpen={opened} onClick={handleClick} episode={episode} />
       {opened && transcript && (
         <EpisodeTranscriptCell
           words={transcript}

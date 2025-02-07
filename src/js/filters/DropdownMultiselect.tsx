@@ -1,9 +1,4 @@
-import Select, {
-  MultiValue,
-  Theme,
-  StylesConfig,
-  GroupBase,
-} from 'react-select';
+import Select, { MultiValue, Theme, StylesConfig, GroupBase } from 'react-select';
 import type { Option } from '../types';
 import { Colors } from '../constants';
 

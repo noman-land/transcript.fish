@@ -1,12 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import type {
-  Episode,
-  Presenter,
-  SearchFiltersState,
-  SearchResults,
-  Venue,
-  Word,
-} from '../types';
+import type { Episode, Presenter, SearchFiltersState, SearchResults, Venue, Word } from '../types';
 import {
   resetDbWorker,
   selectEpisodes,
@@ -42,55 +35,47 @@ export const useEpisodes: UseEpisodes = () => {
 
   const filteredEpisodes = useMemo(
     () =>
-      searchResults
-        ? (episodes || []).filter(({ episode }) => searchResults[episode])
-        : episodes,
+      searchResults ? (episodes || []).filter(({ episode }) => searchResults[episode]) : episodes,
     [episodes, searchResults]
   );
 
-  const search = useCallback(
-    (searchTerm: string, selectedFilters: SearchFiltersState) => {
-      setError(undefined);
-      if (!searchTerm) {
-        setSearchResults(undefined);
-        return;
-      }
-      setLoading(true);
-      searchEpisodeWords(searchTerm, selectedFilters)
-        .then(results => {
-          const normalized = results.reduce<SearchResults>(
-            (accum, { episode }) => {
-              accum[episode] = true;
-              return accum;
-            },
-            {}
-          );
-          setSearchResults(normalized);
-        })
-        .catch(async (e: Error) => {
-          console.error(e);
+  const search = useCallback((searchTerm: string, selectedFilters: SearchFiltersState) => {
+    setError(undefined);
+    if (!searchTerm) {
+      setSearchResults(undefined);
+      return;
+    }
+    setLoading(true);
+    searchEpisodeWords(searchTerm, selectedFilters)
+      .then(results => {
+        const normalized = results.reduce<SearchResults>((accum, { episode }) => {
+          accum[episode] = true;
+          return accum;
+        }, {});
+        setSearchResults(normalized);
+      })
+      .catch(async (e: Error) => {
+        console.error(e);
 
-          if (e.message.includes('doXHR failed (bug)!')) {
-            setError(new Error('Problem while searching', { cause: e }));
-            return await resetDbWorker();
-          }
+        if (e.message.includes('doXHR failed (bug)!')) {
+          setError(new Error('Problem while searching', { cause: e }));
+          return await resetDbWorker();
+        }
 
-          if (e.message.includes('recursively defined fts5 content table')) {
-            setError(new Error('Problem while searching', { cause: e }));
-            return await resetDbWorker();
-          }
+        if (e.message.includes('recursively defined fts5 content table')) {
+          setError(new Error('Problem while searching', { cause: e }));
+          return await resetDbWorker();
+        }
 
-          if (e.message.includes('syntax error near')) {
-            setError(new Error(e.message, { cause: e }));
-            return;
-          }
+        if (e.message.includes('syntax error near')) {
+          setError(new Error(e.message, { cause: e }));
+          return;
+        }
 
-          setError(e);
-        })
-        .finally(() => setLoading(false));
-    },
-    []
-  );
+        setError(e);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   return useMemo(
     () => ({

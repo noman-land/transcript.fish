@@ -1,9 +1,4 @@
-import {
-  ChangeEventHandler,
-  KeyboardEventHandler,
-  useEffect,
-  useState,
-} from 'react';
+import { ChangeEventHandler, KeyboardEventHandler, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import type { PaginatorProps } from './types';
 import { preventDefault } from './utils';
@@ -91,11 +86,7 @@ const Button = styled.button`
         `}
 `;
 
-export const Paginator = ({
-  page,
-  totalPages,
-  onPageChange,
-}: PaginatorProps) => {
+export const Paginator = ({ page, totalPages, onPageChange }: PaginatorProps) => {
   const [localValue, setLocalValue] = useState<number | ''>(page);
   const isFirstPage = page === 0;
   const isLastPage = page === totalPages - 1;
@@ -135,18 +126,10 @@ export const Paginator = ({
 
   return (
     <StyledPaginator>
-      <Button
-        name="first-page"
-        disabled={isFirstPage}
-        onClick={() => onPageChange(0)}
-      >
+      <Button name="first-page" disabled={isFirstPage} onClick={() => onPageChange(0)}>
         {'<<'}
       </Button>
-      <Button
-        name="previous-page"
-        disabled={isFirstPage}
-        onClick={() => onPageChange(page - 1)}
-      >
+      <Button name="previous-page" disabled={isFirstPage} onClick={() => onPageChange(page - 1)}>
         {'<'}
       </Button>
       <PageNumbers>
@@ -162,18 +145,10 @@ export const Paginator = ({
         </PageNumber>
         <span className="total-pages">of {totalPages}</span>
       </PageNumbers>
-      <Button
-        name="next-page"
-        disabled={isLastPage}
-        onClick={() => onPageChange(page + 1)}
-      >
+      <Button name="next-page" disabled={isLastPage} onClick={() => onPageChange(page + 1)}>
         {'>'}
       </Button>
-      <Button
-        name="last-page"
-        disabled={isLastPage}
-        onClick={() => onPageChange(totalPages - 1)}
-      >
+      <Button name="last-page" disabled={isLastPage} onClick={() => onPageChange(totalPages - 1)}>
         {'>>'}
       </Button>
     </StyledPaginator>

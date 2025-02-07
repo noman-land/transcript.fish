@@ -8,7 +8,5 @@ export const AudioPlayer = ({
   audioRef: Ref<HTMLAudioElement>;
   episodeNum: number;
 }) => {
-  return (
-    <audio src={mediaUrl.audio(episodeNum)} ref={audioRef} autoPlay={true} />
-  );
+  return <audio src={mediaUrl.audio(episodeNum)} ref={audioRef} autoPlay={true} />;
 };
