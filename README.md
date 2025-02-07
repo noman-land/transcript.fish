@@ -46,7 +46,7 @@ Run `npm run convert`
 
 **Warning**: This will take a long time
 
-**NOTE** The first time this script is run, it needs to download the Whisper model, which requires [`local_files_only`](./src/python/whisper.py#L13) to be temporarily set to `False` . After this, the option can be changed back to `True`.
+**NOTE** The first time this script is run, it needs to download the Whisper model, which requires [`local_files_only`](./src/python/whisper.py#L13) to be temporarily set to `False`. After this, the option can be changed back to `True`.
 
 ### Changing whisper model size for faster but less accurate performance
 
