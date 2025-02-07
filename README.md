@@ -74,7 +74,7 @@ The good news is changing to the `medium.en`, `small.en`, or `tiny.en` model inc
 
 The other good news is that the convert script is idempotent in that you can kill the script (`Ctrl + C`) and restart it at any time and it will pick back up after the last fully transcribed episode. You can safely run this script over and over without creating any duplicates.
 
-**NOTE:** This script also [downloads](/src/python/convert.py#L25) all the audio files for the episodes as well as each episode's album art. As of 8 February 2025 this amounts to 569 episodes, ~24.2GB audio, ~190MB images.
+**NOTE:** This script also [downloads](/src/python/convert.py#L25) all the audio files for the episodes as well as each episode's album art. As of 8 February 2025 this amounts to 568 episodes, ~24.2GB audio, ~190MB images.
 
 ### 3. Split database into chunks
 
