@@ -82,7 +82,7 @@ Run `npm run split`
 
 ## Deploying
 
-### 1. Sync database, audio, images, and fonts to (Cloudflare) R2
+### Sync database, audio, images, and fonts to (Cloudflare) R2
 
 Needs [`rclone`](https://rclone.org/) and [`jq`](https://jqlang.github.io/jq/) installed.
 
