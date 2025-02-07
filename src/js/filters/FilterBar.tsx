@@ -5,6 +5,7 @@ import { EpisodeTypeFilters } from './EpisodeTypeFilters';
 import { PresenterFilters } from './PresenterFilters';
 import { FiltersToggle } from './FiltersToggle';
 import { VenueFilters } from './VenueFilters';
+import { CityFilters } from './CityFilters';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -46,6 +47,7 @@ export const FilterBar = () => {
           <EpisodeTypeFilters />
           <PresenterFilters />
           <VenueFilters />
+          <CityFilters />
         </FiltersWrapper>
       )}
     </StyledWrapper>
