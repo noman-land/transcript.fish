@@ -57,9 +57,7 @@ export const formatName = ({ firstName, middleName, lastName }: Presenter) =>
   [firstName, middleName, lastName].filter(n => n).join(' ');
 
 export const formatVenueName = (venue: Venue) => {
-  const location = [venue.region, venue.city, venue.state]
-    .filter(n => n)
-    .join(', ');
+  const location = [venue.region, venue.city, venue.state].filter(n => n).join(', ');
   return `${venue.name} (${location})`;
 };
 
@@ -86,10 +84,7 @@ export const findMatches = (words: Word[], searchTerm: string) => {
   const allMatches = words.reduce((acc, _, i, _words) => {
     const matches: Matches = {};
     let j = 0;
-    while (
-      j < searchWords.length &&
-      clean(_words[i + j].word) === clean(searchWords[j])
-    ) {
+    while (j < searchWords.length && clean(_words[i + j].word) === clean(searchWords[j])) {
       matches[i + j] = true;
       j++;
     }

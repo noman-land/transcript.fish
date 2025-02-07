@@ -12,13 +12,7 @@ const StyledButton = styled.button`
   padding: 1rem 1rem 0.6rem 0;
 `;
 
-export const FiltersToggle = ({
-  isOpen,
-  onToggle,
-}: {
-  isOpen: boolean;
-  onToggle: () => void;
-}) => {
+export const FiltersToggle = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => {
   const { numFiltersAltered } = useContext(FiltersContext);
   const numAltered = !!numFiltersAltered && `(${numFiltersAltered})`;
   return (

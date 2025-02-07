@@ -72,10 +72,7 @@ const Timeline = styled.span<{
     $unplayed &&
     css`
       justify-content: flex-start;
-      background-image: radial-gradient(
-        ${Colors.night} 1px,
-        ${Colors.citrineDark} 1.5px
-      );
+      background-image: radial-gradient(${Colors.night} 1px, ${Colors.citrineDark} 1.5px);
       background-size: 5px 5px;
       border: none;
       margin-right: 1rem;
@@ -105,13 +102,9 @@ const Icon = styled.img`
   }
 `;
 
-const PlayIcon = () => (
-  <Icon alt="play icon" src={mediaUrl.images('icons/play.svg')} />
-);
+const PlayIcon = () => <Icon alt="play icon" src={mediaUrl.images('icons/play.svg')} />;
 
-const PauseIcon = () => (
-  <Icon alt="pause icon" src={mediaUrl.images('icons/pause.svg')} />
-);
+const PauseIcon = () => <Icon alt="pause icon" src={mediaUrl.images('icons/pause.svg')} />;
 
 interface AudioTimelineProps {
   onSkipBack: MouseEventHandler<HTMLSpanElement>;
@@ -133,14 +126,10 @@ const AudioTimeline = ({
   return (
     <>
       <Timeline onClick={onSkipBack} $grow={currentTime} $ended={ended}>
-        {halfwayDone && !ended && (
-          <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
-        )}
+        {halfwayDone && !ended && <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>}
       </Timeline>
       <Timeline onClick={onSkipForward} $grow={timeLeft} $unplayed={true}>
-        {!halfwayDone && (
-          <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>
-        )}
+        {!halfwayDone && <CurrentTime>{formatTimestamp(currentTime)}</CurrentTime>}
       </Timeline>
       {formatTimestamp(duration)}
     </>
@@ -156,19 +145,13 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
   const { isPlaying, playPause, currentTime, playingEpisode, seek, ended } =
     useContext(AudioContext);
 
-  const handleSkipBack: MouseEventHandler<HTMLSpanElement> = ({
-    clientX,
-    currentTarget,
-  }) => {
+  const handleSkipBack: MouseEventHandler<HTMLSpanElement> = ({ clientX, currentTarget }) => {
     const { left, width } = currentTarget.getBoundingClientRect();
     const newTime = ((clientX - left) / width) * currentTime;
     seek(newTime);
   };
 
-  const handleSkipForward: MouseEventHandler<HTMLSpanElement> = ({
-    clientX,
-    currentTarget,
-  }) => {
+  const handleSkipForward: MouseEventHandler<HTMLSpanElement> = ({ clientX, currentTarget }) => {
     const { left, width } = currentTarget.getBoundingClientRect();
     const newTime = ((clientX - left) / width) * (duration - currentTime);
     seek(currentTime + newTime);

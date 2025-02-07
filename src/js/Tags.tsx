@@ -51,9 +51,7 @@ export const Tags = ({ live, compilation }: TagsProps) => {
     (isLive || isComp) && (
       <TagWrapper>
         {isLive && <Tag onClick={makeTagClickHandler('live')}>Live</Tag>}
-        {isComp && (
-          <Tag onClick={makeTagClickHandler('compilation')}>Compilation</Tag>
-        )}
+        {isComp && <Tag onClick={makeTagClickHandler('compilation')}>Compilation</Tag>}
       </TagWrapper>
     )
   );
