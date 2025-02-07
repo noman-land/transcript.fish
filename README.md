@@ -76,7 +76,7 @@ The other good news is that the convert script is idempotent in that you can kil
 
 **NOTE:** This script also [downloads](/src/python/convert.py#L25) all the audio files for the episodes as well as each episode's album art. As of 8 February 2025 this amounts to 568 episodes, ~24.2GB audio, ~190MB images.
 
-### 3. Split database into chunks
+### Split database into chunks
 
 Run `npm run split`
 
