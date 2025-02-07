@@ -7,6 +7,7 @@
   "scripts": {
     "convert": "python src/python/main.py",
     "dev": "vite",
+    "start": "npm run dev",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint --ext ts,tsx --report-unused-disable-directives --max-warnings 0 .",
@@ -14,18 +15,20 @@
     "prettier": "npx prettier --check .",
     "prettier:write": "npx prettier --write .",
     "prepare": "husky install",
-    "split:db": "./scripts/create_db.sh",
+    "split": "./scripts/create_db.sh",
     "sync:db": "rclone sync -P ./db cf:transcript-fish/db/",
     "sync:audio": "rclone sync -P ./audio cf:transcript-fish/audio/",
     "sync:images": "rclone sync -P ./images cf:transcript-fish/images/",
     "sync:fonts": "rclone sync -P ./fonts cf:transcript-fish/fonts/",
     "sync": "npm run sync:fonts && npm run sync:images && npm run sync:audio && npm run sync:db",
-    "all": "npm run convert && npm run split:db && npm run sync"
+    "all": "npm run convert && npm run split && npm run sync"
   },
   "author": "Noman",
   "license": "MIT",
   "dependencies": {
     "react-error-boundary": "^4.0.10",
+    "react-router": "^6.20.0",
+    "react-router-dom": "^6.20.0",
     "react-select": "^5.7.7",
     "sql.js-httpvfs": "^0.8.12",
     "sqlite3": "^5.1.6",

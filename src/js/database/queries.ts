@@ -1,5 +1,5 @@
 import { createDbWorker } from 'sql.js-httpvfs';
-import {
+import type {
   Episode,
   Presenter,
   SearchEpisodeWords,
@@ -8,16 +8,13 @@ import {
   SearchFiltersState,
   Word,
   Venue,
-} from './types';
-import { mediaUrl } from './utils';
+} from '../types';
+import { mediaUrl } from '../utils';
 
 const response = await fetch(mediaUrl.db(`latest.json?t=${Date.now()}`));
 const { latest } = await response.json();
 
-const workerUrl = new URL(
-  'sql.js-httpvfs/dist/sqlite.worker.js',
-  import.meta.url
-);
+const workerUrl = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
 const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
 
 const createWorker = async () =>
@@ -51,10 +48,7 @@ export const selectPresenters: SelectPresenters = () => {
       .query(selectPresentersQuery)
       .then(presenters => resolve(presenters as Presenter[]), reject)
       .catch((err: Error) =>
-        console.error(
-          'Something unexpected happened while getting presenters from database.',
-          err
-        )
+        console.error('Something unexpected happened while getting presenters from database.', err)
       );
   });
 };
@@ -76,10 +70,7 @@ export const selectVenues: SelectVenues = () => {
       .query(selectVenuesQuery)
       .then(venues => resolve(venues as Venue[]), reject)
       .catch((err: Error) =>
-        console.error(
-          'Something unexpected happened while getting venues from database.',
-          err
-        )
+        console.error('Something unexpected happened while getting venues from database.', err)
       );
   });
 };
@@ -114,10 +105,7 @@ export const selectEpisodes: SelectEpisodes = () => {
       .query(selectEpisodesQuery)
       .then(episodes => resolve(episodes.reverse() as Episode[]), reject)
       .catch((err: Error) =>
-        console.error(
-          'Something unexpected happened while getting episodes from database.',
-          err
-        )
+        console.error('Something unexpected happened while getting episodes from database.', err)
       );
   });
 };
@@ -163,10 +151,7 @@ const makeSearchFilters = (searchTerm: string, filters: SearchFiltersState) => {
     .join(' OR ');
 };
 
-export const searchEpisodeWords: SearchEpisodeWords = async (
-  searchTerm,
-  filters
-) => {
+export const searchEpisodeWords: SearchEpisodeWords = async (searchTerm, filters) => {
   const filtersQuery = makeSearchFilters(searchTerm, filters);
   if (!filtersQuery) {
     return Promise.resolve([]);
@@ -177,10 +162,7 @@ export const searchEpisodeWords: SearchEpisodeWords = async (
       .query(query)
       .then(episodes => resolve(episodes as SearchEpisodeWordsResult[]), reject)
       .catch((err: Error) => {
-        console.error(
-          'Something unexpected happened while searching the database.\n\n',
-          err
-        );
+        console.error('Something unexpected happened while searching the database.\n\n', err);
       });
   });
 };

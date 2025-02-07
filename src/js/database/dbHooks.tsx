@@ -1,12 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Episode,
-  Presenter,
-  SearchFiltersState,
-  SearchResults,
-  Venue,
-  Word,
-} from './types';
+import { useCallback, useMemo, useState } from 'react';
+import type { Episode, Presenter, SearchFiltersState, SearchResults, Venue, Word } from '../types';
 import {
   resetDbWorker,
   selectEpisodes,
@@ -14,9 +7,18 @@ import {
   selectEpisodeWords,
   selectPresenters,
   selectVenues,
-} from './database';
+} from './queries';
 
-const useEpisodes = () => {
+export type UseEpisodes = () => {
+  total?: number;
+  data?: Episode[];
+  error?: Error;
+  loading: boolean;
+  get: () => void;
+  search: (searchTerm: string, selectedFilters: SearchFiltersState) => void;
+};
+
+export const useEpisodes: UseEpisodes = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [episodes, setEpisodes] = useState<Episode[]>();
@@ -33,55 +35,47 @@ const useEpisodes = () => {
 
   const filteredEpisodes = useMemo(
     () =>
-      searchResults
-        ? (episodes || []).filter(({ episode }) => searchResults[episode])
-        : episodes,
+      searchResults ? (episodes || []).filter(({ episode }) => searchResults[episode]) : episodes,
     [episodes, searchResults]
   );
 
-  const search = useCallback(
-    (searchTerm: string, selectedFilters: SearchFiltersState) => {
-      setError(undefined);
-      if (!searchTerm) {
-        setSearchResults(undefined);
-        return;
-      }
-      setLoading(true);
-      searchEpisodeWords(searchTerm, selectedFilters)
-        .then(results => {
-          const normalized = results.reduce<SearchResults>(
-            (accum, { episode }) => {
-              accum[episode] = true;
-              return accum;
-            },
-            {}
-          );
-          setSearchResults(normalized);
-        })
-        .catch(async (e: Error) => {
-          console.error(e);
+  const search = useCallback((searchTerm: string, selectedFilters: SearchFiltersState) => {
+    setError(undefined);
+    if (!searchTerm) {
+      setSearchResults(undefined);
+      return;
+    }
+    setLoading(true);
+    searchEpisodeWords(searchTerm, selectedFilters)
+      .then(results => {
+        const normalized = results.reduce<SearchResults>((accum, { episode }) => {
+          accum[episode] = true;
+          return accum;
+        }, {});
+        setSearchResults(normalized);
+      })
+      .catch(async (e: Error) => {
+        console.error(e);
 
-          if (e.message.includes('doXHR failed (bug)!')) {
-            setError(new Error('Problem while searching', { cause: e }));
-            return await resetDbWorker();
-          }
+        if (e.message.includes('doXHR failed (bug)!')) {
+          setError(new Error('Problem while searching', { cause: e }));
+          return await resetDbWorker();
+        }
 
-          if (e.message.includes('recursively defined fts5 content table')) {
-            setError(new Error('Problem while searching', { cause: e }));
-            return await resetDbWorker();
-          }
+        if (e.message.includes('recursively defined fts5 content table')) {
+          setError(new Error('Problem while searching', { cause: e }));
+          return await resetDbWorker();
+        }
 
-          if (e.message.includes('syntax error near')) {
-            setError(new Error(e.message, { cause: e }));
-            return;
-          }
+        if (e.message.includes('syntax error near')) {
+          setError(new Error(e.message, { cause: e }));
+          return;
+        }
 
-          setError(e);
-        })
-        .finally(() => setLoading(false));
-    },
-    []
-  );
+        setError(e);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   return useMemo(
     () => ({
@@ -98,7 +92,14 @@ const useEpisodes = () => {
 
 type PresentersState = Record<number, Presenter>;
 
-const usePresenters = () => {
+export type UsePresenters = () => {
+  data?: PresentersState;
+  error?: Error;
+  loading: boolean;
+  get: () => void;
+};
+
+export const usePresenters: UsePresenters = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [presenters, setPresenters] = useState<PresentersState>();
@@ -131,7 +132,14 @@ const usePresenters = () => {
 
 type VenuesState = Record<number, Venue>;
 
-const useVenues = () => {
+export type UseVenues = () => {
+  data?: VenuesState;
+  error?: Error;
+  loading: boolean;
+  get: () => void;
+};
+
+export const useVenues = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [venues, setVenues] = useState<VenuesState>();
@@ -162,7 +170,14 @@ const useVenues = () => {
   );
 };
 
-const useTranscript = () => {
+export type UseTranscript = () => {
+  data?: Word[];
+  error?: Error;
+  loading: boolean;
+  get: (episodeNum: number) => void;
+};
+
+export const useTranscript = () => {
   const [error, setError] = useState<Error>();
   const [loading, setLoading] = useState(false);
   const [transcript, setTranscript] = useState<Word[]>();
@@ -185,24 +200,4 @@ const useTranscript = () => {
     }),
     [transcript, error, loading, getTranscript]
   );
-};
-
-export const useDb = () => {
-  const { get: getEpisodes, ...episodes } = useEpisodes();
-  const { get: getPresenters, ...presenters } = usePresenters();
-  const { get: getVenues, ...venues } = useVenues();
-  const transcript = useTranscript();
-
-  useEffect(() => {
-    getPresenters();
-    getEpisodes();
-    getVenues();
-  }, [getPresenters, getEpisodes, getVenues]);
-
-  return {
-    presenters,
-    episodes,
-    transcript,
-    venues,
-  };
 };

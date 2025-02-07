@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { FilterSection } from './FilterSection';
-import { EpisodeType, EpisodeTypeFilterLabels, SelectedOption } from '../types';
+import type { EpisodeType, EpisodeTypeFilterLabels, SelectedOption } from '../types';
 import styled from 'styled-components';
 import { FiltersContext } from './FiltersContext';
 
@@ -34,8 +34,7 @@ const filterLabels: EpisodeTypeFilterLabels = {
 };
 
 export const EpisodeTypeFilters = () => {
-  const { episodeTypeFilters, handleEpisodeTypeFilterToggle } =
-    useContext(FiltersContext);
+  const { episodeTypeFilters, handleEpisodeTypeFilterToggle } = useContext(FiltersContext);
 
   const handleToggle = useCallback(
     ({ target }: { target: SelectedOption<string> }) => {

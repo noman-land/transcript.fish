@@ -1,18 +1,18 @@
 import { useCallback, useContext, useMemo } from 'react';
 import { MultiValue } from 'react-select';
-import { Option, Venue } from '../types';
-import { useDb } from '../dbHooks';
+import { Option } from '../types';
+
 import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
-import { formatVenueName, sortByLabel } from '../utils';
 import { DropdownMultiselect } from './DropdownMultiselect';
+import { DatabaseContext } from '../database/DatabaseContext';
 
 const nothingFound = () => 'Nothing found';
 
 export const CityFilters = () => {
   const {
     venues: { data: venues },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
   const { cityFilters, setCityFilters } = useContext(FiltersContext);
 
@@ -24,15 +24,20 @@ export const CityFilters = () => {
   );
 
   const options = useMemo(() => {
-    return Object.entries(venues || {})
-      .reduce<Record<string, Set<string>>>((accum, [, { country, city }]) => {
+    return Object.entries(venues || {}).reduce<Record<string, Set<Option>>>(
+      (accum, [, { country, city }]) => {
         if (!accum[country]) {
           accum[country] = new Set();
         }
-        accum[country].add(city);
+        accum[country].add({
+          label: city,
+          value: city,
+        });
 
         return accum;
-      }, {});
+      },
+      {}
+    );
   }, [venues]);
 
   const defaultValue =

@@ -17,13 +17,7 @@ const FilterSectionLabel = styled.span`
   margin: 0 1rem 0.6rem 0;
 `;
 
-export const FilterSection = ({
-  label,
-  children,
-}: {
-  label: ReactNode;
-  children: ReactNode;
-}) => {
+export const FilterSection = ({ label, children }: { label: ReactNode; children: ReactNode }) => {
   return (
     <FilterSectionWrapper>
       <FilterSectionLabel className="bold">{label}</FilterSectionLabel>

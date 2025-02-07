@@ -1,11 +1,11 @@
 import { useCallback, useContext, useMemo } from 'react';
 import { MultiValue } from 'react-select';
-import { Option, Venue } from '../types';
-import { useDb } from '../dbHooks';
+import type { Option, Venue } from '../types';
 import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
 import { formatVenueName, sortByLabel } from '../utils';
 import { DropdownMultiselect } from './DropdownMultiselect';
+import { DatabaseContext } from '../database/DatabaseContext';
 
 const nothingFound = () => 'Nothing found';
 
@@ -14,7 +14,7 @@ type GroupedVenueOptions = Record<string, Venue[]>;
 export const VenueFilters = () => {
   const {
     venues: { data: venues },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
   const { venueFilters, setVenueFilters } = useContext(FiltersContext);
 
@@ -26,17 +26,14 @@ export const VenueFilters = () => {
   );
 
   const options = useMemo(() => {
-    const groupedOptions = Object.entries(venues || {}).reduce(
-      (accum, [, venue]) => {
-        if (accum[venue.country]) {
-          accum[venue.country].push(venue);
-        } else {
-          accum[venue.country] = [venue];
-        }
-        return accum;
-      },
-      {} as GroupedVenueOptions
-    );
+    const groupedOptions = Object.entries(venues || {}).reduce((accum, [, venue]) => {
+      if (accum[venue.country]) {
+        accum[venue.country].push(venue);
+      } else {
+        accum[venue.country] = [venue];
+      }
+      return accum;
+    }, {} as GroupedVenueOptions);
 
     return Object.entries(groupedOptions)
       .sort(([a], [b]) => a.localeCompare(b))

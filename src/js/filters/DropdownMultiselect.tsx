@@ -1,10 +1,5 @@
-import Select, {
-  MultiValue,
-  Theme,
-  StylesConfig,
-  GroupBase,
-} from 'react-select';
-import { Option } from '../types';
+import Select, { MultiValue, Theme, StylesConfig, GroupBase } from 'react-select';
+import type { Option } from '../types';
 import { Colors } from '../constants';
 
 const customTheme = (theme: Theme) => ({

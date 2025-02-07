@@ -1,13 +1,13 @@
 import { useCallback, useContext, useMemo } from 'react';
 import { MultiValue } from 'react-select';
-import { Option, Presenter } from '../types';
-import { useDb } from '../dbHooks';
+import type { Option, Presenter } from '../types';
 import { formatName } from '../utils';
 import { hosts } from '../constants';
 import { FilterSection } from './FilterSection';
 import { FiltersContext } from './FiltersContext';
 import { DropdownMultiselect } from './DropdownMultiselect';
 import { sortByLabel } from '../utils';
+import { DatabaseContext } from '../database/DatabaseContext';
 
 const noOneFound = () => 'No one found';
 
@@ -24,7 +24,7 @@ const groupLabels: Record<PresenterType, string> = {
 export const PresenterFilters = () => {
   const {
     presenters: { data: presenters },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
   const { presenterFilters, setPresenterFilters } = useContext(FiltersContext);
 
