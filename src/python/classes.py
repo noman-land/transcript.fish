@@ -4,15 +4,15 @@ from bs4 import BeautifulSoup
 class RssEpisode:
     def __init__(self, episode):
         audio, *_ = filter(
-            lambda media: media['medium'] == 'audio',
-            episode['media_content']
+            lambda link: link['type'] == 'audio/mpeg',
+            episode['links']
         )
         self.episode_num = int(episode['itunes_episode'])
         # Cut the numbers off the front of the title
         # "   7: Episode Title" -> "Episode Title"
         # "2361: Episode Title" -> "Episode Title"
         self.title = re.sub(r'^\d{1,4}:\s', '', episode['title'])
-        self.audio = str(audio['url'])
+        self.audio = str(audio['href'])
         self.link = str(episode['link'])
         self.image = str(episode['image']['href'])
         self.duration = int(episode['itunes_duration'])

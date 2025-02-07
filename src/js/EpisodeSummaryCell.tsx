@@ -1,13 +1,12 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import styled from 'styled-components';
 import { Tags } from './Tags';
-import { EpisodeSummaryCellProps } from './types';
+import type { EpisodeSummaryCellProps } from './types';
 import { Hosts } from './Hosts';
 import { Separator } from './Separator';
-import { formatDate, stopPropagation } from './utils';
+import { formatDate, formatVenueName, stopPropagation } from './utils';
 import { AudioControls } from './audio/AudioControls';
-import { useDb } from './dbHooks';
-import { formatVenueName } from './utils';
+import { DatabaseContext } from './database/DatabaseContext';
 
 const StyledTd = styled.td<{ $isOpen: boolean }>`
   display: flex;
@@ -95,7 +94,7 @@ export const EpisodeSummaryCell = ({
   );
   const {
     venues: { data: venues },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
   const venueText = venues && !!venue && formatVenueName(venues[venue]);
 
@@ -112,10 +111,7 @@ export const EpisodeSummaryCell = ({
       <div>{formatDate(pubDate)}</div>
       <div>{venueText}</div>
       <Hosts $presenters={presenters} />
-      <Description
-        onClick={stopPropagation}
-        dangerouslySetInnerHTML={{ __html: description }}
-      />
+      <Description onClick={stopPropagation} dangerouslySetInnerHTML={{ __html: description }} />
       <AudioControls episodeNum={episodeNum} duration={duration} />
       {isOpen && <Separator />}
     </StyledTd>

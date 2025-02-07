@@ -1,5 +1,5 @@
 import { FormEventHandler, MouseEventHandler } from 'react';
-import { Option, Venue, Presenter } from './types';
+import type { Option, Venue, Presenter, Word, Matches } from './types';
 
 const MEDIA_URL = 'https://media.transcript.fish' as const;
 
@@ -30,13 +30,13 @@ export const formatDuration = (duration: number) => {
   return `${Math.floor(duration / 60)} minutes`;
 };
 
+const zeroPad = (num: number) => {
+  return Math.floor(num).toString().padStart(2, '0');
+};
+
 export const formatTimestamp = (duration: number) => {
-  const minutes = Math.floor(duration / 60)
-    .toString()
-    .padStart(2, '0');
-  const seconds = Math.floor(duration % 60)
-    .toString()
-    .padStart(2, '0');
+  const minutes = zeroPad(duration / 60);
+  const seconds = zeroPad(duration % 60);
   return `${minutes}:${seconds}`;
 };
 
@@ -57,11 +57,45 @@ export const formatName = ({ firstName, middleName, lastName }: Presenter) =>
   [firstName, middleName, lastName].filter(n => n).join(' ');
 
 export const formatVenueName = (venue: Venue) => {
-  return `${venue.name} (${[venue.region, venue.city, venue.state]
-    .filter(n => n)
-    .join(', ')})`;
+  const location = [venue.region, venue.city, venue.state].filter(n => n).join(', ');
+  return `${venue.name} (${location})`;
 };
 
 export const sortByLabel = (a: Option, b: Option) => {
-  return a.label.toLocaleLowerCase().localeCompare(b.label.toLowerCase());
+  return a.label.toLocaleLowerCase().localeCompare(b.label.toLocaleLowerCase());
+};
+
+export const makeRowKey = (w: Word) => {
+  return `${w.startTime}-${w.endTime}-${w.word}-${w.probability}`;
+};
+
+const WORD_REGEX = /[\s.,!?\-"]/g;
+
+const clean = (word: string) => {
+  return word.replace(WORD_REGEX, '').toLowerCase();
+};
+
+export const findMatches = (words: Word[], searchTerm: string) => {
+  const searchWords = searchTerm
+    .replace(WORD_REGEX, ' ')
+    .split(' ')
+    .filter(n => n);
+
+  const allMatches = words.reduce((acc, _, i, _words) => {
+    const matches: Matches = {};
+    let j = 0;
+    while (j < searchWords.length && clean(_words[i + j].word) === clean(searchWords[j])) {
+      matches[i + j] = true;
+      j++;
+    }
+    if (Object.keys(matches).length === searchWords.length) {
+      return Object.assign(acc, matches);
+    }
+    return acc;
+  }, {} as Matches);
+
+  return {
+    matches: allMatches,
+    occurrences: Object.keys(allMatches).length / searchWords.length,
+  };
 };

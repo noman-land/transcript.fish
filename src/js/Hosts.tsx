@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { HostIcon } from './HostIcon';
-import { Host } from './types';
+import type { Host } from './types';
 import { hosts } from './constants';
 
 interface HostsProps {
@@ -9,11 +9,7 @@ interface HostsProps {
 
 export const Hosts = styled.div.attrs<HostsProps>(({ $presenters }) => ({
   children: Object.entries(hosts).map(([name, id]) => (
-    <HostIcon
-      key={id}
-      $host={name as Host}
-      $absent={!$presenters.includes(id)}
-    />
+    <HostIcon key={id} $host={name as Host} $absent={!$presenters.includes(id)} />
   )),
 }))<HostsProps>`
   margin-top: 1em;

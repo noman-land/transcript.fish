@@ -1,11 +1,42 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { App } from './App';
 import './index.css';
+import { App } from './App';
+import { EpisodeSearch } from './EpisodeSearch';
+import { EpisodesTable } from './EpisodesTable';
+import { NotFoundError } from './NotFoundError';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      {
+        path: '/',
+        element: <EpisodeSearch />,
+        children: [
+          {
+            index: true,
+            element: <EpisodesTable />,
+          },
+          {
+            path: '/episodes/:episodeId',
+            element: <EpisodesTable />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: '*',
+    element: <NotFoundError />,
+  },
+]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

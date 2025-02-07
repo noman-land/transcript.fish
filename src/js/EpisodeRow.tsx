@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
-import { EpisodeRowProps } from './types';
+import type { EpisodeRowProps } from './types';
 import { EpisodeSummaryCell } from './EpisodeSummaryCell';
 import { EpisodeTranscriptCell } from './EpisodeTranscriptCell';
-import { useDb } from './dbHooks';
 import { makeEpisodeCoverUrl } from './utils';
 import { Colors } from './constants';
+import { useTranscript } from './database/dbHooks';
 
 const StyledTr = styled.tr<{ $isOpen: boolean }>`
   background-color: ${({ $isOpen }) => $isOpen && Colors.cirtineWhite};
@@ -43,12 +43,9 @@ const TrWithBackground = styled(StyledTr)<{ $image: string }>`
   }
 `;
 
-export const EpisodeRow = ({ episode, expanded }: EpisodeRowProps) => {
+export const EpisodeRow = ({ episode, expanded, searchTerm }: EpisodeRowProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const {
-    transcript: { get: getTranscript, data: transcript },
-  } = useDb();
+  const { get: getTranscript, data: transcript } = useTranscript();
 
   const handleClick = useCallback(() => {
     setIsOpen(open => !open);
@@ -68,13 +65,13 @@ export const EpisodeRow = ({ episode, expanded }: EpisodeRowProps) => {
       $image={makeEpisodeCoverUrl(episode.episode, episode.image)}
       key={episode.episode}
     >
-      <EpisodeSummaryCell
-        isOpen={opened}
-        onClick={handleClick}
-        episode={episode}
-      />
+      <EpisodeSummaryCell isOpen={opened} onClick={handleClick} episode={episode} />
       {opened && transcript && (
-        <EpisodeTranscriptCell words={transcript} episode={episode.episode} />
+        <EpisodeTranscriptCell
+          words={transcript}
+          episode={episode.episode}
+          searchTerm={searchTerm}
+        />
       )}
     </TrWithBackground>
   );

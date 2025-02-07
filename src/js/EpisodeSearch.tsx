@@ -1,7 +1,6 @@
 import styled from 'styled-components';
+import { Outlet } from 'react-router';
 import { FormEvent, useCallback, useContext, useEffect, useState } from 'react';
-import { EpisodesTable } from './EpisodesTable';
-import { useDb } from './dbHooks';
 import { PAGE_SIZE } from './constants';
 import { Paginator } from './Paginator';
 import { FilterBar } from './filters/FilterBar';
@@ -10,6 +9,7 @@ import { SearchBar } from './SearchBar';
 import { Total } from './Total';
 import { preventDefault } from './utils';
 import { FiltersContext } from './filters/FiltersContext';
+import { DatabaseContext } from './database/DatabaseContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,15 +66,10 @@ export const EpisodeSearch = () => {
       loading: episodesLoading,
       total: totalEpisodes,
     },
-  } = useDb();
+  } = useContext(DatabaseContext);
 
-  const {
-    getFilteredEpisodes,
-    episodeTypeFilters,
-    presenterFilters,
-    searchFilters,
-    venueFilters,
-  } = useContext(FiltersContext);
+  const { getFilteredEpisodes, episodeTypeFilters, presenterFilters, searchFilters, venueFilters } =
+    useContext(FiltersContext);
 
   useEffect(() => {
     search(searchTerm, searchFilters);
@@ -82,13 +77,7 @@ export const EpisodeSearch = () => {
 
   useEffect(() => {
     setPage(0);
-  }, [
-    episodeTypeFilters,
-    presenterFilters,
-    searchTerm,
-    searchFilters,
-    venueFilters,
-  ]);
+  }, [episodeTypeFilters, presenterFilters, searchTerm, searchFilters, venueFilters]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     preventDefault(e);
@@ -116,10 +105,7 @@ export const EpisodeSearch = () => {
 
   return (
     <Wrapper>
-      <SearchBar
-        placeholder="no such thing as a search bar"
-        onSubmit={handleSubmit}
-      />
+      <SearchBar placeholder="no such thing as a search bar" onSubmit={handleSubmit} />
       <FilterBar />
       {!!totalEpisodes && (
         <TotalWrapper>
@@ -129,11 +115,7 @@ export const EpisodeSearch = () => {
             </button>
           </ExpandAllWrapper>
           {!episodesLoading && !episodesError && (
-            <Total
-              isShowingAll={isShowingAll}
-              resultsCount={resultsCount}
-              total={totalEpisodes}
-            />
+            <Total isShowingAll={isShowingAll} resultsCount={resultsCount} total={totalEpisodes} />
           )}
         </TotalWrapper>
       )}
@@ -147,18 +129,17 @@ export const EpisodeSearch = () => {
         </>
       ) : (
         <>
-          <EpisodesTable
-            episodes={filteredEpisodes}
-            page={page}
-            loading={episodesLoading}
-            expanded={expanded}
+          <Outlet
+            context={{
+              episodes: filteredEpisodes,
+              loading: episodesLoading,
+              page,
+              expanded,
+              searchTerm,
+            }}
           />
           {totalPages > 1 && !episodesLoading ? (
-            <Paginator
-              page={page}
-              totalPages={totalPages}
-              onPageChange={setPage}
-            />
+            <Paginator page={page} totalPages={totalPages} onPageChange={setPage} />
           ) : (
             <PaginationSpacer />
           )}

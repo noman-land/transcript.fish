@@ -15,10 +15,7 @@ interface TotalProps {
 }
 
 export const Total = ({ isShowingAll, resultsCount, total }: TotalProps) => {
-  const foundResults = isShowingAll
-    ? 'showing all'
-    : `found ${resultsCount} of`;
-
+  const foundResults = isShowingAll ? 'showing all' : `found ${resultsCount} of`;
   return (
     <StyledDiv>
       {foundResults} {total} episodes

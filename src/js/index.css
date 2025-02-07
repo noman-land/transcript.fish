@@ -47,6 +47,8 @@ p {
 h1,
 h2,
 h3,
+b,
+strong,
 .bold {
   font-family: TTB, 'Courier New', Courier, monospace;
 }

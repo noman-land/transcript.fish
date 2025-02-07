@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Colors } from './constants';
 import { useContext } from 'react';
 import { FiltersContext } from './filters/FiltersContext';
-import { EpisodeType, EpisodeTypeFiltersState } from './types';
+import type { EpisodeType, EpisodeTypeFiltersState } from './types';
 
 const TagWrapper = styled.div`
   display: flex;
@@ -26,8 +26,8 @@ const Tag = styled.button`
 `;
 
 interface TagsProps {
-  live: number;
-  compilation: number;
+  live: 0 | 1;
+  compilation: 0 | 1;
 }
 
 export const Tags = ({ live, compilation }: TagsProps) => {
@@ -51,9 +51,7 @@ export const Tags = ({ live, compilation }: TagsProps) => {
     (isLive || isComp) && (
       <TagWrapper>
         {isLive && <Tag onClick={makeTagClickHandler('live')}>Live</Tag>}
-        {isComp && (
-          <Tag onClick={makeTagClickHandler('compilation')}>Compilation</Tag>
-        )}
+        {isComp && <Tag onClick={makeTagClickHandler('compilation')}>Compilation</Tag>}
       </TagWrapper>
     )
   );

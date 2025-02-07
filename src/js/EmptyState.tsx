@@ -17,13 +17,7 @@ const StyledDiv = styled.div`
   }
 `;
 
-export const EmptyState = ({
-  title,
-  body,
-}: {
-  title: string;
-  body: string;
-}) => (
+export const EmptyState = ({ title, body }: { title: string; body: string }) => (
   <StyledDiv>
     <h3 style={{ marginTop: 0, flexGrow: 1 }}>{title}</h3>
     <span>{body}</span>

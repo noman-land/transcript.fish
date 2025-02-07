@@ -1,80 +1,58 @@
 import styled from 'styled-components';
+import { useOutletContext } from 'react-router';
 import { EmptyState } from './EmptyState';
 import { EpisodeRow } from './EpisodeRow';
-import { Episode } from './types';
+import type { Episode } from './types';
 import { Colors, PAGE_SIZE } from './constants';
 import { Spinner } from './Spinner';
-
-const StyledEpisodesTbody = styled.tbody`
-  background-color: ${Colors.citrineLight};
-  border-collapse: collapse;
-`;
 
 interface EpisodesTableProps {
   episodes: Episode[];
   page: number;
   loading: boolean;
   expanded: boolean;
+  searchTerm: string;
 }
 
-const StyledTbody = styled.tbody`
-  &,
-  tr,
-  td {
-    display: flex;
-    min-height: 200px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+const StyledTable = styled.table`
+  background-color: ${Colors.citrineLight};
+  border-collapse: collapse;
 `;
 
-const Loading = () => {
-  return (
-    <StyledTbody>
-      <tr>
-        <td>
-          <Spinner $size="58px" />
-        </td>
-      </tr>
-    </StyledTbody>
-  );
-};
+const LoaderWrapper = styled.div`
+  display: flex;
+  min-height: 200px;
+  align-items: center;
+  justify-content: center;
+`;
 
-export const EpisodesTable = ({
-  episodes,
-  page,
-  loading,
-  expanded,
-}: EpisodesTableProps) => {
+export const EpisodesTable = () => {
+  const { episodes, page, loading, expanded, searchTerm } = useOutletContext<EpisodesTableProps>();
+
+  if (loading) {
+    return (
+      <LoaderWrapper>
+        <Spinner $size="58px" />
+      </LoaderWrapper>
+    );
+  }
+
+  if (!episodes.length) {
+    return <EmptyState title="No results found" body="Try doing another search." />;
+  }
+
   return (
-    <table>
-      {loading ? (
-        <Loading />
-      ) : (
-        <StyledEpisodesTbody>
-          {episodes.length ? (
-            episodes
-              .slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
-              .map(episode => (
-                <EpisodeRow
-                  episode={episode}
-                  key={episode.episode}
-                  expanded={expanded}
-                />
-              ))
-          ) : (
-            <tr>
-              <td>
-                <EmptyState
-                  title="No results found"
-                  body="Try doing another search."
-                />
-              </td>
-            </tr>
-          )}
-        </StyledEpisodesTbody>
-      )}
-    </table>
+    <StyledTable>
+      <tbody>
+        {episodes.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE).map(episode => (
+          <EpisodeRow
+            episode={episode}
+            key={episode.episode}
+            searchTerm={searchTerm}
+            expanded={expanded}
+          />
+        ))}
+      </tbody>
+    </StyledTable>
   );
 };
