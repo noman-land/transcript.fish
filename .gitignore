@@ -2,7 +2,6 @@
 /images/
 /db/**/db.sqlite3.*
 /db/**/*.json
-/_data/
 venv
 
 # SQLite
