@@ -21,7 +21,7 @@
     "sync:images": "rclone sync -P ./images cf:transcript-fish/images/",
     "sync:fonts": "rclone sync -P ./fonts cf:transcript-fish/fonts/",
     "sync": "npm run sync:fonts && npm run sync:images && npm run sync:audio && npm run sync:db",
-    "all": "npm run convert && npm run split:db && npm run sync"
+    "all": "npm run convert && npm run split && npm run sync"
   },
   "author": "Noman",
   "license": "MIT",

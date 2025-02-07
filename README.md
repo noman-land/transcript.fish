@@ -52,7 +52,7 @@ Unofficial No Such Thing As A Fish episode transcripts.
 
 3. Split database into chunks
 
-   - Run `npm run split:db`
+   - Run `npm run split`
 
 4. (Optional) Sync database, audio, images, and fonts to (Cloudflare) R2. Needs [`rclone`](https://rclone.org/) and [`jq`](https://jqlang.github.io/jq/) installed.
 
