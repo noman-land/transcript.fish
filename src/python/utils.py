@@ -10,11 +10,11 @@ def log(episode_num: int, *msg: str, end: Optional[str] = None):
     print(f'[ Episode {episode_num} ]', *msg, end=end)
 
 def show_progress(episode: RssEpisode, progress: float, start_time: datetime):
-    percent_complete = int(progress / episode.duration * 1000) / 10
+    percent_complete = progress / episode.duration * 100
     elapsed_seconds = (datetime.now() - start_time).seconds
-    elapsed = str(timedelta(seconds=(elapsed_seconds)))
-    remaining = str(timedelta(seconds=int((progress / percent_complete * 100) - progress)))
-    log(episode.episode_num, f'Transcribing ({percent_complete}%): {elapsed} elapsed. ETA: {remaining}', end='\r')
+    elapsed = timedelta(seconds=elapsed_seconds)
+    remaining = timedelta(seconds=round(timedelta(seconds=(progress / percent_complete * 100) - progress).total_seconds()))
+    log(episode.episode_num, f'Transcribing ({round(percent_complete, 2)}%): {elapsed} elapsed. ETA: {remaining}', end='\r')
 
 def maybe_create_folder(folder_path: str):
     # Check if the folder exists, and if not, create it
