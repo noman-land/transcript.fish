@@ -75,5 +75,6 @@ upsert_episode = '''
         wordCount = excluded.wordCount;
 '''
 
-def insert_words(episode_num: int):
-  return f'INSERT INTO words VALUES (?, ?, ?, ?, {episode_num})'
+insert_words = '''
+    INSERT INTO words VALUES (?, ?, ?, ?, ?)
+'''
