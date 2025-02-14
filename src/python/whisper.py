@@ -4,7 +4,7 @@ from classes import RssEpisode
 from datetime import datetime
 from faster_whisper import WhisperModel
 
-model_size = 'large-v2'
+model_size = 'large-v3-turbo'
 
 model = WhisperModel(
     model_size_or_path=model_size,

@@ -69,8 +69,9 @@ def delete_transcription(episode_num: int):
     cur.execute(sql.reset_word_count, [episode_num])
 
 def insert_words(episode_num: int, words):
+    words_with_ep_num = map(lambda word: (word.start, word.end, word.word, word.probability, episode_num), words)
     cur = con.cursor()
-    cur.executemany(sql.insert_words(episode_num), words)
+    cur.executemany(sql.insert_words, words_with_ep_num)
 
 def upsert_episode(episode: RssEpisode, word_count: int):
     cur = con.cursor()
