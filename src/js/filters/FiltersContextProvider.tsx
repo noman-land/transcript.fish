@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useContext, useState } from 'react';
 import { useParams } from 'react-router';
 import type {
   Episode,
@@ -9,9 +9,11 @@ import type {
 } from '../types';
 import { FiltersContext } from './FiltersContext';
 import { defaultEpisodeTypeFiltersState, defaultSearchFiltersState } from './filtersUtils';
+import { DatabaseContext } from '../database/DatabaseContext';
 
 type PresenterFiltersState = number[];
 type VenueFiltersState = number[];
+type CityFiltersState = string[];
 type FilterToggleHandler<T> = (args: { name: T; checked: boolean }) => void;
 
 // Four Undisclosed Locations
@@ -24,9 +26,15 @@ const QI_OFFICE_VENUE_IDS = [
 
 export const FiltersContextProvider = ({ children }: { children: ReactElement }) => {
   const { episodeId } = useParams();
+
+  const {
+    venues: { data: venues },
+  } = useContext(DatabaseContext);
   const [presenterFilters, setPresenterFilters] = useState<PresenterFiltersState>([]);
 
   const [venueFilters, setVenueFilters] = useState<VenueFiltersState>([]);
+
+  const [cityFilters, setCityFilters] = useState<CityFiltersState>([]);
 
   const [episodeTypeFilters, setEpisodeTypeFilters] = useState<EpisodeTypeFiltersState>(
     defaultEpisodeTypeFiltersState
@@ -57,7 +65,7 @@ export const FiltersContextProvider = ({ children }: { children: ReactElement })
         return episode === parseInt(episodeId, 10);
       })
       .filter(ep => {
-        if (presenterFilters.length === 0) {
+        if (!presenterFilters.length) {
           return true;
         }
         return (
@@ -69,10 +77,16 @@ export const FiltersContextProvider = ({ children }: { children: ReactElement })
         );
       })
       .filter(ep => {
-        if (venueFilters.length === 0) {
+        if (!venueFilters.length) {
           return true;
         }
         return venueFilters.includes(ep.venue);
+      })
+      .filter(ep => {
+        if (!cityFilters.length || !venues) {
+          return true;
+        }
+        return cityFilters.includes(venues[ep.venue].city);
       })
       .filter(ep => {
         return (
@@ -102,10 +116,12 @@ export const FiltersContextProvider = ({ children }: { children: ReactElement })
         searchFilters,
         presenterFilters,
         venueFilters,
+        cityFilters,
         handleEpisodeTypeFilterToggle,
         handleSearchFilterToggle,
         setPresenterFilters,
         setVenueFilters,
+        setCityFilters,
         setEpisodeTypeFilters,
         numFiltersAltered,
       }}
