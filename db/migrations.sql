@@ -75,10 +75,10 @@ CREATE TABLE IF NOT EXISTS "venues" (
 CREATE UNIQUE INDEX IF NOT EXISTS "venues_index" ON "venues" ("id");
 
 CREATE TABLE IF NOT EXISTS "words" (
-  "startTime" NUMERIC NOT NULL,
-  "endTime" NUMERIC NOT NULL,
+  "startTime" REAL NOT NULL,
+  "endTime" REAL NOT NULL,
   "word" TEXT NOT NULL COLLATE NOCASE,
-  "probability" NUMERIC NOT NULL,
+  "probability" REAL NOT NULL,
   "episode" INTEGER NOT NULL,
   PRIMARY KEY (
     "episode",
