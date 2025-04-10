@@ -18,7 +18,7 @@ type FilterToggleHandler<T> = (args: { name: T; checked: boolean }) => void;
 const WFH_VENUE_ID = 2;
 const QI_OFFICE_VENUE_IDS = [
   1, // Covent Garden
-  4, // Hoburn
+  4, // Holborn
   9, // 2020 Audio
 ];
 
