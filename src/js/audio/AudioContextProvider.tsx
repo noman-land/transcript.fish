@@ -1,114 +1,72 @@
-import { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+  ReactElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { AudioPlayer } from './AudioPlayer';
 import { AudioContext } from './AudioContext';
-import { DatabaseContext } from '../database/DatabaseContext';
-import { setMetadata } from './audioUtils';
+import { setMetadata, setPositionState } from './audioUtils';
 import { FiltersContext } from '../filters/FiltersContext';
 
-export const AudioContextProvider = ({ children }: { children: ReactElement }) => {
-  const { episodes } = useContext(DatabaseContext);
-  const { getFilteredEpisodes } = useContext(FiltersContext);
-  const [playingEpisode, setPlayingEpisode] = useState<number>();
+type Handler = (details: MediaSessionActionDetails) => void;
+
+type Handlers = [MediaSessionAction, Handler | null][];
+
+export const AudioContextProvider = ({
+  children,
+}: {
+  children: ReactElement;
+}) => {
+  const { filteredEpisodes } = useContext(FiltersContext);
+  const [playingEpisode, setPlayingEpisode] = useState<number | undefined>(
+    filteredEpisodes?.[0]?.episode
+  );
   const [ended, setEnded] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const play = useCallback((episodeNum: number) => {
-    setPlaying(true);
-    setPlayingEpisode(episodeNum);
-    audioRef.current?.play();
+    if (audioRef.current) {
+      setPlaying(true);
+      setPlayingEpisode(episodeNum);
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.play();
+          setPositionState(audioRef.current);
+        }
+      }, 0);
+    }
   }, []);
 
   const pause = useCallback(() => {
-    setPlaying(false);
-    audioRef.current?.pause();
+    if (audioRef.current) {
+      setPlaying(false);
+      audioRef.current.pause();
+    }
   }, []);
 
   const isPlaying = useCallback(
-    (episodeNum: number) => {
-      return playing && episodeNum === playingEpisode;
-    },
+    (episodeNum: number) => playing && episodeNum === playingEpisode,
     [playing, playingEpisode]
   );
 
   const seek = useCallback((time: number) => {
     if (audioRef.current) {
-      audioRef.current.fastSeek(time);
+      audioRef.current.currentTime = time;
+      setPositionState(audioRef.current);
     }
   }, []);
 
-  const filteredEpisodes = getFilteredEpisodes(episodes.data);
-
-  // Add event listeners
+  // Add event listeners on audio element
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !playingEpisode) {
+    if (!audio) {
       return;
     }
-
-    if (!filteredEpisodes) {
-      return;
-    }
-
-    audio.playbackRate = 1;
-    audio.preservesPitch = true;
-
-    const episodeIdx = filteredEpisodes?.findIndex(({ episode }) => episode === playingEpisode);
-
-    navigator.mediaSession.setActionHandler('play', () => play(playingEpisode));
-    navigator.mediaSession.setActionHandler('pause', pause);
-
-    // Show back button on everything but the first episode
-    if (episodeIdx > 0) {
-      navigator.mediaSession.setActionHandler('previoustrack', () => {
-        if (typeof episodeIdx === 'number') {
-          setPlayingEpisode(filteredEpisodes[episodeIdx - 1].episode);
-          setCurrentTime(0);
-          setPlaying(true);
-          audio.currentTime = 0;
-        }
-      });
-    } else {
-      navigator.mediaSession.setActionHandler('previoustrack', null);
-    }
-
-    // Show foward button on everything but the last episode
-    if (episodeIdx < filteredEpisodes.length - 1) {
-      navigator.mediaSession.setActionHandler('nexttrack', () => {
-        if (typeof episodeIdx === 'number') {
-          setPlayingEpisode(filteredEpisodes[episodeIdx + 1].episode);
-          setCurrentTime(0);
-          setPlaying(true);
-          audio.currentTime = 0;
-        }
-      });
-    } else {
-      navigator.mediaSession.setActionHandler('nexttrack', null);
-    }
-
-    navigator.mediaSession.setActionHandler('seekbackward', () => {
-      setCurrentTime(t => {
-        const seekTime = t - 10_000;
-        audio.fastSeek(seekTime);
-        return seekTime;
-      });
-    });
-
-    navigator.mediaSession.setActionHandler('seekforward', () => {
-      setCurrentTime(t => {
-        const seekTime = t + 10_000;
-        audio.fastSeek(seekTime);
-        return seekTime;
-      });
-    });
-
-    navigator.mediaSession.setActionHandler('seekto', ({ seekTime }) => {
-      if (seekTime) {
-        setCurrentTime(seekTime);
-        audio.fastSeek(seekTime);
-      }
-    });
 
     const handleTimeupdate = (event: Event) => {
       const { currentTime } = event.target as HTMLAudioElement;
@@ -130,15 +88,111 @@ export const AudioContextProvider = ({ children }: { children: ReactElement }) =
       audio.removeEventListener('seeked', handleTimeupdate);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [playingEpisode, play, pause, filteredEpisodes, getFilteredEpisodes]);
+  }, []);
 
   // Update MediaSession metadata when episode is changed
   useEffect(() => {
-    const episode = filteredEpisodes?.find(({ episode }) => episode === playingEpisode);
+    const episode = filteredEpisodes?.find(
+      ({ episode }) => episode === playingEpisode
+    );
     if (episode) {
       setMetadata(episode);
     }
   }, [playingEpisode, filteredEpisodes]);
+
+  // Add MediaSession event handlers
+  useEffect(() => {
+    if (!audioRef.current || !playingEpisode || !filteredEpisodes) {
+      return;
+    }
+
+    audioRef.current.playbackRate = 1;
+    audioRef.current.preservesPitch = true;
+
+    const episodeIdx = filteredEpisodes?.findIndex(
+      ({ episode }) => episode === playingEpisode
+    );
+
+    const handlers: Handlers = [
+      ['play', () => play(playingEpisode)],
+      ['pause', pause],
+      [
+        'previoustrack',
+        episodeIdx > 0
+          ? () => {
+              if (audioRef.current) {
+                setPlayingEpisode(filteredEpisodes[episodeIdx - 1].episode);
+                setCurrentTime(0);
+                setPlaying(true);
+                audioRef.current.currentTime = 0;
+                setPositionState(audioRef.current);
+              }
+            }
+          : null,
+      ],
+      [
+        'nexttrack',
+        episodeIdx < filteredEpisodes.length - 1
+          ? () => {
+              if (audioRef.current) {
+                setPlayingEpisode(filteredEpisodes[episodeIdx + 1].episode);
+                setCurrentTime(0);
+                setPlaying(true);
+                audioRef.current.currentTime = 0;
+                setPositionState(audioRef.current);
+              }
+            }
+          : null,
+      ],
+      [
+        'seekbackward',
+        ({ seekOffset = 10 }) => {
+          if (audioRef.current) {
+            audioRef.current.currentTime =
+              audioRef.current.currentTime - seekOffset;
+            setCurrentTime(time => time - seekOffset);
+            setPositionState(audioRef.current);
+          }
+        },
+      ],
+      [
+        'seekforward',
+        ({ seekOffset = 10 }) => {
+          if (audioRef.current) {
+            audioRef.current.currentTime =
+              audioRef.current.currentTime + seekOffset;
+            setCurrentTime(time => time + seekOffset);
+            setPositionState(audioRef.current);
+          }
+        },
+      ],
+      [
+        'seekto',
+        ({ seekTime, fastSeek }) => {
+          if (!seekTime || !audioRef.current) {
+            return;
+          }
+
+          if (fastSeek && 'fastSeek' in audioRef.current) {
+            audioRef.current.fastSeek(seekTime);
+          } else {
+            audioRef.current.currentTime = seekTime;
+          }
+
+          setCurrentTime(seekTime);
+          setPositionState(audioRef.current);
+        },
+      ],
+    ];
+
+    for (const [event, handler] of handlers) {
+      try {
+        navigator.mediaSession.setActionHandler(event, handler);
+      } catch (e) {
+        console.warn(`MediaSession event '${event}' not supported.`);
+      }
+    }
+  }, [playingEpisode, play, pause, filteredEpisodes]);
 
   return (
     <AudioContext.Provider
@@ -152,7 +206,7 @@ export const AudioContextProvider = ({ children }: { children: ReactElement }) =
         ended,
       }}
     >
-      {playingEpisode && <AudioPlayer episodeNum={playingEpisode} audioRef={audioRef} />}
+      <AudioPlayer episodeNum={playingEpisode} audioRef={audioRef} />
       {children}
     </AudioContext.Provider>
   );
