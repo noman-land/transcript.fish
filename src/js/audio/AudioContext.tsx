@@ -2,7 +2,8 @@ import { Ref, createContext } from 'react';
 
 export const AudioContext = createContext<{
   isPlaying: (episodeNum: number) => boolean;
-  playPause: (episodeNum: number) => void;
+  play: (episodeNum: number) => void;
+  pause: () => void;
   audioRef?: Ref<HTMLAudioElement>;
   playingEpisode?: number;
   currentTime: number;
@@ -10,7 +11,8 @@ export const AudioContext = createContext<{
   ended: boolean;
 }>({
   isPlaying: () => false,
-  playPause: () => undefined,
+  play: () => undefined,
+  pause: () => undefined,
   audioRef: null,
   playingEpisode: undefined,
   currentTime: 0,

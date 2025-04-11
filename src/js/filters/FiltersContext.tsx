@@ -6,7 +6,10 @@ import type {
   SearchField,
   SearchFiltersState,
 } from '../types';
-import { defaultEpisodeTypeFiltersState, defaultSearchFiltersState } from './filtersUtils';
+import {
+  defaultEpisodeTypeFiltersState,
+  defaultSearchFiltersState,
+} from './filtersUtils';
 
 type PresenterFiltersState = number[];
 type VenueFiltersState = number[];
@@ -20,7 +23,7 @@ const noop = () => {
 };
 
 export const FiltersContext = createContext<{
-  getFilteredEpisodes: (episodes?: Episode[]) => Episode[] | undefined;
+  filteredEpisodes: Episode[] | undefined;
   episodeTypeFilters: EpisodeTypeFiltersState;
   searchFilters: SearchFiltersState;
   presenterFilters: PresenterFiltersState;
@@ -32,7 +35,7 @@ export const FiltersContext = createContext<{
   setEpisodeTypeFilters: Dispatch<SetStateAction<EpisodeTypeFiltersState>>;
   numFiltersAltered: number;
 }>({
-  getFilteredEpisodes: () => undefined,
+  filteredEpisodes: undefined,
   episodeTypeFilters: defaultEpisodeTypeFiltersState,
   searchFilters: defaultSearchFiltersState,
   presenterFilters: defaultPresenterFiltersState,

@@ -142,7 +142,7 @@ interface AudioControlsProps {
 }
 
 export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
-  const { isPlaying, playPause, currentTime, playingEpisode, seek, ended } =
+  const { isPlaying, play, pause, currentTime, playingEpisode, seek, ended } =
     useContext(AudioContext);
 
   const handleSkipBack: MouseEventHandler<HTMLSpanElement> = ({ clientX, currentTarget }) => {
@@ -160,9 +160,15 @@ export const AudioControls = ({ episodeNum, duration }: AudioControlsProps) => {
   return (
     <Wrapper>
       <ButtonWrapper>
-        <Button onClick={() => playPause(episodeNum)}>
-          {isPlaying(episodeNum) ? <PauseIcon /> : <PlayIcon />}
-        </Button>
+        {isPlaying(episodeNum) ? (
+          <Button onClick={pause}>
+            <PauseIcon />
+          </Button>
+        ) : (
+          <Button onClick={() => play(episodeNum)}>
+            <PlayIcon />
+          </Button>
+        )}
       </ButtonWrapper>
       <DurationWrapper>
         {playingEpisode === episodeNum ? (
