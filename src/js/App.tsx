@@ -54,21 +54,21 @@ export const App = () => {
   return (
     <Wrapper>
       <DatabaseContextProvider>
-        <AudioContextProvider>
-          <>
-            <Header />
-            <div className="app-body">
-              <h1>transcript.fish</h1>
-              <UnderConstructionBanner />
-              <img className="logo" src={mediaUrl.images('logo-transparent.png')} />
-              <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
-                <FiltersContextProvider>
+        <FiltersContextProvider>
+          <AudioContextProvider>
+            <>
+              <Header />
+              <div className="app-body">
+                <h1>transcript.fish</h1>
+                <UnderConstructionBanner />
+                <img className="logo" src={mediaUrl.images('logo-transparent.png')} />
+                <ErrorBoundary FallbackComponent={EpisodeSearchFallback}>
                   <Outlet />
-                </FiltersContextProvider>
-              </ErrorBoundary>
-            </div>
-          </>
-        </AudioContextProvider>
+                </ErrorBoundary>
+              </div>
+            </>
+          </AudioContextProvider>
+        </FiltersContextProvider>
       </DatabaseContextProvider>
     </Wrapper>
   );

@@ -1,92 +1,218 @@
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AudioPlayer } from './AudioPlayer';
 import { AudioContext } from './AudioContext';
+import { setMetadata, setPositionState } from './audioUtils';
+import { FiltersContext } from '../filters/FiltersContext';
+
+type Handler = (details: MediaSessionActionDetails) => void;
+
+type Handlers = [MediaSessionAction, Handler | null][];
 
 export const AudioContextProvider = ({ children }: { children: ReactElement }) => {
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [playingEpisode, setPlayingEpisode] = useState<number>();
+  const { filteredEpisodes } = useContext(FiltersContext);
+  const [playingEpisode, setPlayingEpisode] = useState<number | undefined>(
+    filteredEpisodes?.[0]?.episode
+  );
   const [ended, setEnded] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [canPlayThrough, setCanPlayThrough] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const playPause = (episodeNum: number) => {
-    setPlaying(p => {
-      if (episodeNum === playingEpisode) {
-        return !p;
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const play = useCallback(
+    (episodeNum: number) => {
+      if (audioRef.current) {
+        setPlaying(true);
+        setPlayingEpisode(episodeNum);
+
+        if (episodeNum !== playingEpisode) {
+          setCanPlayThrough(false);
+        }
       }
+    },
+    [playingEpisode]
+  );
 
-      setPlayingEpisode(episodeNum);
-      return true;
-    });
-  };
+  const pause = useCallback(() => {
+    if (audioRef.current) {
+      setPlaying(false);
+      audioRef.current.pause();
+    }
+  }, []);
 
-  const isPlaying = (episodeNum: number) => {
-    return playing && episodeNum === playingEpisode;
-  };
+  const isPlaying = useCallback(
+    (episodeNum: number) => playing && episodeNum === playingEpisode,
+    [playing, playingEpisode]
+  );
 
-  const seek = (time: number) => {
+  const seek = useCallback((time: number) => {
     if (audioRef.current) {
       audioRef.current.currentTime = time;
+      setPositionState(audioRef.current);
     }
-  };
+  }, []);
 
   useEffect(() => {
+    if (audioRef.current && playing && canPlayThrough && playingEpisode) {
+      audioRef.current.play();
+      setPositionState(audioRef.current);
+    }
+  }, [canPlayThrough, playing, playingEpisode]);
+
+  // Add event listeners on audio element
+  useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !playingEpisode) {
+    if (!audio) {
       return;
     }
-
-    audio.playbackRate = 1;
-    audio.preservesPitch = true;
 
     const handleTimeupdate = (event: Event) => {
       const { currentTime } = event.target as HTMLAudioElement;
       setCurrentTime(currentTime);
       setEnded(false);
     };
-    const handlePlay = () => setPlaying(true);
-    const handlePause = () => setPlaying(false);
-    const handleEnded = () => setEnded(true);
 
-    audio?.addEventListener('timeupdate', handleTimeupdate);
-    audio?.addEventListener('play', handlePlay);
-    audio?.addEventListener('pause', handlePause);
-    audio?.addEventListener('ended', handleEnded);
-    audio?.addEventListener('seeked', handleTimeupdate);
+    const handleEnded = () => {
+      setEnded(true);
+      setPlaying(false);
+    };
+
+    const handleCanPlayThrough = () => {
+      console.log('handleplayThrough');
+      setCanPlayThrough(true);
+    };
+
+    const handleLoadStart = () => {
+      console.log('handleloading');
+      setCanPlayThrough(false);
+    };
+
+    audio.addEventListener('timeupdate', handleTimeupdate);
+    audio.addEventListener('seeked', handleTimeupdate);
+    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('canplaythrough', handleCanPlayThrough);
+    audio.addEventListener('loadstart', handleLoadStart);
 
     return () => {
-      audio?.removeEventListener('timeupdate', handleTimeupdate);
-      audio?.removeEventListener('play', handlePlay);
-      audio?.removeEventListener('pause', handlePause);
-      audio?.removeEventListener('ended', handleEnded);
-      audio?.removeEventListener('seeked', handleTimeupdate);
+      audio.removeEventListener('timeupdate', handleTimeupdate);
+      audio.removeEventListener('seeked', handleTimeupdate);
+      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('canplaythrough', handleCanPlayThrough);
+      audio.removeEventListener('loadstart', handleLoadStart);
     };
-  }, [playingEpisode]);
+  }, []);
 
+  // Update MediaSession metadata when episode is changed
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio || !playingEpisode) {
+    const episode = filteredEpisodes?.find(({ episode }) => episode === playingEpisode);
+    if (episode) {
+      setMetadata(episode);
+    }
+  }, [playingEpisode, filteredEpisodes]);
+
+  // Add MediaSession event handlers
+  useEffect(() => {
+    if (!audioRef.current || !playingEpisode || !filteredEpisodes || !canPlayThrough) {
       return;
     }
 
-    if (playing) {
-      audio.play();
-    } else {
-      audio.pause();
+    audioRef.current.playbackRate = 1;
+    audioRef.current.preservesPitch = true;
+
+    const episodeIdx = filteredEpisodes?.findIndex(({ episode }) => episode === playingEpisode);
+
+    const handlers: Handlers = [
+      ['play', () => play(playingEpisode)],
+      ['pause', pause],
+      [
+        'previoustrack',
+        episodeIdx > 0
+          ? () => {
+              if (audioRef.current) {
+                setPlayingEpisode(filteredEpisodes[episodeIdx - 1].episode);
+                setCurrentTime(0);
+                setPlaying(true);
+                setCanPlayThrough(false);
+                audioRef.current.currentTime = 0;
+              }
+            }
+          : null,
+      ],
+      [
+        'nexttrack',
+        episodeIdx < filteredEpisodes.length - 1
+          ? () => {
+              if (audioRef.current) {
+                setPlayingEpisode(filteredEpisodes[episodeIdx + 1].episode);
+                setCurrentTime(0);
+                setPlaying(true);
+                setCanPlayThrough(false);
+                audioRef.current.currentTime = 0;
+              }
+            }
+          : null,
+      ],
+      [
+        'seekbackward',
+        ({ seekOffset = 10 }) => {
+          if (audioRef.current) {
+            audioRef.current.currentTime -= seekOffset;
+            setCurrentTime(time => time - seekOffset);
+            setPositionState(audioRef.current);
+          }
+        },
+      ],
+      [
+        'seekforward',
+        ({ seekOffset = 10 }) => {
+          if (audioRef.current) {
+            audioRef.current.currentTime += seekOffset;
+            setCurrentTime(time => time + seekOffset);
+            setPositionState(audioRef.current);
+          }
+        },
+      ],
+      [
+        'seekto',
+        ({ seekTime, fastSeek }) => {
+          if (!seekTime || !audioRef.current) {
+            return;
+          }
+
+          if (fastSeek && 'fastSeek' in audioRef.current) {
+            audioRef.current.fastSeek(seekTime);
+          } else {
+            audioRef.current.currentTime = seekTime;
+          }
+
+          setCurrentTime(seekTime);
+          setPositionState(audioRef.current);
+        },
+      ],
+    ];
+
+    for (const [event, handler] of handlers) {
+      try {
+        navigator.mediaSession.setActionHandler(event, handler);
+      } catch (e) {
+        console.warn(`MediaSession event '${event}' not supported.`);
+      }
     }
-  }, [playingEpisode, playing]);
+  }, [playingEpisode, play, pause, filteredEpisodes, canPlayThrough]);
 
   return (
     <AudioContext.Provider
       value={{
         isPlaying,
-        playPause,
+        play,
+        pause,
         playingEpisode,
         currentTime,
         seek,
         ended,
       }}
     >
-      {playingEpisode && <AudioPlayer episodeNum={playingEpisode} audioRef={audioRef} />}
+      <AudioPlayer episodeNum={playingEpisode} audioRef={audioRef} />
       {children}
     </AudioContext.Provider>
   );
