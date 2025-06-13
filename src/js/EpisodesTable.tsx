@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import { useOutletContext } from 'react-router';
 import { EmptyState } from './EmptyState';
@@ -26,8 +27,27 @@ const LoaderWrapper = styled.div`
   justify-content: center;
 `;
 
+let ep: Episode[] | undefined;
+
 export const EpisodesTable = () => {
   const { episodes, page, loading, expanded, searchTerm } = useOutletContext<EpisodesTableProps>();
+
+  if (ep !== episodes) {
+    console.log('DUDE');
+    ep = episodes;
+  }
+  const rows = useMemo(() => {
+    return episodes
+      .slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
+      .map(episode => (
+        <EpisodeRow
+          episode={episode}
+          key={episode.episode}
+          searchTerm={searchTerm}
+          expanded={expanded}
+        />
+      ));
+  }, [episodes, expanded, page, searchTerm]);
 
   if (loading) {
     return (
@@ -43,16 +63,7 @@ export const EpisodesTable = () => {
 
   return (
     <StyledTable>
-      <tbody>
-        {episodes.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE).map(episode => (
-          <EpisodeRow
-            episode={episode}
-            key={episode.episode}
-            searchTerm={searchTerm}
-            expanded={expanded}
-          />
-        ))}
-      </tbody>
+      <tbody>{rows}</tbody>
     </StyledTable>
   );
 };

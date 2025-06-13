@@ -12,7 +12,11 @@ export const setMetadata = (episode: Episode) => {
   }
 };
 
-export const setPositionState = (audio: HTMLAudioElement) => {
+export const setPositionState = (audio: {
+  duration: number;
+  playbackRate: number;
+  currentTime: number;
+}) => {
   if ('mediaSession' in navigator) {
     navigator.mediaSession.setPositionState({
       duration: audio.duration,
